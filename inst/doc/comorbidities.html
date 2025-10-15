@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Comorbidities</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Comorbidities</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#comorbidity-algorithms" id="toc-comorbidity-algorithms">Comorbidity Algorithms</a></li>
+<li><a href="#when-are-conditions-flag" id="toc-when-are-conditions-flag">When are conditions flag?</a></li>
+<li><a href="#mapping-icd-codes-to-comorbidities" id="toc-mapping-icd-codes-to-comorbidities">Mapping ICD Codes to
+Comorbidities</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.6.0&#39;</span></span></code></pre></div>
+<div id="comorbidity-algorithms" class="section level1">
+<h1>Comorbidity Algorithms</h1>
+<p>There are three comorbidity algorithms, each with several variants,
+implemented in the <code>medicalcoder</code> package:</p>
+<ol style="list-style-type: decimal">
+<li>Pediatric Complex Chronic Condition System (PCCC)
+<ol style="list-style-type: lower-alpha">
+<li>Version 2.0 <span class="citation">(Feudtner et al. 2014)</span>
+<ol style="list-style-type: lower-roman">
+<li><code>pccc_v2.0</code> is consistent with the older R package pccc
+(v1.0.6) <span class="citation">(DeWitt, Feinstein, and Russell
+2025)</span>.</li>
+<li><code>pccc_v2.1</code> modifies the set of ICD codes to be more
+consistent with documentation and other implementations of v2.0.</li>
+</ol></li>
+<li>Version 3.0 <span class="citation">(Feinstein et al. 2024)</span>
+<ol style="list-style-type: lower-roman">
+<li><code>pccc_v3.0</code> is consistent with the SAS software published
+on the <a href="https://www.childrenshospitals.org/content/analytics/toolkit/complex-chronic-conditions">Children’s
+Hospital Association</a> website in conjunction with <span class="citation">Feinstein et al. (2024)</span>.</li>
+<li><code>pccc_v3.1</code> modifies the set of ICD codes to be more
+consistent with documentation.</li>
+</ol></li>
+</ol></li>
+<li>Charlson
+<ol style="list-style-type: lower-alpha">
+<li><code>charslon_deyo1992</code>: Deyo’s original set of codes <span class="citation">(Deyo, Cherkin, and Ciol 1992; Quan et al.
+2005)</span></li>
+<li><code>charlson_quan2005</code> and <code>charlson_quan2011</code>:
+Codes and index scoring <span class="citation">(Quan et al. 2005,
+2011)</span></li>
+<li><code>charlson_cdmf2019</code>: <span class="citation">(Glasheen et
+al. 2019)</span></li>
+</ol></li>
+<li>Elixhauser
+<ol style="list-style-type: lower-alpha">
+<li>Based on codes provided by the Agency for Healthcare Research and
+Quality (AHRQ) for fiscal years 2022 through 2025 <span class="citation">(Healthcare Research and (AHRQ) 2025)</span>
+<ol style="list-style-type: lower-roman">
+<li><code>elixhauser_ahrq2022</code></li>
+<li><code>elixhauser_ahrq2023</code></li>
+<li><code>elixhauser_ahrq2024</code></li>
+<li><code>elixhauser_ahrq2025</code></li>
+</ol></li>
+<li>Codes from Table 2 of <span class="citation">Quan et al.
+(2005)</span>
+<ol style="list-style-type: lower-roman">
+<li><code>elixhauser_elixhauser1988</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
+<li><code>elixhauser_ahrq_web</code>: <span class="citation">(Quan et
+al. 2005; Cost and (HCUP) 2017)</span></li>
+<li><code>elixhauser_quan2005</code>: <span class="citation">(Quan et
+al. 2005)</span></li>
+</ol></li>
+</ol></li>
+</ol>
+<p><strong>IMPORTANT NOTE:</strong> Elixhauser 1998 and AHRQ Web used
+diagnostic related group (DRG) codes as part of the methods. The
+<code>medicalcoder</code> package <em>does not</em> use DRG codes. This
+is consistent with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
+<p>A list of the valid methods for the package can be accessed via a
+non-exported function. In general, the methods are listed in the form of
+<code>&lt;algorithm&gt;_&lt;version&gt;</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>medicalcoder<span class="sc">:::</span><span class="fu">comorbidities_methods</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">##  [1] &quot;pccc_v2.0&quot;                 &quot;pccc_v2.1&quot;                </span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  [3] &quot;pccc_v3.0&quot;                 &quot;pccc_v3.1&quot;                </span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  [5] &quot;charlson_deyo1992&quot;         &quot;charlson_quan2011&quot;        </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  [7] &quot;charlson_quan2005&quot;         &quot;charlson_cdmf2019&quot;        </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  [9] &quot;elixhauser_elixhauser1988&quot; &quot;elixhauser_ahrq_web&quot;      </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## [11] &quot;elixhauser_quan2005&quot;       &quot;elixhauser_ahrq2022&quot;      </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## [13] &quot;elixhauser_ahrq2023&quot;       &quot;elixhauser_ahrq2024&quot;      </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">## [15] &quot;elixhauser_ahrq2025&quot;</span></span></code></pre></div>
+<p>Vignettes for each of the major methods are available.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;pccc&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;charlson&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;elixhauser&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span></code></pre></div>
+<p>The focus of this vignette is to highlight the general use of the
+<code>comorbidities</code> function.</p>
+<p>Details of the function arguments call are in the manual.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">help</span>(<span class="at">topic =</span> <span class="st">&quot;comorbidities&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">args</span>(comorbidities)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## function (data, icd.codes, method, id.vars = NULL, icdv.var = NULL, </span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">##     icdv = NULL, dx.var = NULL, dx = NULL, poa.var = NULL, poa = NULL, </span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">##     age.var = NULL, primarydx.var = NULL, primarydx = NULL, flag.method = c(&quot;current&quot;, </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">##         &quot;cumulative&quot;), full.codes = TRUE, compact.codes = TRUE, </span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">##     subconditions = FALSE) </span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
+<p>We highlight a general concept for the arguments. Note that several
+arguments are in pairs, e.g., <code>dx.var</code> and <code>dx</code>
+(used for denoting if codes are diagnostic or procedural), or
+<code>poa.var</code> and <code>poa</code> (used for denoting if a codes
+are present on admission). The <code>.var</code> version is the name of
+a variable within the <code>data.frame</code> passed into the
+<code>data</code> argument. The version without <code>.var</code> is a
+default value to be applied to the entirety of <code>data</code>. We
+will see some examples where this is useful.</p>
+<p>The <code>data</code> element is expected to be a
+<code>data.frame</code>, or at least something that inherits the
+<code>data.frame</code> class. The format is expected to be a ‘long’
+format. One row per code. Two example data sets in the package show the
+general expected form of the <code>data</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">head</span>(mdcr)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="do">##   patid icdv  code dx</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="do">## 1 71412    9 99931  1</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="do">## 2 71412    9 75169  1</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="do">## 3 71412    9 99591  1</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="do">## 4 71412    9 V5865  1</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="do">## 5 71412    9  V427  1</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="do">## 6 17087   10  V441  1</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="fu">head</span>(mdcr_longitudinal)</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="do">##     patid       date icdv     code</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="do">## 1 9663901 2016-03-18   10   Z77.22</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="do">## 2 9663901 2016-03-24   10  IMO0002</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="do">## 3 9663901 2016-03-24   10 V87.7XXA</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="do">## 4 9663901 2016-03-25   10  J95.851</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="do">## 5 9663901 2016-03-30   10  IMO0002</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="do">## 6 9663901 2016-03-30   10    Z93.0</span></span></code></pre></div>
+<p>A great level of detail for each of the comorbidity algorithms are
+provided in dedicated vignettes:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)<span class="sc">$</span>results</span></code></pre></div>
+</div>
+<div id="when-are-conditions-flag" class="section level1">
+<h1>When are conditions flag?</h1>
+<p>Whether or not the code is present on admission (POA) is useful when
+applying the comorbidity algorithms and considering if the patient has a
+comorbidity at time of encounter start of if the condition is a result
+of the current hospitalization.</p>
+<p>Implementation of Elixhauser comorbidities for 2022 and beyond <span class="citation">(Healthcare Research and (AHRQ) 2025)</span> explicitly
+define the use of present on admission flags for specific conditions
+(see the <code>poa_required</code> flag reported in the data set
+returned by <code>get_elixhauser_poa</code>).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_poa</span>())</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    43 obs. of  7 variables:</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">##  $ condition          : chr  &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ANEMDEF&quot; &quot;ANEMDEF&quot; ...</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">##  $ desc               : chr  &quot;Acquired immune deficiency syndrome&quot; &quot;Alcohol abuse&quot; &quot;Anemias due to other nutritional deficiencies&quot; &quot;Deficiency anemias&quot; ...</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">##  $ poa_required       : int  0 0 1 1 0 1 1 0 0 0 ...</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022: int  1 1 NA 1 1 NA 1 1 1 1 ...</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span></code></pre></div>
+<p>For Charlson comorbidities, from <span class="citation">Quan et al.
+(2011)</span>:</p>
+<blockquote>
+<p>We defined comorbidities in the previous admissions using major and
+secondary diagnoses, without consideration of diagnosis type. The
+presence of a comorbid condition was assigned to a patient when it was
+present in index or previous admission records. Otherwise, the absence
+of the condition was assigned to the patient.</p>
+</blockquote>
+<p>From <span class="citation">Quan et al. (2005)</span>:</p>
+<blockquote>
+<p>The decision of whether to include or exclude specific codes or
+conditions from a coding algorithm depends to a large extent on a given
+study’s objectives. The original Charlson index used conditions present
+in hospitalized medical patients (regardless of whether the condition
+was present at baseline or arose after admission) to predict survival
+over an ensuing year. For such a study, a decision to exclude conditions
+arising after admission would not be ideal, as it would result in a loss
+of prognostic information relevant to long-term survival, and an
+‘under-adjustment’ in risk-adjusted survival analyses. In contrast, in
+the context of studying in-hospital outcomes of a surgical procedure,
+researchers would be best advised to confine their risk adjustment to
+variables that are predominantly present at baseline. In jurisdictions
+that have diagnosis type indicators, the methodological decision is
+simply one of deciding, based on study objectives, whether to use or not
+use the indicators. In regions or countries without diagnosis type
+indicators, meanwhile, the data that we present … can help researchers
+make decisions on a condition-by-condition basis of whether to include
+particular variables, depending on their study objectives.</p>
+</blockquote>
+<p>PCCC does not explicitly note the if POA is required.</p>
+<p><code>medicalcoder</code> has been built to consider POA for all
+comorbidity algorithms.</p>
+<p>End users can use a 0/1 indicator variable in the data set to report
+which codes are POA via the function argument <code>poa.var</code>. If
+all the codes are to be considered POA or not, the functional argument
+<code>poa</code> can be used to set a common status without adding a
+column to the input data set.</p>
+<p>Additionally, <code>medicalcoder</code> provides a
+<code>flag.method</code> argument for longitudinal data sets.</p>
+<p><strong>Example:</strong> Let’s assume we have a patient record for
+six encounters. We use ICD-10 diagnostic codes C78.4 and I50.40 which
+maps to a cancer and heart failure (cardiovascular disease) comorbidity
+respectively for PCCC, Charlson, and Elixhauser. For demonstration, we
+also flag POA with the second report of I50.40 intentionally marked as
+not present on admission.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">lookup_icd_codes</span>(<span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">##   input_code match_type icdv dx full_code  code src known_start known_end</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">## 1      C78.4  full_code   10  1     C78.4  C784 cms        2014      2026</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="do">## 2      C78.4  full_code   10  1     C78.4  C784 cdc        2001      2025</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="do">## 3      C78.4  full_code   10  1     C78.4  C784 who        2008      2019</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="do">## 4     I50.40  full_code   10  1    I50.40 I5040 cms        2014      2026</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="do">##   assignable_start assignable_end</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="do">## 1             2014           2026</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="do">## 2             2001           2025</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="do">## 3             2008           2019</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="do">## 4             2014           2026</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_pccc_codes</span>(),</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>       <span class="at">subset =</span> full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>),</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>, <span class="st">&quot;full_code&quot;</span>, <span class="st">&quot;condition&quot;</span>, <span class="st">&quot;pccc_v3.0&quot;</span>))</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="do">##      icdv dx  code full_code  condition pccc_v3.0</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="do">## 4523   10  1  C784     C78.4 malignancy         1</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="do">## 6570   10  1 I5040    I50.40        cvd         1</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_charlson_codes</span>(),</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>       <span class="at">subset =</span> full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>),</span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>, <span class="st">&quot;full_code&quot;</span>, <span class="st">&quot;condition&quot;</span>, <span class="st">&quot;charlson_quan2011&quot;</span>))</span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="do">##      icdv dx  code full_code condition charlson_quan2011</span></span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="do">## 3500   10  1  C784     C78.4       mst                 1</span></span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="do">## 5776   10  1 I5040    I50.40       chf                 1</span></span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_elixhauser_codes</span>(),</span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>       <span class="at">subset =</span> full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>) <span class="sc">&amp;</span> elixhauser_ahrq2025 <span class="sc">==</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>, <span class="st">&quot;full_code&quot;</span>, <span class="st">&quot;condition&quot;</span>, <span class="st">&quot;elixhauser_ahrq2025&quot;</span>))</span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="do">##      icdv dx  code full_code   condition elixhauser_ahrq2025</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="do">## 3394   10  1  C784     C78.4 CANCER_METS                   1</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="do">## 7647   10  1 I5040    I50.40          HF                   1</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a>record <span class="ot">&lt;-</span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">fread</span>(<span class="at">text =</span> <span class="st">&quot;</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="st">patid | encid | code   | poa</span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="st">A     | 1     | NA     | NA</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="st">A     | 2     | C78.4  | 0</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="st">A     | 3     | I50.40 | 1</span></span>
+<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a><span class="st">A     | 4     | NA     | NA</span></span>
+<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a><span class="st">A     | 5     | C78.4  | 1</span></span>
+<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="st">A     | 5     | I50.40 | 0</span></span>
+<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="st">A     | 6     | NA     | NA</span></span>
+<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="st">&quot;</span>)</span></code></pre></div>
+<p>We will call <code>comorbidities</code> for the three methods using
+static POA flags and dynamic POA flags, and both flag methods.</p>
+<table style="NAborder-bottom: 0;">
+<caption>
+Indicators for when a comorbidity is flagged based on the algorithm,
+present on admission (poa), and flag.method. The two ICD codes,C78.4 and
+I50.40, map to cancer and cardiovascular disease respectively.
+</caption>
+<thead>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="2">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+POA = 0
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+POA = 1
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="6">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+poa.var = ‘poa’
+</div>
+</th>
+</tr>
+<tr>
+<th style="empty-cells: hide;border-bottom:hidden;" colspan="2">
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+PCCC
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Charlson
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Elixhauser
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+PCCC
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Charlson
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Elixhauser
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+PCCC
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Charlson
+</div>
+</th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
+<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Elixhauser
+</div>
+</th>
+</tr>
+<tr>
+<th style="text-align:left;">
+encid
+</th>
+<th style="text-align:left;">
+ICD
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+<th style="text-align:right;">
+CVD
+</th>
+<th style="text-align:right;">
+CANCER
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="6">
+<td colspan="20" style="border-bottom: 1px solid;">
+<strong>flag.method = ‘current’</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+1
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+2
+</td>
+<td style="text-align:left;">
+C78.4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+3
+</td>
+<td style="text-align:left;">
+I50.40<sup>*</sup>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+4
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+5
+</td>
+<td style="text-align:left;">
+C78.4<sup>*</sup>; I50.40
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+6
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr grouplength="6">
+<td colspan="20" style="border-bottom: 1px solid;">
+<strong>flag.method = ‘cumulative’</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+1
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+2
+</td>
+<td style="text-align:left;">
+C78.4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+3
+</td>
+<td style="text-align:left;">
+I50.40<sup>*</sup>
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+4
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+5
+</td>
+<td style="text-align:left;">
+C78.4<sup>*</sup>; I50.40
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+6
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<span style="font-style: italic;">Note: </span>
+</td>
+</tr>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> C78.4 does not need to be POA to count for Elixhauser.
+I50.40 does need to be POA to count for Elixhauser.
+</td>
+</tr>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup>*</sup> Present on Admission
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="mapping-icd-codes-to-comorbidities" class="section level1">
+<h1>Mapping ICD Codes to Comorbidities</h1>
+<p>End users can quickly assess the lookup table for all the ICD codes
+associated with a comorbidity algorithm using the
+<code>get_&lt;comorbidity&gt;_codes</code> functions. Each
+<code>data.frame</code> has columns for the ICD version, diagnostic or
+procedure flag, the compact code, and the full code. A column for the
+condition and other method specific flags are provided. Lastly, there
+are indicator columns for the variant of each method</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_pccc_codes</span>())</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7913 obs. of  12 variables:</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="do">##  $ code           : chr  &quot;0010&quot; &quot;0050&quot; &quot;0051&quot; &quot;0053&quot; ...</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="do">##  $ condition      : chr  &quot;malignancy&quot; &quot;cvd&quot; &quot;cvd&quot; &quot;cvd&quot; ...</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="do">##  $ subcondition   : chr  &quot;neoplasms&quot; &quot;device_and_technology_use&quot; &quot;device_and_technology_use&quot; &quot;device_and_technology_use&quot; ...</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="do">##  $ transplant_flag: int  0 0 0 0 0 0 0 1 1 1 ...</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="do">##  $ tech_dep_flag  : int  0 1 1 1 1 1 1 0 0 0 ...</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="do">##  $ pccc_v3.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="do">##  $ pccc_v3.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="do">##  $ pccc_v2.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="do">##  $ pccc_v2.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="do">##  $ dx               : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; &quot;010&quot; ...</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; &quot;010&quot; ...</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    10679 obs. of  12 variables:</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;042&quot; &quot;07022&quot; &quot;07023&quot; &quot;07032&quot; ...</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span></code></pre></div>
+<p>End users should be aware that just because an ICD code exists in a
+data set does not mean that the patient has the condition. For
+Elixhauser, the presence on admission is important to consider. For PCCC
+version 3.0 and 3.1, tech dependencies on their own are insufficient to
+flag a condition (see
+<code>vignette(topic = &quot;pccc&quot;, package = &quot;medicalcoder&quot;)</code>).</p>
+<p>For the <code>charlson_cdmf2019</code> method <span class="citation">(Glasheen et al. 2019)</span>, the AIDS categories are
+defined by the presence of HIV and an opportunistic infection. In the
+following example, if only considering ICD codes which flag ‘aids’,
+there would be several thousand cases of AIDS, but only six cases of
+HIV.</p>
+<!-- NOTE: the following example is also in tests/test-charlson_cdmf2019.R -->
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>cdmf_eg <span class="ot">&lt;-</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="at">x =</span> mdcr,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">subset</span>(<span class="fu">get_charlson_codes</span>(),</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>                   condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;aids&quot;</span>, <span class="st">&quot;hiv&quot;</span>) <span class="sc">&amp;</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>                   charlson_cdmf2019 <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>        <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>))</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cdmf_eg)</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>cdmf_eg <span class="ot">&lt;-</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">dcast</span>(<span class="at">data =</span> cdmf_eg,</span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>                    patid <span class="sc">~</span> condition,</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>                    <span class="at">value.var =</span> <span class="st">&quot;charlson_cdmf2019&quot;</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>                    <span class="at">fun.aggregate =</span> <span class="cf">function</span>(x) {<span class="fu">as.integer</span>(<span class="fu">sum</span>(x) <span class="sc">&gt;</span> <span class="dv">0</span>)})</span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>cdmf_eg[, .N, keyby <span class="ot">=</span> .(hiv, aids)]</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="do">## Key: &lt;hiv, aids&gt;</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="do">##      hiv  aids     N</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="do">## 1:     0     1  2716</span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="do">## 2:     1     0     6</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="do">## 3:     1     1     1</span></span></code></pre></div>
+<p>When calling <code>comorbidities</code> we get the expected
+result.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>cmdf_mdcr <span class="ot">&lt;-</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(<span class="at">data =</span> mdcr,</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>                <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>                <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>                <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>                <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;charlson_cdmf2019&quot;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>                <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>                <span class="at">poa =</span> <span class="dv">1</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cmdf_mdcr)</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>cmdf_mdcr[, .N, keyby <span class="ot">=</span> .(hiv, aids)]</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="do">## Key: &lt;hiv, aids&gt;</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="do">##      hiv  aids     N</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="do">## 1:     0     0 38255</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="do">## 2:     1     0     6</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="do">## 3:     1     1     1</span></span></code></pre></div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<!-- ----------------------------------------------------------------------- -->
+<!--                              End of File                                -->
+<!------------------------------------------------------------------------- -->
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-ahrq2017" class="csl-entry">
+Cost, Healthcare, and Utilization Project (HCUP). 2017.
+<span>“Elixhauser Comorbidity Software for ICD-9-CM.”</span> <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp" class="uri">https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp</a>.
+</div>
+<div id="ref-dewitt2025pccc" class="csl-entry">
+DeWitt, Peter, James Feinstein, and Seth Russell. 2025. <em>Pccc:
+Pediatric Complex Chronic Conditions</em>. <a href="https://github.com/CUD2V/pccc">https://github.com/CUD2V/pccc</a>.
+</div>
+<div id="ref-deyo1992adapting" class="csl-entry">
+Deyo, Richard A, Daniel C Cherkin, and Marcia A Ciol. 1992.
+<span>“Adapting a Clinical Comorbidity Index for Use with ICD-9-CM
+Administrative Databases.”</span> <em>Journal of Clinical
+Epidemiology</em> 45 (6): 613–19. https://doi.org/<a href="https://doi.org/10.1016/0895-4356(92)90133-8">https://doi.org/10.1016/0895-4356(92)90133-8</a>.
+</div>
+<div id="ref-elixhauser1998" class="csl-entry">
+Elixhauser, Anne, Claudia Steiner, D Robert Harris, and Rosanna M
+Coffey. 1998. <span>“Comorbidity Measures for Use with Administrative
+Data.”</span> <em>Medical Care</em> 36 (1): 8–27. <a href="https://doi.org/10.1097/00005650-199801000-00004">https://doi.org/10.1097/00005650-199801000-00004</a>.
+</div>
+<div id="ref-feinstein2024pediatric" class="csl-entry">
+Feinstein, James A, Matt Hall, Amber Davidson, and Chris Feudtner. 2024.
+<span>“Pediatric Complex Chronic Condition System Version 3.”</span>
+<em>JAMA Network Open</em> 7 (7): e2420579–79. <a href="https://doi.org/10.1001/jamanetworkopen.2024.20579">https://doi.org/10.1001/jamanetworkopen.2024.20579</a>.
+</div>
+<div id="ref-feudtner2014pediatric" class="csl-entry">
+Feudtner, Chris, James A Feinstein, Wenjun Zhong, Matt Hall, and Dingwei
+Dai. 2014. <span>“Pediatric Complex Chronic Conditions Classification
+System Version 2: Updated for ICD-10 and Complex Medical Technology
+Dependence and Transplantation.”</span> <em>BMC Pediatrics</em> 14: 1–7.
+<a href="https://doi.org/10.1186/1471-2431-14-199">https://doi.org/10.1186/1471-2431-14-199</a>.
+</div>
+<div id="ref-glasheen2019" class="csl-entry">
+Glasheen, William P, Tristan Cordier, Rajiv Gumpina, Gil Haugh, Jared
+Davis, and Andrew Renda. 2019. <span>“Charlson Comorbidity Index: ICD-9
+Update and ICD-10 Translation.”</span> <em>American Health &amp; Drug
+Benefits</em> 12 (4): 188. <a href="https://pubmed.ncbi.nlm.nih.gov/31428236/">https://pubmed.ncbi.nlm.nih.gov/31428236/</a>.
+</div>
+<div id="ref-ahrq2025" class="csl-entry">
+Healthcare Research, Agency for, and Quality (AHRQ). 2025.
+<span>“Elixhauser Comorbidity Software Refined for ICD-10-CM Healthcare
+Cost and Utilization Project (HCUP).”</span> <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp">https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp</a>.
+</div>
+<div id="ref-quan2011" class="csl-entry">
+Quan, Hude, Bo Li, Colette M. Couris, Kiyohide Fushimi, Peter Graham,
+Philip Hider, Jean-Michel Januel, and Vijaya Sundararajan. 2011.
+<span>“Updating and Validating the Charlson Comorbidity Index and Score
+for Risk Adjustment in Hospital Discharge Abstracts Using Data from 6
+Countries.”</span> <em>American Journal of Epidemiology</em> 173 (6):
+676–82. <a href="https://doi.org/10.1093/aje/kwq433">https://doi.org/10.1093/aje/kwq433</a>.
+</div>
+<div id="ref-quan2005" class="csl-entry">
+Quan, Hude, Vijaya Sundararajan, Patricia Halfon, Andrew Fong, Bernard
+Burnand, Jean-Christophe Luthi, L Duncan Saunders, Catherine A. Beck,
+Thomas E. Feasby, and William A. Ghali. 2005. <span>“Coding Algorithms
+for Defining Comorbidities in ICD-9-CM and ICD-10 Administrative
+Data.”</span> <em>Medical Care</em> 43 (11): 1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

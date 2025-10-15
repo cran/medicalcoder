@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Elixhauser Comorbidities</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>$(document).ready(function(){
+    if (typeof $('[data-toggle="tooltip"]').tooltip === 'function') {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    if ($('[data-toggle="popover"]').popover === 'function') {
+        $('[data-toggle="popover"]').popover();
+    }
+});
+</script>
+<style type="text/css">
+.lightable-minimal {
+border-collapse: separate;
+border-spacing: 16px 1px;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-minimal td {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal th {
+margin-left: 5px;
+margin-right: 5px;
+}
+.lightable-minimal thead tr:last-child th {
+border-bottom: 2px solid #00000050;
+empty-cells: hide;
+}
+.lightable-minimal tbody tr:first-child td {
+padding-top: 0.5em;
+}
+.lightable-minimal.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-minimal.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic {
+border-top: 0.16em solid #111111;
+border-bottom: 0.16em solid #111111;
+width: 100%;
+margin-bottom: 10px;
+margin: 10px 5px;
+}
+.lightable-classic tfoot tr td {
+border: 0;
+}
+.lightable-classic tfoot tr:first-child td {
+border-top: 0.14em solid #111111;
+}
+.lightable-classic caption {
+color: #222222;
+}
+.lightable-classic td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic thead tr:last-child th {
+border-bottom: 0.10em solid #111111;
+}
+.lightable-classic.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-classic-2 {
+border-top: 3px double #111111;
+border-bottom: 3px double #111111;
+width: 100%;
+margin-bottom: 10px;
+}
+.lightable-classic-2 tfoot tr td {
+border: 0;
+}
+.lightable-classic-2 tfoot tr:first-child td {
+border-top: 3px double #111111;
+}
+.lightable-classic-2 caption {
+color: #222222;
+}
+.lightable-classic-2 td {
+padding-left: 5px;
+padding-right: 5px;
+color: #222222;
+}
+.lightable-classic-2 th {
+padding-left: 5px;
+padding-right: 5px;
+font-weight: normal;
+color: #222222;
+}
+.lightable-classic-2 tbody tr:last-child td {
+border-bottom: 3px double #111111;
+}
+.lightable-classic-2 thead tr:last-child th {
+border-bottom: 1px solid #111111;
+}
+.lightable-classic-2.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-classic-2.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #EEE;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+.lightable-material tfoot tr td {
+border: 0;
+}
+.lightable-material tfoot tr:first-child td {
+border-top: 1px solid #EEE;
+}
+.lightable-material th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+}
+.lightable-material td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+border-top: 1px solid #eeeeee;
+}
+.lightable-material.lightable-hover tbody tr:hover {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody tr:nth-child(even) {
+background-color: #f5f5f5;
+}
+.lightable-material.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #ddd;
+}
+.lightable-material-dark {
+min-width: 100%;
+white-space: nowrap;
+table-layout: fixed;
+font-family: Roboto, sans-serif;
+border: 1px solid #FFFFFF12;
+border-collapse: collapse;
+margin-bottom: 10px;
+background-color: #363640;
+}
+.lightable-material-dark tfoot tr td {
+border: 0;
+}
+.lightable-material-dark tfoot tr:first-child td {
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark th {
+height: 56px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF60;
+}
+.lightable-material-dark td {
+height: 52px;
+padding-left: 16px;
+padding-right: 16px;
+color: #FFFFFF;
+border-top: 1px solid #FFFFFF12;
+}
+.lightable-material-dark.lightable-hover tbody tr:hover {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody tr:nth-child(even) {
+background-color: #FFFFFF12;
+}
+.lightable-material-dark.lightable-striped tbody td {
+border: 0;
+}
+.lightable-material-dark.lightable-striped thead tr:last-child th {
+border-bottom: 1px solid #FFFFFF12;
+}
+.lightable-paper {
+width: 100%;
+margin-bottom: 10px;
+color: #444;
+}
+.lightable-paper tfoot tr td {
+border: 0;
+}
+.lightable-paper tfoot tr:first-child td {
+border-top: 1px solid #00000020;
+}
+.lightable-paper thead tr:last-child th {
+color: #666;
+vertical-align: bottom;
+border-bottom: 1px solid #00000020;
+line-height: 1.15em;
+padding: 10px 5px;
+}
+.lightable-paper td {
+vertical-align: middle;
+border-bottom: 1px solid #00000010;
+line-height: 1.15em;
+padding: 7px 5px;
+}
+.lightable-paper.lightable-hover tbody tr:hover {
+background-color: #F9EEC1;
+}
+.lightable-paper.lightable-striped tbody tr:nth-child(even) {
+background-color: #00000008;
+}
+.lightable-paper.lightable-striped tbody td {
+border: 0;
+}
+</style>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Elixhauser Comorbidities</h1>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#icd-codes-and-index-scores" id="toc-icd-codes-and-index-scores">ICD Codes and Index Scores</a></li>
+<li><a href="#applying-elixhauser" id="toc-applying-elixhauser">Applying
+Elixhauser</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.6.0&#39;</span></span></code></pre></div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The <code>medicalcoder</code> package implements several variants of
+the Elixhauser comorbidity algorithm.</p>
+<ul>
+<li>Based on codes provided by the Agency for Healthcare Research and
+Quality (AHRQ) for fiscal years 2022 through 2025 <span class="citation">(Healthcare Research and (AHRQ) 2025)</span>
+<ul>
+<li><code>elixhauser_ahrq2022</code></li>
+<li><code>elixhauser_ahrq2023</code></li>
+<li><code>elixhauser_ahrq2024</code></li>
+<li><code>elixhauser_ahrq2025</code></li>
+</ul></li>
+<li>Codes from Table 2 of <span class="citation">Quan et al.
+(2005)</span>
+<ul>
+<li><code>elixhauser_elixhauser1988</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
+<li><code>elixhauser_ahrq_web</code>: <span class="citation">(Quan et
+al. 2005; Cost and (HCUP) 2017)</span></li>
+<li><code>elixhauser_quan2005</code>: <span class="citation">(Quan et
+al. 2005)</span></li>
+</ul></li>
+</ul>
+<p><strong>IMPORTANT NOTE:</strong> Elixhauser 1998 and AHRQ Web used
+diagnostic related group (DRG) codes as part of the methods. The
+<code>medicalcoder</code> package <em>does not</em> use DRG codes. This
+is consistent with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
+</div>
+<div id="icd-codes-and-index-scores" class="section level1">
+<h1>ICD Codes and Index Scores</h1>
+<p>End users may access three lookup tables relevant to Elixhauser
+variants.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    10679 obs. of  12 variables:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;042&quot; &quot;07022&quot; &quot;07023&quot; &quot;07032&quot; ...</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_index_scores</span>())</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    112 obs. of  9 variables:</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ALCOHOL&quot; ...</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="do">##  $ index                    : chr  &quot;mortality&quot; &quot;readmission&quot; &quot;mortality&quot; &quot;readmission&quot; ...</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  -4 5 -1 3 -3 5 NA NA -1 2 ...</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  -4 5 -1 3 -3 5 NA NA 0 2 ...</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  -4 5 -1 3 -3 5 NA NA 0 2 ...</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  -4 5 -1 3 -3 5 NA NA 0 2 ...</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_poa</span>())</span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    43 obs. of  7 variables:</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="do">##  $ condition          : chr  &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ANEMDEF&quot; &quot;ANEMDEF&quot; ...</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="do">##  $ desc               : chr  &quot;Acquired immune deficiency syndrome&quot; &quot;Alcohol abuse&quot; &quot;Anemias due to other nutritional deficiencies&quot; &quot;Deficiency anemias&quot; ...</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="do">##  $ poa_required       : int  0 0 1 1 0 1 1 0 0 0 ...</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022: int  1 1 NA 1 1 NA 1 1 1 1 ...</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span></code></pre></div>
+<ul>
+<li><p><code>get_elixhauser_codes()</code> returns a
+<code>data.frame</code> of the ICD codes mapping to each condition with
+indicators for the inclusion in specific variants.</p></li>
+<li><p><code>get_elixhauser_index_scores()</code> returns a
+<code>data.frame</code> with points scored per condition for both
+mortality and readmission indices by variant.</p></li>
+<li><p><code>get_elixhauser_poa()</code> returns a
+<code>data.frame</code> which reports which conditions are required and
+not required to be present-on-admission for the conditions to be
+classified as a comorbidity by variant. For the variants not listed the
+default is as with the Charlson and PCCC methods, the code needs to be
+present-on-admission for the condition to be flagged.</p></li>
+</ul>
+</div>
+<div id="applying-elixhauser" class="section level1">
+<h1>Applying Elixhauser</h1>
+<p>The Elixhauser method considers if the diagnostic codes are for
+primary or secondary diagnoses. As such, the following call will throw a
+warning that the <code>primarydx.var</code> or <code>primarydx</code>
+argument was not set and that all conditions will be assumed to be
+secondary. To suppress this warning pass an appropriate value for either
+argument.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># will warn because primarydx and primarydx.var are both NULL</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>mdcr_results0 <span class="ot">&lt;-</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;elixhauser_ahrq2025&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  )</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="do">## Warning: Assuming all codes provided are secondary diagnostic codes.  Define</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="do">## `primarydx.var` or `primarydx` if this assumption is incorrect.</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># no warning</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>mdcr_results <span class="ot">&lt;-</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;elixhauser_ahrq2025&quot;</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>    <span class="at">primarydx =</span> <span class="dv">0</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>  )</span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="fu">identical</span>(mdcr_results, mdcr_results0)</span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+<p>The return object is a <code>data.frame</code> with 0/1 integer
+indicator columns for the relevant conditions, the id.vars (if
+applicable), <code>num_cmrb</code> the number of comorbidities,
+<code>cmrb_flag</code> a 0/1 indicator for presence of at least one
+comorbidity, and the mortality and readmission index scores.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">str</span>(mdcr_results)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## Classes &#39;medicalcoder_comorbidities&#39; and &#39;data.frame&#39;:   38262 obs. of  43 variables:</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">##  $ patid            : int  10000 10002 10005 10006 10008 10010 10014 10015 10017 10018 ...</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">##  $ AIDS             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">##  $ ALCOHOL          : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">##  $ ANEMDEF          : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">##  $ AUTOIMMUNE       : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">##  $ BLDLOSS          : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="do">##  $ CANCER_LEUK      : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="do">##  $ CANCER_LYMPH     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="do">##  $ CANCER_METS      : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="do">##  $ CANCER_NSITU     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="do">##  $ CANCER_SOLID     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="do">##  $ CBVD             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="do">##  $ COAG             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="do">##  $ DEMENTIA         : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="do">##  $ DEPRESS          : int  0 1 0 0 0 0 0 0 0 1 ...</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="do">##  $ DIAB_CX          : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="do">##  $ DIAB_UNCX        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="do">##  $ DRUG_ABUSE       : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="do">##  $ HF               : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="do">##  $ HTN_CX           : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="do">##  $ HTN_UNCX         : int  0 0 0 0 0 0 1 0 0 0 ...</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="do">##  $ LIVER_MLD        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="do">##  $ LIVER_SEV        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="do">##  $ LUNG_CHRONIC     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="do">##  $ NEURO_MOVT       : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="do">##  $ NEURO_OTH        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="do">##  $ NEURO_SEIZ       : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a><span class="do">##  $ OBESE            : int  0 1 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a><span class="do">##  $ PARALYSIS        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="do">##  $ PERIVASC         : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="do">##  $ PSYCHOSES        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="do">##  $ PULMCIRC         : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="do">##  $ RENLFL_MOD       : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="do">##  $ RENLFL_SEV       : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="do">##  $ THYROID_HYPO     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="do">##  $ THYROID_OTH      : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="do">##  $ ULCER_PEPTIC     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="do">##  $ VALVE            : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="do">##  $ WGHTLOSS         : int  0 0 0 0 0 0 1 0 0 0 ...</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="do">##  $ num_cmrb         : int  0 2 0 0 0 0 2 0 0 1 ...</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="do">##  $ cmrb_flag        : int  0 1 0 0 0 0 1 0 0 1 ...</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="do">##  $ mortality_index  : int  0 -15 0 0 0 0 13 0 0 -8 ...</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="do">##  $ readmission_index: int  0 0 0 0 0 0 6 0 0 2 ...</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="do">##  - attr(*, &quot;method&quot;)= chr &quot;elixhauser_ahrq2025&quot;</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="do">##  - attr(*, &quot;id.vars&quot;)= chr &quot;patid&quot;</span></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="do">##  - attr(*, &quot;flag.method&quot;)= chr &quot;current&quot;</span></span></code></pre></div>
+<p>Call <code>summary()</code> to get a list of summaries which can be
+used to generate summary tables.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">summary</span>(mdcr_results)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## $conditions</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">##       condition count      percent</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## 1          AIDS     3  0.007840677</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">## 2       ALCOHOL    11  0.028749151</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">## 3       ANEMDEF   700  1.829491401</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## 4    AUTOIMMUNE   170  0.444305055</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="do">## 5       BLDLOSS    33  0.086247452</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## 6   CANCER_LEUK   381  0.995766034</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="do">## 7  CANCER_LYMPH    76  0.198630495</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="do">## 8   CANCER_METS   213  0.556688098</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="do">## 9  CANCER_NSITU     0  0.000000000</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="do">## 10 CANCER_SOLID   609  1.591657519</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="do">## 11         CBVD     0  0.000000000</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="do">## 12         COAG   877  2.292091370</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="do">## 13     DEMENTIA    35  0.091474570</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="do">## 14      DEPRESS   321  0.838952485</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="do">## 15      DIAB_CX   123  0.321467775</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="do">## 16    DIAB_UNCX   193  0.504416915</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="do">## 17   DRUG_ABUSE    77  0.201244054</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="do">## 18           HF   246  0.642935550</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="do">## 19       HTN_CX   286  0.747477915</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="do">## 20     HTN_UNCX   406  1.061105013</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="do">## 21    LIVER_MLD   206  0.538393184</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="do">## 22    LIVER_SEV   159  0.415555904</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="do">## 23 LUNG_CHRONIC  1359  3.551826878</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="do">## 24   NEURO_MOVT   139  0.363284721</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="do">## 25    NEURO_OTH   948  2.477654069</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="do">## 26   NEURO_SEIZ  1490  3.894203126</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="do">## 27        OBESE   315  0.823271131</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="do">## 28    PARALYSIS   767  2.004599864</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="do">## 29     PERIVASC   209  0.546233861</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="do">## 30    PSYCHOSES    96  0.250901678</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="do">## 31     PULMCIRC   332  0.867701636</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="do">## 32   RENLFL_MOD   112  0.292718624</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="do">## 33   RENLFL_SEV   247  0.645549109</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="do">## 34 THYROID_HYPO   371  0.969630443</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="do">## 35  THYROID_OTH    36  0.094088129</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="do">## 36 ULCER_PEPTIC    23  0.060111860</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="do">## 37        VALVE   572  1.494955831</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="do">## 38     WGHTLOSS   616  1.609952433</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="do">## 39         &gt;= 1  7850 20.516439287</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="do">## 40         &gt;= 2  3230  8.441796038</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="do">## 41         &gt;= 3  1171  3.060477759</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="do">## 42         &gt;= 4   357  0.933040615</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="do">## 43         &gt;= 5   116  0.303172861</span></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="do">## 44         &gt;= 6    27  0.070566097</span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="do">## 45         &gt;= 7     4  0.010454237</span></span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="do">## 46         &gt;= 8     2  0.005227118</span></span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="do">## $index_summary</span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="do">##         index min q1 median q3 max</span></span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a><span class="do">## 1 readmission  -2  0      0  0  42</span></span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="do">## 2   mortality -24  0      0  0  85</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">summary</span>(mdcr_results)<span class="sc">$</span>conditions</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>tab <span class="ot">&lt;-</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  kableExtra<span class="sc">::</span><span class="fu">kbl</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="at">x =</span> x,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="at">format =</span> <span class="st">&quot;html&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">&quot;Counts and percentages of patients in the mdcr example data sets with the Elixhauser @quan2005 comorbidities.&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;Count&quot;</span>, <span class="st">&quot;Percentage&quot;</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="at">digits =</span> <span class="dv">3</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  )</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>tab <span class="ot">&lt;-</span> kableExtra<span class="sc">::</span><span class="fu">pack_rows</span>(tab, <span class="at">group_label =</span> <span class="st">&quot;Comorbidity&quot;</span>, <span class="at">start_row =</span> <span class="dv">1</span>, <span class="at">end_row =</span> <span class="dv">39</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>tab <span class="ot">&lt;-</span> kableExtra<span class="sc">::</span><span class="fu">pack_rows</span>(tab, <span class="at">group_label =</span> <span class="st">&quot;Total Comorbidities&quot;</span>, <span class="at">start_row =</span> <span class="dv">39</span>, <span class="at">end_row =</span> <span class="fu">nrow</span>(x))</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>tab</span></code></pre></div>
+<table>
+<caption>
+Counts and percentages of patients in the mdcr example data sets with
+the Elixhauser <span class="citation">Quan et al. (2005)</span>
+comorbidities.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Count
+</th>
+<th style="text-align:right;">
+Percentage
+</th>
+</tr>
+</thead>
+<tbody>
+<tr grouplength="39">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>Comorbidity</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+AIDS
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ALCOHOL
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0.029
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ANEMDEF
+</td>
+<td style="text-align:right;">
+700
+</td>
+<td style="text-align:right;">
+1.829
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+AUTOIMMUNE
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+0.444
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+BLDLOSS
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+0.086
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+CANCER_LEUK
+</td>
+<td style="text-align:right;">
+381
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+CANCER_LYMPH
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+0.199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+CANCER_METS
+</td>
+<td style="text-align:right;">
+213
+</td>
+<td style="text-align:right;">
+0.557
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+CANCER_NSITU
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+CANCER_SOLID
+</td>
+<td style="text-align:right;">
+609
+</td>
+<td style="text-align:right;">
+1.592
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+CBVD
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+COAG
+</td>
+<td style="text-align:right;">
+877
+</td>
+<td style="text-align:right;">
+2.292
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DEMENTIA
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+0.091
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DEPRESS
+</td>
+<td style="text-align:right;">
+321
+</td>
+<td style="text-align:right;">
+0.839
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DIAB_CX
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+0.321
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DIAB_UNCX
+</td>
+<td style="text-align:right;">
+193
+</td>
+<td style="text-align:right;">
+0.504
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+DRUG_ABUSE
+</td>
+<td style="text-align:right;">
+77
+</td>
+<td style="text-align:right;">
+0.201
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+HF
+</td>
+<td style="text-align:right;">
+246
+</td>
+<td style="text-align:right;">
+0.643
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+HTN_CX
+</td>
+<td style="text-align:right;">
+286
+</td>
+<td style="text-align:right;">
+0.747
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+HTN_UNCX
+</td>
+<td style="text-align:right;">
+406
+</td>
+<td style="text-align:right;">
+1.061
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+LIVER_MLD
+</td>
+<td style="text-align:right;">
+206
+</td>
+<td style="text-align:right;">
+0.538
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+LIVER_SEV
+</td>
+<td style="text-align:right;">
+159
+</td>
+<td style="text-align:right;">
+0.416
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+LUNG_CHRONIC
+</td>
+<td style="text-align:right;">
+1359
+</td>
+<td style="text-align:right;">
+3.552
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+NEURO_MOVT
+</td>
+<td style="text-align:right;">
+139
+</td>
+<td style="text-align:right;">
+0.363
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+NEURO_OTH
+</td>
+<td style="text-align:right;">
+948
+</td>
+<td style="text-align:right;">
+2.478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+NEURO_SEIZ
+</td>
+<td style="text-align:right;">
+1490
+</td>
+<td style="text-align:right;">
+3.894
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+OBESE
+</td>
+<td style="text-align:right;">
+315
+</td>
+<td style="text-align:right;">
+0.823
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+PARALYSIS
+</td>
+<td style="text-align:right;">
+767
+</td>
+<td style="text-align:right;">
+2.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+PERIVASC
+</td>
+<td style="text-align:right;">
+209
+</td>
+<td style="text-align:right;">
+0.546
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+PSYCHOSES
+</td>
+<td style="text-align:right;">
+96
+</td>
+<td style="text-align:right;">
+0.251
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+PULMCIRC
+</td>
+<td style="text-align:right;">
+332
+</td>
+<td style="text-align:right;">
+0.868
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+RENLFL_MOD
+</td>
+<td style="text-align:right;">
+112
+</td>
+<td style="text-align:right;">
+0.293
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+RENLFL_SEV
+</td>
+<td style="text-align:right;">
+247
+</td>
+<td style="text-align:right;">
+0.646
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+THYROID_HYPO
+</td>
+<td style="text-align:right;">
+371
+</td>
+<td style="text-align:right;">
+0.970
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+THYROID_OTH
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+0.094
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+ULCER_PEPTIC
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+0.060
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+VALVE
+</td>
+<td style="text-align:right;">
+572
+</td>
+<td style="text-align:right;">
+1.495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+WGHTLOSS
+</td>
+<td style="text-align:right;">
+616
+</td>
+<td style="text-align:right;">
+1.610
+</td>
+</tr>
+<tr grouplength="8">
+<td colspan="3" style="border-bottom: 1px solid;">
+<strong>Total Comorbidities</strong>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 4em;" indentlevel="2">
+&gt;= 1
+</td>
+<td style="text-align:right;">
+7850
+</td>
+<td style="text-align:right;">
+20.516
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 2
+</td>
+<td style="text-align:right;">
+3230
+</td>
+<td style="text-align:right;">
+8.442
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 3
+</td>
+<td style="text-align:right;">
+1171
+</td>
+<td style="text-align:right;">
+3.060
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 4
+</td>
+<td style="text-align:right;">
+357
+</td>
+<td style="text-align:right;">
+0.933
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 5
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+0.303
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 6
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+0.071
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 7
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0.010
+</td>
+</tr>
+<tr>
+<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+&gt;= 8
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<!-- ----------------------------------------------------------------------- -->
+<!--                              End of File                                -->
+<!-- ----------------------------------------------------------------------- -->
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-ahrq2017" class="csl-entry">
+Cost, Healthcare, and Utilization Project (HCUP). 2017.
+<span>“Elixhauser Comorbidity Software for ICD-9-CM.”</span> <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp" class="uri">https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp</a>.
+</div>
+<div id="ref-elixhauser1998" class="csl-entry">
+Elixhauser, Anne, Claudia Steiner, D Robert Harris, and Rosanna M
+Coffey. 1998. <span>“Comorbidity Measures for Use with Administrative
+Data.”</span> <em>Medical Care</em> 36 (1): 8–27. <a href="https://doi.org/10.1097/00005650-199801000-00004">https://doi.org/10.1097/00005650-199801000-00004</a>.
+</div>
+<div id="ref-ahrq2025" class="csl-entry">
+Healthcare Research, Agency for, and Quality (AHRQ). 2025.
+<span>“Elixhauser Comorbidity Software Refined for ICD-10-CM Healthcare
+Cost and Utilization Project (HCUP).”</span> <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp">https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp</a>.
+</div>
+<div id="ref-quan2005" class="csl-entry">
+Quan, Hude, Vijaya Sundararajan, Patricia Halfon, Andrew Fong, Bernard
+Burnand, Jean-Christophe Luthi, L Duncan Saunders, Catherine A. Beck,
+Thomas E. Feasby, and William A. Ghali. 2005. <span>“Coding Algorithms
+for Defining Comorbidities in ICD-9-CM and ICD-10 Administrative
+Data.”</span> <em>Medical Care</em> 43 (11): 1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
