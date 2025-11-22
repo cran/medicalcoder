@@ -1,70 +1,117 @@
 library(medicalcoder)
+source('utilities.R')
 
-DF <- data.frame(code = c("B", "A"), patid = 1:2)[0, ]
+# Verify that when a data.frame with zero rows is passed to comorbidities() the
+# return will be a zero row data.frame with the same general structure that
+# would be returned if a data.frame with at least one row was passed to
+# comorbidities().
 
-out <- comorbidities(DF, icd.codes = "code", method = "charlson_quan2005")
+# build a zero-row data.frame for
+DF <- data.frame(code = c("B", "A"), patid = 1:2)
+common_args <- list(data = DF[0, ], id.vars = "patid", icd.codes = "code", poa = 1)
+
+# fit all methods without subconditions
+methods <- medicalcoder:::comorbidities_methods()
+args <- lapply(methods, function(x) { if (startsWith(x, "pccc")) {c(common_args, list(method = x))} else {c(common_args, list(method = x, primarydx = 0L))} } )
+args <- setNames(args, methods)
+rtns <- lapply(args, do.call, what = comorbidities)
+
+# pccc with subconditions
+common_args[["subconditions"]] <- TRUE
+args <- lapply(methods[startsWith(methods, "pccc")], function(x) c(common_args, list(method = x)))
+args <- setNames(args, paste0(methods[startsWith(methods, "pccc")], "s"))
+rtns <- c(rtns, lapply(args, do.call, what = comorbidities))
+
+# build rtns1 with nrow = nrow(DF), this will be used to check that the names
+# and general structure of the returns are the same with zero input rows or more
+# than zero input rows
+common_args <- list(data = DF, id.vars = "patid", icd.codes = "code", poa = 1)
+args <- lapply(methods, function(x) { if (startsWith(x, "pccc")) {c(common_args, list(method = x))} else {c(common_args, list(method = x, primarydx = 0L))} } )
+args <- setNames(args, methods)
+rtns1 <- lapply(args, do.call, what = comorbidities)
+
+# pccc with subconditions
+common_args[["subconditions"]] <- TRUE
+args <- lapply(methods[startsWith(methods, "pccc")], function(x) c(common_args, list(method = x)))
+args <- setNames(args, paste0(methods[startsWith(methods, "pccc")], "s"))
+rtns1 <- c(rtns1, lapply(args, do.call, what = comorbidities))
+
+################################################################################
+# verify that all the returned elements inherit the expected classes
+for (m in names(rtns)) {
+  if (!inherits(rtns[[m]], "medicalcoder_comorbidities")) {
+    stop(sprintf("rtns[[%s]] does not inherit `medicalcoder_comorbidities`", m))
+  }
+
+  if (!startsWith(m, "pccc") & inherits(rtns[[m]], "medicalcoder_comorbidities_with_subconditions")) {
+    stop(sprintf("rtns[[%s]] incorrectly inherits `medicalcoder_comorbidities_with_subconditions`", m))
+  } else {
+    if (endsWith(m, "s") & !inherits(rtns[[m]], "medicalcoder_comorbidities_with_subconditions")) {
+      stop(sprintf("rtns[[%s]] does not inherit `medicalcoder_comorbidities_with_subconditions`", m))
+    } else if (!endsWith(m, "s") & inherits(rtns[[m]], "medicalcoder_comorbidities_with_subconditions")) {
+      stop(sprintf("rtns[[%s]] incorrectly inherits `medicalcoder_comorbidities_with_subconditions`", m))
+    }
+  }
+}
+
+# verify that all the non subcondition rtns are data.frames
+for (m in names(rtns)) {
+  if (!startsWith(m, "pccc")) {
+    if (!inherits(rtns[[m]], "data.frame")) {
+      stop(sprintf("rtns[[%s]] is not a data.frame", m))
+    }
+    if (nrow(rtns[[m]]) != 0L) {
+      stop(sprintf("nrow(rtns[[%s]]) != 0", m))
+    }
+  } else {
+    if (endsWith(m, "s")) {
+
+      if (!inherits(rtns[[m]], "list")) {
+        stop(sprintf("rtns[[%s]] is not a list", m))
+      }
+
+      if (length(rtns[[m]]) != 2L) {
+        stop(sprintf("length(rtns[[%s]]) != 2L", m))
+      }
+
+      if (!inherits(rtns[[m]][['conditions']], "data.frame")) {
+        stop(sprintf("rtns[[%s]][['conditions']] is not a data.frame", m))
+      }
+
+      if (nrow(rtns[[m]][['conditions']]) != 0L) {
+        stop(sprintf("nrow(rtns[[%s]][['conditions']]) != 0", m))
+      }
+
+      if (!inherits(rtns[[m]][['subconditions']], "list")) {
+        stop(sprintf("rtns[[%s]][['subconditions']] is not a list", m))
+      }
+
+      if (length(rtns[[m]][['subconditions']]) != 11L) {
+        stop(sprintf("length(rtns[[%s]][['subconditions']]) != 11L", m))
+      }
+
+      if (!all(sapply(rtns[[m]][['subconditions']], nrow) == 0L)) {
+        stop(sprintf("!all(sapply(rtns[[%s]][['subconditions']], nrow) == 0L)", m))
+      }
+
+    } else {
+      if (!inherits(rtns[[m]], "data.frame")) {
+        stop(sprintf("rtns[[%s]] is not a data.frame", m))
+      }
+      if (nrow(rtns[[m]]) != 0L) {
+        stop(sprintf("nrow(rtns[[%s]]) != 0", m))
+      }
+    }
+  }
+}
+
+stopifnot(identical(lapply(rtns, names), lapply(rtns1, names)))
+
 stopifnot(
-  inherits(out, "medicalcoder_comorbidities"),
-  inherits(out, "data.frame"),
-  nrow(out) == 0L,
-  identical(names(out), c("aidshiv", "mal", "cebvd", "copd", "chf", "dem", "dmc", "dm", "hp", "mld", "msld", "mst", "mi", "pud", "pvd", "rnd", "rhd", "num_cmrb", "cmrb_flag", "cci", "age_score"))
-)
-
-out <- comorbidities(DF, icd.codes = "code", method = "elixhauser_ahrq2025")
-stopifnot(
-  inherits(out, "medicalcoder_comorbidities"),
-  inherits(out, "data.frame"),
-  nrow(out) == 0L,
   identical(
-    names(out),
-    c("AIDS", "ALCOHOL", "ANEMDEF", "AUTOIMMUNE", "BLDLOSS", "CANCER_LEUK",
-      "CANCER_LYMPH", "CANCER_METS", "CANCER_NSITU", "CANCER_SOLID", "CBVD",
-      "COAG", "DEMENTIA", "DEPRESS", "DIAB_CX", "DIAB_UNCX", "DRUG_ABUSE", "HF",
-      "HTN_CX", "HTN_UNCX", "LIVER_MLD", "LIVER_SEV", "LUNG_CHRONIC",
-      "NEURO_MOVT", "NEURO_OTH", "NEURO_SEIZ", "OBESE", "PARALYSIS", "PERIVASC",
-      "PSYCHOSES", "PULMCIRC", "RENLFL_MOD", "RENLFL_SEV", "THYROID_HYPO",
-      "THYROID_OTH", "ULCER_PEPTIC", "VALVE", "WGHTLOSS", "num_cmrb",
-      "cmrb_flag", "mortality_index", "readmission_index")
+    lapply(rtns[grep("pccc_v.+s$", names(rtns))], lapply, names),
+    lapply(rtns1[grep("pccc_v.+s$", names(rtns))], lapply, names)
   )
-)
-
-out <- comorbidities(DF, icd.codes = "code", method = "pccc_v3.1")
-stopifnot(
-  inherits(out, "medicalcoder_comorbidities"),
-  inherits(out, "data.frame"),
-  nrow(out) == 0L,
-  identical(
-    names(out),
-    c("congeni_genetic_dxpr_only", "congeni_genetic_tech_only",
-      "congeni_genetic_dxpr_and_tech", "congeni_genetic_dxpr_or_tech",
-      "cvd_dxpr_only", "cvd_tech_only", "cvd_dxpr_and_tech", "cvd_dxpr_or_tech",
-      "gi_dxpr_only", "gi_tech_only", "gi_dxpr_and_tech", "gi_dxpr_or_tech",
-      "hemato_immu_dxpr_only", "hemato_immu_tech_only",
-      "hemato_immu_dxpr_and_tech", "hemato_immu_dxpr_or_tech",
-      "malignancy_dxpr_only", "malignancy_tech_only",
-      "malignancy_dxpr_and_tech", "malignancy_dxpr_or_tech",
-      "metabolic_dxpr_only", "metabolic_tech_only", "metabolic_dxpr_and_tech",
-      "metabolic_dxpr_or_tech", "misc_dxpr_only", "misc_tech_only",
-      "misc_dxpr_and_tech", "misc_dxpr_or_tech", "neonatal_dxpr_only",
-      "neonatal_tech_only", "neonatal_dxpr_and_tech", "neonatal_dxpr_or_tech",
-      "neuromusc_dxpr_only", "neuromusc_tech_only", "neuromusc_dxpr_and_tech",
-      "neuromusc_dxpr_or_tech", "renal_dxpr_only", "renal_tech_only",
-      "renal_dxpr_and_tech", "renal_dxpr_or_tech", "respiratory_dxpr_only",
-      "respiratory_tech_only", "respiratory_dxpr_and_tech",
-      "respiratory_dxpr_or_tech", "any_tech_dep", "any_transplant", "num_cmrb",
-      "cmrb_flag")
-  )
-)
-
-out <- comorbidities(DF, icd.codes = "code", method = "pccc_v3.1", subconditions = TRUE)
-stopifnot(
-  inherits(out, "medicalcoder_comorbidities_with_subconditions"),
-  inherits(out, "medicalcoder_comorbidities"),
-  inherits(out[[1]], "data.frame"),
-  inherits(out[[2]], "list"),
-  nrow(out[[1]]) == 0L,
-  length(out[[2]]) == 11L,
-  sapply(out[[2]], nrow) == 0L
 )
 
 ################################################################################

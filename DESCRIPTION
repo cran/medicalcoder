@@ -1,11 +1,12 @@
 Package: medicalcoder
-Title: Tools for Working with ICD Codes and Comorbidity Algorithms
-Version: 0.6.0
+Title: A Package for Working with ICD Codes and Comorbidity Algorithms
+Version: 0.7.0
 Authors@R: c(
-    person(given = "Peter", family = "DeWitt",    email = "peter.dewitt@cuanschutz.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6391-0795")),
-    person(given = "Tell",  family = "Bennett",   email = "tell.bennett@cuanschutz.edu", role = c("ctb"),        comment = c(ORCID = "0000-0003-1483-4236")),
-    person(given = "Seth",  family = "Russell",   email = "seth.russell@cuanschutz.edu", role = c("ctb"),        comment = c(ORCID = "0000-0002-2436-1367")),
-    person(given = "Meg",   family = "Rebull",    email = "meg.rebull@cuanschutz.edu",   role = c("ctb"),        comment = c(ORCID = "0000-0003-0334-4223"))
+    person(given = "Peter",   family = "DeWitt",    email = "peter.dewitt@cuanschutz.edu",      role = c("aut", "cre", "cov"), comment = c(ORCID = "0000-0002-6391-0795")),
+    person(given = "Tell",    family = "Bennett",   email = "tell.bennett@cuanschutz.edu",      role = c("ctb"),               comment = c(ORCID = "0000-0003-1483-4236")),
+    person(given = "Seth",    family = "Russell",   email = "seth.russell@cuanschutz.edu",      role = c("ctb"),               comment = c(ORCID = "0000-0002-2436-1367")),
+    person(given = "Meg",     family = "Rebull",    email = "meg.rebull@cuanschutz.edu",        role = c("ctb"),               comment = c(ORCID = "0000-0003-0334-4223")),
+    person(given = "Vincent", family = "Rubinetti", email = "vincent.rubinetti@cuanschutz.edu", role = c("cov"),               comment = c(ORCID = "0000-0002-4655-3773"))
     )
 Description: Provides tools for working with medical coding schemas such as the
   International Classification of Diseases (ICD). Includes functions for
@@ -15,17 +16,25 @@ Depends: R (>= 3.5.0)
 License: GPL-2
 Language: en-US
 Encoding: UTF-8
+URL: http://www.peteredewitt.com/medicalcoder/,
+        https://github.com/dewittpe/medicalcoder/
+BugReports: https://github.com/dewittpe/medicalcoder/issues
 LazyData: true
-Suggests: data.table, kableExtra, knitr, rmarkdown, tibble (>= 2.0.0)
+Suggests: data.table, kableExtra, knitr, R.utils, rmarkdown, tibble (>=
+        2.0.0)
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr
+Config/Needs/website: pkgdown, comorbidity, icdcomorbid,
+        multimorbidity, dplyr, odbc, DBI, RSQLite
 NeedsCompilation: no
-Packaged: 2025-10-09 07:13:40 UTC; peterdewitt
-Author: Peter DeWitt [aut, cre] (ORCID:
+Packaged: 2025-11-22 19:08:05 UTC; peterdewitt
+Author: Peter DeWitt [aut, cre, cov] (ORCID:
     <https://orcid.org/0000-0002-6391-0795>),
   Tell Bennett [ctb] (ORCID: <https://orcid.org/0000-0003-1483-4236>),
   Seth Russell [ctb] (ORCID: <https://orcid.org/0000-0002-2436-1367>),
-  Meg Rebull [ctb] (ORCID: <https://orcid.org/0000-0003-0334-4223>)
+  Meg Rebull [ctb] (ORCID: <https://orcid.org/0000-0003-0334-4223>),
+  Vincent Rubinetti [cov] (ORCID:
+    <https://orcid.org/0000-0002-4655-3773>)
 Maintainer: Peter DeWitt <peter.dewitt@cuanschutz.edu>
 Repository: CRAN
-Date/Publication: 2025-10-15 19:20:08 UTC
+Date/Publication: 2025-11-22 19:30:02 UTC

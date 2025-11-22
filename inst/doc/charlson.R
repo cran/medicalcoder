@@ -30,6 +30,7 @@ mdcr_results <-
     dx.var = "dx",
     flag.method = "current",
     poa = 1,
+    primarydx = 0,
     method = "charlson_quan2005"
   )
 
@@ -37,11 +38,9 @@ mdcr_results <-
 str(mdcr_results)
 
 ## -----------------------------------------------------------------------------
-str(
-  summary(mdcr_results)
-)
+str(summary(mdcr_results))
 
-## ----results = "asis"---------------------------------------------------------
+## ----echo = FALSE, results = "asis"-------------------------------------------
 x <- summary(mdcr_results)$conditions[, c("condition_description", "count", "percent")]
 tab <-
   kableExtra::kbl(
@@ -51,6 +50,7 @@ tab <-
     col.names = c("", "Count", "Percentage"),
     digits = 3
   )
+tab <- kableExtra::kable_styling(tab, bootstrap_options = c("striped"), font_size = 10)
 tab <- kableExtra::pack_rows(tab, group_label = "Comorbidity", start_row = 1, end_row = 17)
 tab <- kableExtra::pack_rows(tab, group_label = "Total Comorbidities", start_row = 18, end_row = nrow(x))
 tab

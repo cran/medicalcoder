@@ -7,6 +7,8 @@
 #' @param iddf A `data.frame` of unique IDs
 #' @param cmrb A `data.frame` containing at least `id.vars` and
 #' `condition` columns; i.e., the 'comorbidity' `data.frame`.
+#' @param primarydx.var Character (scalar) with the name of the column in
+#' `cmrb` denoting if the condition was flaged as a primary diagnostic or not.
 #' @param method Character scalar; name of the Charlson variant to assess
 #'
 #' @return A `data.frame` with `id.vars`, per-condition 0/1
@@ -15,8 +17,12 @@
 #' @family internal comorbidity functions
 #' @noRd
 #' @keywords internal
-.charlson <- function(id.vars, iddf, cmrb, method) {
-  ccc <- unique(mdcr_select(cmrb, cols = c(id.vars, "condition")))
+.charlson <- function(id.vars, iddf, cmrb, primarydx.var, method) {
+  ccc <- unique(mdcr_select(cmrb, cols = c(id.vars, "condition", primarydx.var)))
+
+  # omit primary dx
+  idx <- which(ccc[[primarydx.var]] == 0L)
+  ccc <- mdcr_subset(ccc, i = idx)
 
   # get the method weights and conditions
   conditions <- mdcr_subset(..mdcr_internal_charlson_index_scores..,
@@ -44,30 +50,19 @@
     X[, "aids"] <- as.integer(X[, "aids"] * X[, "hiv"])
   }
 
+  # set less severe conditions to zero if the more severe condition is present
+  X[X[, "msld"] == 1L, "mld"] <- 0L
+  X[X[, "dmc"]  == 1L, "dm"]  <- 0L
+  X[X[, "mst"]  == 1L, "mal"] <- 0L
+
   # num_cmrb, cmrb_flag, cci
   storage.mode(X) <- "integer"
   num_cmrb  <- as.integer(rowSums(X))
   cmrb_flag <- as.integer(num_cmrb > 0L)
   cci      <- as.integer(as.vector(X %*% cci_wt))
 
-  # update the cci so that there is not over counting
-  # 1. points for moderate/severe liver disease and zero for mild disease if
-  #    both are present
-  # 2. points for complicated dm, zero for uncomplicated dm, if both are present
-  # 3. points for metastatic, zero for other cancer, if both are present
-  over_count_adjustment <- function(cci, a, b, drop) {
-    if (all(c(a, b) %in% colnames(X))) {
-      idx <- (X[, a] * X[, b]) == 1L
-      cci[idx] <- cci[idx] - cci_wt[[drop]]
-    }
-    cci
-  }
-  cci <- over_count_adjustment(cci = cci, a = "mld", b = "msld", drop = "mld")
-  cci <- over_count_adjustment(cci = cci, a = "dm",  b = "dmc",  drop = "dm")
-  cci <- over_count_adjustment(cci = cci, a = "mst", b = "mal",  drop = "mal")
-
   # build the return object
-  rtn <- cbind(iddf, as.data.frame(X, check.names = FALSE))
+  rtn <- cbind(iddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
   rtn <- mdcr_set(rtn, j = "num_cmrb",  value = num_cmrb)
   rtn <- mdcr_set(rtn, j = "cmrb_flag", value = cmrb_flag)
   rtn <- mdcr_set(rtn, j = "cci",      value = cci)

@@ -33,10 +33,10 @@ packageVersion("medicalcoder")
 
 # Introduction
 
-The `medicalcoder` package implements several variants of the Charlson
+The medicalcoder package implements several variants of the Charlson
 comorbidities algorithm.
 
-* `charslon_deyo1992`: Deyo's original set of codes [@deyo1992adapting;@quan2005]
+* `charlson_deyo1992`: Deyo's original set of codes [@deyo1992adapting;@quan2005]
 * `charlson_quan2005` and `charlson_quan2011`: Codes and index scoring [@quan2005;@quan2011]
 * `charlson_cdmf2019`: [@glasheen2019]
 
@@ -54,7 +54,7 @@ str(get_charlson_index_scores())
 # Applying Charlson
 
 Example: applying the @quan2005 variant of the Charlson comorbidities to the
-`mdcr` data is be done as follows.
+`mdcr` data can be done as follows.
 
 ```{r}
 mdcr_results <-
@@ -66,6 +66,7 @@ mdcr_results <-
     dx.var = "dx",
     flag.method = "current",
     poa = 1,
+    primarydx = 0,
     method = "charlson_quan2005"
   )
 ```
@@ -84,12 +85,10 @@ Call `summary()` on the return object for a list of summary objects.  These can 
 used to generate output tables to the end user's liking.
 
 ```{r}
-str(
-  summary(mdcr_results)
-)
+str(summary(mdcr_results))
 ```
 
-```{r, results = "asis"}
+```{r echo = FALSE, results = "asis"}
 x <- summary(mdcr_results)$conditions[, c("condition_description", "count", "percent")]
 tab <-
   kableExtra::kbl(
@@ -99,6 +98,7 @@ tab <-
     col.names = c("", "Count", "Percentage"),
     digits = 3
   )
+tab <- kableExtra::kable_styling(tab, bootstrap_options = c("striped"), font_size = 10)
 tab <- kableExtra::pack_rows(tab, group_label = "Comorbidity", start_row = 1, end_row = 17)
 tab <- kableExtra::pack_rows(tab, group_label = "Total Comorbidities", start_row = 18, end_row = nrow(x))
 tab

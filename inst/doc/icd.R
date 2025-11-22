@@ -1,9 +1,6 @@
 ## ----label = "setup", include = FALSE-----------------------------------------
 knitr::opts_chunk$set(collapse = TRUE, fig.align = "center")
 
-## ----label = "medicalcoder-url"-----------------------------------------------
-cat(packageDescription('medicalcoder')$URL)
-
 ## ----label = "get-icd-codes"--------------------------------------------------
 library(medicalcoder)
 icd_codes <- get_icd_codes()
@@ -20,14 +17,31 @@ str(get_icd_codes(with.descriptions = TRUE))
 
 ## ----label = "deltas-in-desc", results = "hide"-------------------------------
 delta_in_desc <-
-  subset(get_icd_codes(with.descriptions = TRUE),
-         subset = full_code %in% c("Z88.7", "010.93", "V76.49"),
-         select = c("full_code", "src", "desc", "desc_start", "desc_end"))
+  subset(
+    get_icd_codes(with.descriptions = TRUE),
+    subset = full_code %in% c("Z88.7", "010.93", "V76.49"),
+    select = c("full_code", "src", "desc", "desc_start", "desc_end")
+  )
 
-## ----label = "deltas-in-desc-show", echo = FALSE, results = "asis"------------
-knitr::kable(delta_in_desc, row.names = FALSE)
+## ----label = "deltas-in-desc-show-010.93", echo = FALSE, results = "asis"-----
+knitr::kable(
+  subset(delta_in_desc, subset = full_code == "010.93"),
+  row.names = FALSE
+)
 
-## ----label = "get-icd-descs-with-heirarchy"-----------------------------------
+## ----label = "deltas-in-desc-show-Z88.7", echo = FALSE, results = "asis"------
+knitr::kable(
+  subset(delta_in_desc, subset = full_code == "Z88.7"),
+  row.names = FALSE
+)
+
+## ----label = "deltas-in-desc-show-v79.49", echo = FALSE, results = "asis"-----
+knitr::kable(
+  subset(delta_in_desc, subset = full_code == "V76.49"),
+  row.names = FALSE
+)
+
+## ----label = "get-icd-descs-with-hierarchy"-----------------------------------
 str(get_icd_codes(with.hierarchy = TRUE))
 
 ## ----label = "lookup-icd-code-example"----------------------------------------

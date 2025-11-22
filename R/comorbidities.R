@@ -11,14 +11,13 @@
 #' contribute to flags. When a longitudinal method is selected (e.g.,
 #' `"cumulative"`), prior encounters for the same `id.vars`
 #' combination may contribute to condition flags. For the cumulative method to
-#' work the `id.vars` need to be a character vector length 2 or more.  The last
-#' variable listed in the id.vars will be considered the encounter id and should
-#' be sortable. For example, say you have data with a hospital, patient, and
-#' encounter id.  The `id.vars` could be one of two entries:  `c("hospital",
-#' "patient", "encounter")` or `c("patient", "hospital", "encounter")`.  In both
-#' cases the return with be the same as "encounter" within the hospital/patient
-#' id interaction is the same as "encounter" within patient/hospital
-#' interaction.
+#' work, `id.vars` needs to be a character vector of length 2 or more. The last
+#' element is treated as the encounter identifier and must be sortable. For
+#' example, say you have data with a hospital, patient, and encounter id. The
+#' `id.vars` could be one of two entries: `c("hospital", "patient", "encounter")`
+#' or `c("patient", "hospital", "encounter")`. In both cases the return will be
+#' the same because the encounter identifier is unchanged regardless of whether
+#' hospital or patient is listed first.
 #'
 #' It is critically important that the `data[[tail(id.vars, 1)]]` variable can
 #' be sorted.  Just because your data is sorted in temporal order does not mean
@@ -31,9 +30,9 @@
 #' | P1    | 10725138 | Jul 2025 |
 #'
 #' `id.vars = c("patid", "enc_id")` will give the wrong result as enc_id
-#' 10725138 would be sorted to come before enc_id 10823090.  `id.var =
+#' 10725138 would be sorted to come before enc_id 10823090.  `id.vars =
 #' c("patid", "date")` would be sufficient input, assuming that `date` has been
-#' correctly stored.   Adding a column `enc_seq`, e.g.,
+#' correctly stored. Adding a column `enc_seq`, e.g.,
 #'
 #' | patid | enc_id   | date     | enc_seq |
 #' |:---:  |:---:     | :---:    | :---:   |
@@ -51,7 +50,7 @@
 #'
 #' * When `subconditions = FALSE`, a `medicalcoder_comorbidities` object (a
 #'   `data.frame` with attributes) is returned.  Column(s) for `id.vars`, if
-#'   defined in the function call.  For all method there will be the following
+#'   defined in the function call.  For all methods there will be the following
 #'   columns:
 #'   * `num_cmrb` a count of comorbidities/conditions flagged
 #'   * `cmrb_flag` a 0/1 integer indicator for at least one
@@ -65,8 +64,8 @@
 #'
 #'     * For `method = "pccc_v3.0"` and `method = "pccc_v3.1"`,
 #'       there are four columns per condition:
-#'       * `<condition>_dxpr_or_tech`: the condition was flag due to the
-#'         presence of either a diagnostic or procedure code, or was flag due to
+#'       * `<condition>_dxpr_or_tech`: the condition was flagged due to the
+#'         presence of either a diagnostic or procedure code, or was flagged due to
 #'         the presence of a technology dependence code along with at least one
 #'         comorbidity being flagged by a diagnostic or procedure code.
 #'       * `<condition>_dxpr_only`: the condition was flagged due to the
@@ -257,8 +256,7 @@ comorbidities.data.frame <- function(data,
     }
   }
 
-
-  if (startsWith(method, "elixhauser") & !is.null(primarydx.var)) {
+  if ((startsWith(method, "elixhauser") | startsWith(method, "charlson")) & !is.null(primarydx.var)) {
     is_a_column(primarydx.var, names(data))
     pn <- primarydx.var %in% ..protected_names..
     if (pn) {
@@ -269,6 +267,9 @@ comorbidities.data.frame <- function(data,
         )
       )
     }
+  } else if (startsWith(method, "pccc") & (!is.null(primarydx.var) | !is.null(primarydx))) {
+    warning(sprintf("primarydx.var and primarydx are ignored when method = '%s'", method), call. = FALSE)
+    primarydx.var <- primarydx <- NULL
   }
 
   flag.method <-
@@ -277,14 +278,13 @@ comorbidities.data.frame <- function(data,
       several.ok = FALSE
     )
 
-
   if (startsWith(method, "charlson") && !is.null(age.var)) {
     is_a_column(age.var, names(data))
   }
 
   assert_scalar_logical(subconditions)
   if (subconditions & !startsWith(method, "pccc")) {
-    warning("subconditions only implemented for PCCC")
+    warning("subconditions only implemented for PCCC", call. = FALSE)
     subconditions <- FALSE
   }
 
@@ -367,7 +367,7 @@ comorbidities.data.frame <- function(data,
     lookup_to_keep <- c(lookup_to_keep)
   } else if (startsWith(method, "elixhauser")) {
     lookup <- get_elixhauser_codes()
-    lookup_to_keep <- c(lookup_to_keep)
+    lookup_to_keep <- c(lookup_to_keep, "poaexempt")
   }
 
   idx <- lookup[[method]] == 1L
@@ -444,12 +444,12 @@ comorbidities.data.frame <- function(data,
     on_comp <- mdcr_set(on_comp, j = poa.var, value = rep(poa, nrow(on_comp)))
   } else {
     if (!is.null(poa)) {
-      warning("'poa.var' and 'poa' were both specified; ignoring 'poa'")
+      warning("'poa.var' and 'poa' were both specified; ignoring 'poa'", call. = FALSE)
     }
     is_a_column(poa.var, nms)
   }
 
-  if (startsWith(method, "elixhauser")) {
+  if (startsWith(method, "elixhauser") | startsWith(method, "charlson")) {
     if (is.null(primarydx.var)) {
       if (!is.null(primarydx)) {
         stopifnot(inherits(primarydx, "numeric") | inherits(primarydx, "integer"))
@@ -457,22 +457,18 @@ comorbidities.data.frame <- function(data,
         primarydx <- as.integer(primarydx)
         stopifnot(primarydx %in% c(0L, 1L))
       } else {
-        if (grepl("^elixhauser", method)) {
-          warning("Assuming all codes provided are secondary diagnostic codes.  Define `primarydx.var` or `primarydx` if this assumption is incorrect.", call. = FALSE)
-        }
+        warning("Assuming all codes provided are secondary diagnostic codes.  Define `primarydx.var` or `primarydx` if this assumption is incorrect.", call. = FALSE)
         primarydx <- 0L
       }
 
       primarydx.var <- build_name("..medicalcoder_primarydx..", nms)
 
-      if (grepl("^elixhauser", method)) {
-        on_full <- mdcr_set(on_full, j = primarydx.var, value = rep(primarydx, nrow(on_full)))
-        on_comp <- mdcr_set(on_comp, j = primarydx.var, value = rep(primarydx, nrow(on_comp)))
-      }
+      on_full <- mdcr_set(on_full, j = primarydx.var, value = rep(primarydx, nrow(on_full)))
+      on_comp <- mdcr_set(on_comp, j = primarydx.var, value = rep(primarydx, nrow(on_comp)))
 
     } else {
       if (!is.null(primarydx)) {
-        warning("'primarydx.var' and 'primarydx' were both specified; ignoring 'primarydx'")
+        warning("'primarydx.var' and 'primarydx' were both specified; ignoring 'primarydx'", call. = FALSE)
       }
       is_a_column(primarydx.var, nms)
     }
@@ -498,7 +494,7 @@ comorbidities.data.frame <- function(data,
   } else {
     iddf <- unique(mdcr_select(cmrb, cols = id.vars))
     if (nrow(iddf) == 0) {
-      iddf <- stats::setNames(data.frame(1L), id.vars)
+      iddf <- stats::setNames(data.frame(1L, stringsAsFactors = FALSE), id.vars)
     }
   }
 
@@ -558,7 +554,12 @@ comorbidities.data.frame <- function(data,
 
     cmrb <- do.call(rbind, foc)
 
-    cmrb[[poa.var]][cmrb[[encid]] > cmrb[["first_occurrance"]]] <- 1L
+    # set poa to 1 and primarydx to 0 for prior conditions
+    idx <- cmrb[[encid]] > cmrb[["first_occurrance"]]
+    cmrb[[poa.var]][idx] <- 1L
+    if (!is.null(primarydx.var)) {
+      cmrb[[primarydx.var]][cmrb[[encid]] > cmrb[["first_occurrance"]]] <- 0L
+    }
     cmrb <- mdcr_set(cmrb, j = "first_occurrance", value =  NULL)
 
     cmrb <- unique(cmrb)
@@ -579,17 +580,17 @@ comorbidities.data.frame <- function(data,
   } else if (startsWith(method, "pccc_v3")) {
     ccc <- .pccc_v3(id.vars = id.vars, iddf = iddf, cmrb = cmrb, subconditions = subconditions)
   } else if (startsWith(method, "charlson")) {
-    ccc <- .charlson(id.vars = id.vars, iddf = iddf, cmrb = cmrb, method)
+    ccc <- .charlson(id.vars = id.vars, iddf = iddf, cmrb = cmrb, primarydx.var = primarydx.var, method = method)
     if (!is.null(age.var)) {
       ages <- unique(mdcr_select(data, cols = c(id.vars, age.var)))
-      ages[["age_score"]] <- as.integer(cut(ages[[age.var]], breaks = c(-Inf, 50, 60, 70, 80, Inf), right = FALSE)) - 1L
+      ages[["age_score"]] <- as.integer(cut(ages[[age.var]], breaks = c(-Inf, 50, 60, 70, 80, Inf), right = TRUE)) - 1L
       ccc <- merge(ccc, mdcr_select(ages, cols = c(id.vars, "age_score")), all.x = TRUE, by = id.vars, sort = FALSE)
       ccc[["cci"]] <- ccc[["cci"]] + ccc[["age_score"]]
     } else {
       ccc[["age_score"]] <- rep(NA_integer_, nrow(ccc))
     }
   } else if (startsWith(method, "elixhauser")) {
-    ccc <- .elixhauser(id.vars = id.vars, iddf = iddf, cmrb = cmrb, poa.var = poa.var, primarydx.var = primarydx.var, method)
+    ccc <- .elixhauser(id.vars = id.vars, iddf = iddf, cmrb = cmrb, poa.var = poa.var, primarydx.var = primarydx.var, method = method)
   } else {
     stop(sprintf("method '%s' has not yet been implemented", method))
   }
@@ -618,6 +619,17 @@ comorbidities.data.frame <- function(data,
 
   ##############################################################################
   # set attributes and return
+  if (requireNamespace("tibble", quietly = TRUE) && inherits(data, "tbl_df")) {
+    if (subconditions) {
+      ccc[["conditions"]] <- getExportedValue(name = "as_tibble", ns = "tibble")(x = ccc[["conditions"]])
+      for (i in seq_len(length(ccc[["subconditions"]]))) {
+        ccc[["subconditions"]][[i]] <- getExportedValue(name = "as_tibble", ns = "tibble")(x = ccc[["subconditions"]][[i]])
+      }
+    } else {
+      ccc <- getExportedValue(name = "as_tibble", ns = "tibble")(x = ccc)
+    }
+  }
+
   attr(ccc, "method") <- method
   attr(ccc, "id.vars") <- id.vars
   attr(ccc, "flag.method") <- flag.method
@@ -662,7 +674,7 @@ comorbidities_methods <- function() {
       "charlson_cdmf2019",
       "elixhauser_elixhauser1988", "elixhauser_ahrq_web", "elixhauser_quan2005",
       "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024",
-      "elixhauser_ahrq2025")
+      "elixhauser_ahrq2025", "elixhauser_ahrq_icd10")
 }
 
 
@@ -672,9 +684,10 @@ comorbidities_methods <- function() {
 ..protected_names.. <-
   c("icdv", "dx", "full_code", "code", "src", "known_start", "known_end",
     "assignable_start", "assignable_end", "condition", "subcondition",
-    "transplant_flag", "tech_dep_flag", "pccc_v3.1", "pccc_v3.0",
-    "pccc_v2.1", "pccc_v2.0", "elixhauser_ahrq_web", "elixhauser_elixhauser1988",
-    "elixhauser_quan2005", "elixhauser_ahrq2022", "elixhauser_ahrq2023",
-    "elixhauser_ahrq2024", "elixhauser_ahrq2025", "charlson_cdmf2019",
-    "charlson_deyo1992", "charlson_quan2005", "charlson_quan2011"
+    "transplant_flag", "tech_dep_flag",
+    "pccc_v3.1", "pccc_v3.0", "pccc_v2.1", "pccc_v2.0",
+    "elixhauser_ahrq_web", "elixhauser_elixhauser1988", "elixhauser_quan2005",
+    "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024", "elixhauser_ahrq2025",
+    "elixhauser_ahrq_icd10",
+    "charlson_cdmf2019", "charlson_deyo1992", "charlson_quan2005", "charlson_quan2011"
   )

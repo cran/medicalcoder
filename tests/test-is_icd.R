@@ -1,21 +1,55 @@
+source('utilities.R')
 library(medicalcoder)
 
-# a code of length 1 should not be a valid code for either ICD-9 or ICD-10
-x <- is_icd(c(LETTERS, as.character(0:9)))
-stopifnot(length(x) == 36L, !any(x))
+################################################################################
+# a code of length 1 should not be a valid code for either ICD-9 or ICD-10, that
+# is because the minimum number of characters for ICD-9-CM ICD-10-CM is three,
+# ICD-10-PCS is seven, and ICD-9-PCS is two.  The folowing tests verify that
+# is_icd will return FALSE any reasonable one characters string.
+#
+# tests:
+#
+#   code_length_one_default: use the default call to is_icd
+#   code_length_one_icd9dx:  test against just ICD-9 diagnostic codes
+#   code_length_one_icd9pr:  test against just ICD-9 procedure codes
+#   code_length_one_icd10dx: test against just ICD-10 diagnostic codes
+#   code_length_one_icd10pr: test against just ICD-10 procedure codes
+#
+one_char_codes <- c(LETTERS, as.character(0:9))
+default <- is_icd(one_char_codes)
+icd9dx  <- is_icd(one_char_codes, icdv =  9L, dx = 1L)
+icd9pr  <- is_icd(one_char_codes, icdv =  9L, dx = 0L)
+icd10dx <- is_icd(one_char_codes, icdv = 10L, dx = 1L)
+icd10pr <- is_icd(one_char_codes, icdv = 10L, dx = 0L)
 
-x <- is_icd(c(LETTERS, as.character(0:9)), icdv = 9, dx = 1L)
-stopifnot(length(x) == 36L, !any(x))
+stopifnot(
+  code_length_one_default = length(default) == 36L && !any(default),
+  code_length_one_icd9dx  = length(icd9dx)  == 36L && !any(icd9dx),
+  code_length_one_icd9pr  = length(icd9pr)  == 36L && !any(icd9pr),
+  code_length_one_icd10dx = length(icd10dx) == 36L && !any(icd10dx),
+  code_length_one_icd10pr = length(icd10pr) == 36L && !any(icd10pr)
+)
 
-x <- is_icd(c(LETTERS, as.character(0:9)), icdv = 9, dx = 0L)
-stopifnot(length(x) == 36L, !any(x))
+################################################################################
+# check for early return if the input combination of icdv, dx, src excludes all
+# possible codes
+x <- c("7993", ".7993", "7.993", "79.93", "799.3", "7993.")
+y <- rep_len(FALSE, length(x))
 
-x <- is_icd(c(LETTERS, as.character(0:9)), icdv = 10, dx = 1L)
-stopifnot(length(x) == 36L, !any(x))
+stopifnot(
+  "failed to stop on bad icdv" = inherits(tryCatchError(is_icd(x, icdv = 8)), "error"),
+  "failed to stop on bad src"  = inherits(tryCatchError(is_icd(x, src = "a")), "error"),
+  "failed to stop on bad dx"   = inherits(tryCatchError(is_icd(x, dx = 2)), "error"),
+  "warning for WHO and ICD 9"   = inherits(tryCatchWarning(is_icd(x, icdv = 9, src = "who")), "warning"),
+  "all FALSE for WHO and ICD 9" = identical(suppressWarnings(is_icd(x, icdv = 9, src = "who")), y),
+  "warning for CDC and ICD 9"   = inherits(tryCatchWarning(is_icd(x, icdv = 9, src = "cdc")), "warning"),
+  "all FALSE for CDC and ICD 9" = identical(suppressWarnings(is_icd(x, icdv = 9, src = "cdc")), y),
+  "warning for WHO, ICD-10, pr" = inherits(tryCatchWarning(is_icd(x, icdv = 10, src = "who", dx = 0)), "warning"),
+  "all FALSE for WHO, ICD-10, pr" = identical(suppressWarnings(is_icd(x, icdv = 10, src = "who", dx = 0)), y)
+)
 
-x <- is_icd(c(LETTERS, as.character(0:9)), icdv = 10, dx = 0L)
-stopifnot(length(x) == 36L, !any(x))
 
+################################################################################
 # For ICD-9 test that the presense of a dot is considered when testing.
 # Example 7993 is the simplified version of the proper ICD-9 DX code 799.3 and
 # PR code 79.93.  Becuase the look up tables use 7993, the input of 7993 will be
@@ -23,15 +57,20 @@ stopifnot(length(x) == 36L, !any(x))
 # FALSE if the dot is in the wrong place
 
 x <- c("7993", ".7993", "7.993", "79.93", "799.3", "7993.")
+f <- factor(x)
 stopifnot(
   identical(is_icd(x, icdv =  9, dx = 1L), c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE)),
   identical(is_icd(x, icdv =  9, dx = 0L), c(TRUE, FALSE, FALSE, TRUE, FALSE, FALSE)),
   !any(is_icd(x, icdv = 10, dx = 1L)),
-  !any(is_icd(x, icdv = 10, dx = 0L))
+  !any(is_icd(x, icdv = 10, dx = 0L)),
+  identical(is_icd(x, icdv =  9, dx = 1L), is_icd(f, icdv =  9, dx = 1L)),
+  identical(is_icd(x, icdv =  9, dx = 0L), is_icd(f, icdv =  9, dx = 0L)),
+  identical(is_icd(x, icdv = 10, dx = 1L), is_icd(f, icdv = 10, dx = 1L)),
+  identical(is_icd(x, icdv = 10, dx = 0L), is_icd(f, icdv = 10, dx = 0L))
 )
 
 # expect a warning that 7993 is ambiguous
-x <- tryCatch(is_icd("7993"), warning = function(w) w)
+x <- tryCatchWarning(is_icd("7993"))
 stopifnot(inherits(x, "warning"))
 
 # For ICD-10 dx, if there is a dot, it need be the fourth character
@@ -47,11 +86,16 @@ x <- c("C441121",
        "C4411.21",
        "C44112.1",
        "C441121.")
+f <- factor(x)
 stopifnot(
   identical(is_icd(x, icdv = 10, dx = 1L), c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)),
   !any(is_icd(x, icdv = 9, dx = 1L)),
   !any(is_icd(x, icdv = 9, dx = 0L)),
-  !any(is_icd(x, icdv = 10, dx = 0L))
+  !any(is_icd(x, icdv = 10, dx = 0L)),
+  identical(is_icd(x, icdv =  9, dx = 1L), is_icd(f, icdv =  9, dx = 1L)),
+  identical(is_icd(x, icdv =  9, dx = 0L), is_icd(f, icdv =  9, dx = 0L)),
+  identical(is_icd(x, icdv = 10, dx = 1L), is_icd(f, icdv = 10, dx = 1L)),
+  identical(is_icd(x, icdv = 10, dx = 0L), is_icd(f, icdv = 10, dx = 0L))
   )
 
 # another example
@@ -64,12 +108,17 @@ x <- c("Y389X2S",
        "Y389X.2S",
        "Y389X2.S",
        "Y389X2S.")
+f <- factor(x)
 stopifnot(
   identical(is_icd(x), c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)),
   identical(is_icd(x, icdv = 10, dx = 1L), c(TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)),
   !any(is_icd(x, icdv = 9, dx = 1L)),
   !any(is_icd(x, icdv = 9, dx = 0L)),
-  !any(is_icd(x, icdv = 10, dx = 0L))
+  !any(is_icd(x, icdv = 10, dx = 0L)),
+  identical(is_icd(x, icdv =  9, dx = 1L), is_icd(f, icdv =  9, dx = 1L)),
+  identical(is_icd(x, icdv =  9, dx = 0L), is_icd(f, icdv =  9, dx = 0L)),
+  identical(is_icd(x, icdv = 10, dx = 1L), is_icd(f, icdv = 10, dx = 1L)),
+  identical(is_icd(x, icdv = 10, dx = 0L), is_icd(f, icdv = 10, dx = 0L))
   )
 
 # ICD 10 pr codes have no dots
@@ -82,12 +131,17 @@ x <- c("0016074",
        "00160.74",
        "001607.4",
        "0016074.")
+f <- factor(x)
 stopifnot(
   identical(is_icd(x), c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)),
   identical(is_icd(x, icdv = 10, dx = 0L), c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)),
   !any(is_icd(x, icdv = 9, dx = 1L)),
   !any(is_icd(x, icdv = 9, dx = 0L)),
-  !any(is_icd(x, icdv = 10, dx = 1L))
+  !any(is_icd(x, icdv = 10, dx = 1L)),
+  identical(is_icd(x, icdv =  9, dx = 1L), is_icd(f, icdv =  9, dx = 1L)),
+  identical(is_icd(x, icdv =  9, dx = 0L), is_icd(f, icdv =  9, dx = 0L)),
+  identical(is_icd(x, icdv = 10, dx = 1L), is_icd(f, icdv = 10, dx = 1L)),
+  identical(is_icd(x, icdv = 10, dx = 0L), is_icd(f, icdv = 10, dx = 0L))
   )
 
 ################################################################################
@@ -129,9 +183,9 @@ default_rtn <-
 stopifnot(identical(default_rtn, c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE, NA, TRUE, TRUE)))
 
 warn <-
-  tryCatch(
-    is_icd(x, headerok = TRUE, ever.assignable = TRUE, warn.ambiguous = TRUE),
-    warning = function(w) w)
+  tryCatchWarning(
+    is_icd(x, headerok = TRUE, ever.assignable = TRUE, warn.ambiguous = TRUE)
+  )
 stopifnot(inherits(warn, "warning"))
 
 ################################################################################
@@ -153,12 +207,12 @@ stopifnot(inherits(warn, "warning"))
 #   2:    cms    10  2014
 #   3:    cdc    10  2001
 #   4:    who    10  2008
-w1 <- tryCatch(is_icd("516.3", year = 1979), warning = function(w) w)
-w2 <- tryCatch(is_icd("516.3", year = 1979, icdv = 9), warning = function(w) w)
-w3 <- tryCatch(is_icd("516.3", year = 2000, icdv = 9), warning = function(w) w)
-w4 <- tryCatch(is_icd("516.3", year = 2000, icdv = 10), warning = function(w) w)
-w5 <- tryCatch(is_icd("516.3", year = 2009, icdv = 10), warning = function(w) w)
-w6 <- tryCatch(is_icd("516.3", year = 2009, icdv = 10, src = "cms"), warning = function(w) w)
+w1 <- tryCatchWarning(is_icd("516.3", year = 1979))
+w2 <- tryCatchWarning(is_icd("516.3", year = 1979, icdv = 9))
+w3 <- tryCatchWarning(is_icd("516.3", year = 2000, icdv = 9))
+w4 <- tryCatchWarning(is_icd("516.3", year = 2000, icdv = 10))
+w5 <- tryCatchWarning(is_icd("516.3", year = 2009, icdv = 10))
+w6 <- tryCatchWarning(is_icd("516.3", year = 2009, icdv = 10, src = "cms"))
 
 stopifnot(
   "Year before first known year generates an warning: w1" = inherits(w1, "warning"),

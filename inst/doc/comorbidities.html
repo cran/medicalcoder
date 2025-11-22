@@ -373,7 +373,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -590,7 +589,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="TOC">
 <ul>
 <li><a href="#comorbidity-algorithms" id="toc-comorbidity-algorithms">Comorbidity Algorithms</a></li>
-<li><a href="#when-are-conditions-flag" id="toc-when-are-conditions-flag">When are conditions flag?</a></li>
+<li><a href="#when-are-conditions-flagged" id="toc-when-are-conditions-flagged">When are conditions
+flagged?</a></li>
 <li><a href="#mapping-icd-codes-to-comorbidities" id="toc-mapping-icd-codes-to-comorbidities">Mapping ICD Codes to
 Comorbidities</a></li>
 <li><a href="#references" id="toc-references">References</a></li>
@@ -599,19 +599,18 @@ Comorbidities</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.6.0&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.7.0&#39;</span></span></code></pre></div>
 <div id="comorbidity-algorithms" class="section level1">
 <h1>Comorbidity Algorithms</h1>
 <p>There are three comorbidity algorithms, each with several variants,
-implemented in the <code>medicalcoder</code> package:</p>
+implemented in the medicalcoder package:</p>
 <ol style="list-style-type: decimal">
 <li>Pediatric Complex Chronic Condition System (PCCC)
 <ol style="list-style-type: lower-alpha">
 <li>Version 2.0 <span class="citation">(Feudtner et al. 2014)</span>
 <ol style="list-style-type: lower-roman">
 <li><code>pccc_v2.0</code> is consistent with the older R package pccc
-(v1.0.6) <span class="citation">(DeWitt, Feinstein, and Russell
-2025)</span>.</li>
+(v1.0.6) <span class="citation">(DeWitt et al. 2025)</span>.</li>
 <li><code>pccc_v2.1</code> modifies the set of ICD codes to be more
 consistent with documentation and other implementations of v2.0.</li>
 </ol></li>
@@ -626,8 +625,7 @@ consistent with documentation.</li>
 </ol></li>
 <li>Charlson
 <ol style="list-style-type: lower-alpha">
-<li><code>charslon_deyo1992</code>: Deyo’s original set of codes <span class="citation">(Deyo, Cherkin, and Ciol 1992; Quan et al.
-2005)</span></li>
+<li><code>charlson_deyo1992</code>: Deyo’s original set of codes <span class="citation">(Deyo et al. 1992; Quan et al. 2005)</span></li>
 <li><code>charlson_quan2005</code> and <code>charlson_quan2011</code>:
 Codes and index scoring <span class="citation">(Quan et al. 2005,
 2011)</span></li>
@@ -649,7 +647,8 @@ Quality (AHRQ) for fiscal years 2022 through 2025 <span class="citation">(Health
 <ol style="list-style-type: lower-roman">
 <li><code>elixhauser_elixhauser1988</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
 <li><code>elixhauser_ahrq_web</code>: <span class="citation">(Quan et
-al. 2005; Cost and (HCUP) 2017)</span></li>
+al. 2005; Healthcare Cost and Utilization Project (HCUP)
+2017)</span></li>
 <li><code>elixhauser_quan2005</code>: <span class="citation">(Quan et
 al. 2005)</span></li>
 </ol></li>
@@ -657,8 +656,8 @@ al. 2005)</span></li>
 </ol>
 <p><strong>IMPORTANT NOTE:</strong> Elixhauser 1998 and AHRQ Web used
 diagnostic related group (DRG) codes as part of the methods. The
-<code>medicalcoder</code> package <em>does not</em> use DRG codes. This
-is consistent with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
+medicalcoder package <em>does not</em> use DRG codes. This is consistent
+with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
 <p>A list of the valid methods for the package can be accessed via a
 non-exported function. In general, the methods are listed in the form of
 <code>&lt;algorithm&gt;_&lt;version&gt;</code>.</p>
@@ -670,13 +669,13 @@ non-exported function. In general, the methods are listed in the form of
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  [9] &quot;elixhauser_elixhauser1988&quot; &quot;elixhauser_ahrq_web&quot;      </span></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## [11] &quot;elixhauser_quan2005&quot;       &quot;elixhauser_ahrq2022&quot;      </span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## [13] &quot;elixhauser_ahrq2023&quot;       &quot;elixhauser_ahrq2024&quot;      </span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">## [15] &quot;elixhauser_ahrq2025&quot;</span></span></code></pre></div>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">## [15] &quot;elixhauser_ahrq2025&quot;       &quot;elixhauser_ahrq_icd10&quot;</span></span></code></pre></div>
 <p>Vignettes for each of the major methods are available.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;pccc&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;charlson&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;pccc&quot;</span>,       <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;charlson&quot;</span>,   <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;elixhauser&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span></code></pre></div>
 <p>The focus of this vignette is to highlight the general use of the
-<code>comorbidities</code> function.</p>
+<code>comorbidities()</code> function.</p>
 <p>Details of the function arguments call are in the manual.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">help</span>(<span class="at">topic =</span> <span class="st">&quot;comorbidities&quot;</span>, <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">args</span>(comorbidities)</span>
@@ -716,29 +715,26 @@ general expected form of the <code>data</code>.</p>
 <span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="do">## 4 9663901 2016-03-25   10  J95.851</span></span>
 <span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="do">## 5 9663901 2016-03-30   10  IMO0002</span></span>
 <span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="do">## 6 9663901 2016-03-30   10    Z93.0</span></span></code></pre></div>
-<p>A great level of detail for each of the comorbidity algorithms are
-provided in dedicated vignettes:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)<span class="sc">$</span>results</span></code></pre></div>
 </div>
-<div id="when-are-conditions-flag" class="section level1">
-<h1>When are conditions flag?</h1>
+<div id="when-are-conditions-flagged" class="section level1">
+<h1>When are conditions flagged?</h1>
 <p>Whether or not the code is present on admission (POA) is useful when
 applying the comorbidity algorithms and considering if the patient has a
-comorbidity at time of encounter start of if the condition is a result
-of the current hospitalization.</p>
+comorbidity at the start of an encounter, or if the condition is a
+result of the current hospitalization.</p>
 <p>Implementation of Elixhauser comorbidities for 2022 and beyond <span class="citation">(Healthcare Research and (AHRQ) 2025)</span> explicitly
 define the use of present on admission flags for specific conditions
 (see the <code>poa_required</code> flag reported in the data set
-returned by <code>get_elixhauser_poa</code>).</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_poa</span>())</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    43 obs. of  7 variables:</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">##  $ condition          : chr  &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ANEMDEF&quot; &quot;ANEMDEF&quot; ...</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">##  $ desc               : chr  &quot;Acquired immune deficiency syndrome&quot; &quot;Alcohol abuse&quot; &quot;Anemias due to other nutritional deficiencies&quot; &quot;Deficiency anemias&quot; ...</span></span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">##  $ poa_required       : int  0 0 1 1 0 1 1 0 0 0 ...</span></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022: int  1 1 NA 1 1 NA 1 1 1 1 ...</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025: int  1 1 1 NA 1 1 NA 1 1 1 ...</span></span></code></pre></div>
+returned by <code>get_elixhauser_poa()</code>).</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_poa</span>())</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    49 obs. of  7 variables:</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="do">##  $ condition            : chr  &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ANEMDEF&quot; &quot;AUTOIMMUNE&quot; ...</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="do">##  $ poa_required         : int  0 0 1 0 1 0 0 0 0 0 ...</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022  : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023  : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024  : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025  : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_icd10: int  1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
 <p>For Charlson comorbidities, from <span class="citation">Quan et al.
 (2011)</span>:</p>
 <blockquote>
@@ -770,72 +766,29 @@ make decisions on a condition-by-condition basis of whether to include
 particular variables, depending on their study objectives.</p>
 </blockquote>
 <p>PCCC does not explicitly note the if POA is required.</p>
-<p><code>medicalcoder</code> has been built to consider POA for all
-comorbidity algorithms.</p>
+<p>medicalcoder has been built to consider POA for all comorbidity
+algorithms.</p>
 <p>End users can use a 0/1 indicator variable in the data set to report
 which codes are POA via the function argument <code>poa.var</code>. If
 all the codes are to be considered POA or not, the functional argument
 <code>poa</code> can be used to set a common status without adding a
 column to the input data set.</p>
-<p>Additionally, <code>medicalcoder</code> provides a
-<code>flag.method</code> argument for longitudinal data sets.</p>
+<p>Additionally, medicalcoder provides a <code>flag.method</code>
+argument for longitudinal data sets.</p>
 <p><strong>Example:</strong> Let’s assume we have a patient record for
 six encounters. We use ICD-10 diagnostic codes C78.4 and I50.40 which
 maps to a cancer and heart failure (cardiovascular disease) comorbidity
 respectively for PCCC, Charlson, and Elixhauser. For demonstration, we
 also flag POA with the second report of I50.40 intentionally marked as
 not present on admission.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">lookup_icd_codes</span>(<span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="do">##   input_code match_type icdv dx full_code  code src known_start known_end</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="do">## 1      C78.4  full_code   10  1     C78.4  C784 cms        2014      2026</span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="do">## 2      C78.4  full_code   10  1     C78.4  C784 cdc        2001      2025</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="do">## 3      C78.4  full_code   10  1     C78.4  C784 who        2008      2019</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="do">## 4     I50.40  full_code   10  1    I50.40 I5040 cms        2014      2026</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="do">##   assignable_start assignable_end</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="do">## 1             2014           2026</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="do">## 2             2001           2025</span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="do">## 3             2008           2019</span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="do">## 4             2014           2026</span></span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_pccc_codes</span>(),</span>
-<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>       <span class="at">subset =</span> full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>),</span>
-<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>, <span class="st">&quot;full_code&quot;</span>, <span class="st">&quot;condition&quot;</span>, <span class="st">&quot;pccc_v3.0&quot;</span>))</span>
-<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="do">##      icdv dx  code full_code  condition pccc_v3.0</span></span>
-<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="do">## 4523   10  1  C784     C78.4 malignancy         1</span></span>
-<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="do">## 6570   10  1 I5040    I50.40        cvd         1</span></span>
-<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a></span>
-<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_charlson_codes</span>(),</span>
-<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>       <span class="at">subset =</span> full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>),</span>
-<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>, <span class="st">&quot;full_code&quot;</span>, <span class="st">&quot;condition&quot;</span>, <span class="st">&quot;charlson_quan2011&quot;</span>))</span>
-<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a><span class="do">##      icdv dx  code full_code condition charlson_quan2011</span></span>
-<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a><span class="do">## 3500   10  1  C784     C78.4       mst                 1</span></span>
-<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a><span class="do">## 5776   10  1 I5040    I50.40       chf                 1</span></span>
-<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a></span>
-<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_elixhauser_codes</span>(),</span>
-<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>       <span class="at">subset =</span> full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;C78.4&quot;</span>, <span class="st">&quot;I50.40&quot;</span>) <span class="sc">&amp;</span> elixhauser_ahrq2025 <span class="sc">==</span> <span class="dv">1</span><span class="dt">L</span>,</span>
-<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a>       <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>, <span class="st">&quot;full_code&quot;</span>, <span class="st">&quot;condition&quot;</span>, <span class="st">&quot;elixhauser_ahrq2025&quot;</span>))</span>
-<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="do">##      icdv dx  code full_code   condition elixhauser_ahrq2025</span></span>
-<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="do">## 3394   10  1  C784     C78.4 CANCER_METS                   1</span></span>
-<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="do">## 7647   10  1 I5040    I50.40          HF                   1</span></span>
-<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a></span>
-<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a>record <span class="ot">&lt;-</span></span>
-<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">fread</span>(<span class="at">text =</span> <span class="st">&quot;</span></span>
-<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="st">patid | encid | code   | poa</span></span>
-<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="st">A     | 1     | NA     | NA</span></span>
-<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="st">A     | 2     | C78.4  | 0</span></span>
-<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="st">A     | 3     | I50.40 | 1</span></span>
-<span id="cb9-40"><a href="#cb9-40" tabindex="-1"></a><span class="st">A     | 4     | NA     | NA</span></span>
-<span id="cb9-41"><a href="#cb9-41" tabindex="-1"></a><span class="st">A     | 5     | C78.4  | 1</span></span>
-<span id="cb9-42"><a href="#cb9-42" tabindex="-1"></a><span class="st">A     | 5     | I50.40 | 0</span></span>
-<span id="cb9-43"><a href="#cb9-43" tabindex="-1"></a><span class="st">A     | 6     | NA     | NA</span></span>
-<span id="cb9-44"><a href="#cb9-44" tabindex="-1"></a><span class="st">&quot;</span>)</span></code></pre></div>
-<p>We will call <code>comorbidities</code> for the three methods using
-static POA flags and dynamic POA flags, and both flag methods.</p>
-<table style="NAborder-bottom: 0;">
-<caption>
+<p>We will call <code>comorbidities()</code> for the three methods using
+static POA flags and dynamic POA flags, and both flag methods. Results
+are shown in the following table.</p>
+<table style="NAborder-bottom: 0; font-size: 8px; width: auto !important; margin-left: auto; margin-right: auto;" class="table table-striped table-bordered">
+<caption style="font-size: initial !important;">
 Indicators for when a comorbidity is flagged based on the algorithm,
-present on admission (poa), and flag.method. The two ICD codes,C78.4 and
-I50.40, map to cancer and cardiovascular disease respectively.
+present on admission (poa), and flag.method. The two ICD codes, C78.4
+and I50.40, map to cancer and cardiovascular disease respectively.
 </caption>
 <thead>
 <tr>
@@ -907,64 +860,64 @@ Elixhauser
 </th>
 </tr>
 <tr>
-<th style="text-align:left;">
+<th style="text-align:center;">
 encid
 </th>
-<th style="text-align:left;">
+<th style="text-align:center;">
 ICD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CVD
 </th>
-<th style="text-align:right;">
+<th style="text-align:center;">
 CANCER
 </th>
 </tr>
@@ -976,371 +929,371 @@ CANCER
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 1
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 2
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 C78.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 3
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 I50.40<sup>*</sup>
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 4
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 5
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 C78.4<sup>*</sup>; I50.40
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 6
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
 </tr>
@@ -1350,371 +1303,371 @@ C78.4<sup>*</sup>; I50.40
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 1
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 2
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 C78.4
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 3
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 I50.40<sup>*</sup>
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 0
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 4
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 5
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 C78.4<sup>*</sup>; I50.40
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
 <tr>
-<td style="text-align:left;padding-left: 2em;" indentlevel="1">
+<td style="text-align:center;padding-left: 2em;" indentlevel="1">
 6
 </td>
-<td style="text-align:left;">
+<td style="text-align:center;">
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
-<td style="text-align:right;">
+<td style="text-align:center;">
 1
 </td>
 </tr>
@@ -1748,45 +1701,47 @@ associated with a comorbidity algorithm using the
 procedure flag, the compact code, and the full code. A column for the
 condition and other method specific flags are provided. Lastly, there
 are indicator columns for the variant of each method</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_pccc_codes</span>())</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7913 obs. of  12 variables:</span></span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="do">##  $ code           : chr  &quot;0010&quot; &quot;0050&quot; &quot;0051&quot; &quot;0053&quot; ...</span></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="do">##  $ condition      : chr  &quot;malignancy&quot; &quot;cvd&quot; &quot;cvd&quot; &quot;cvd&quot; ...</span></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="do">##  $ subcondition   : chr  &quot;neoplasms&quot; &quot;device_and_technology_use&quot; &quot;device_and_technology_use&quot; &quot;device_and_technology_use&quot; ...</span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="do">##  $ transplant_flag: int  0 0 0 0 0 0 0 1 1 1 ...</span></span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="do">##  $ tech_dep_flag  : int  0 1 1 1 1 1 1 0 0 0 ...</span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="do">##  $ pccc_v3.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="do">##  $ pccc_v3.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="do">##  $ pccc_v2.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="do">##  $ pccc_v2.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
-<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
-<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="do">##  $ dx               : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; &quot;010&quot; ...</span></span>
-<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; &quot;010&quot; ...</span></span>
-<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
-<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
-<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    10679 obs. of  12 variables:</span></span>
-<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
-<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;042&quot; &quot;07022&quot; &quot;07023&quot; &quot;07032&quot; ...</span></span>
-<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
-<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
-<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
-<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_pccc_codes</span>())</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7913 obs. of  12 variables:</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="do">##  $ code           : chr  &quot;0010&quot; &quot;0050&quot; &quot;0051&quot; &quot;0053&quot; ...</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="do">##  $ condition      : chr  &quot;malignancy&quot; &quot;cvd&quot; &quot;cvd&quot; &quot;cvd&quot; ...</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="do">##  $ subcondition   : chr  &quot;neoplasms&quot; &quot;device_and_technology_use&quot; &quot;device_and_technology_use&quot; &quot;device_and_technology_use&quot; ...</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="do">##  $ transplant_flag: int  0 0 0 0 0 0 0 1 1 1 ...</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="do">##  $ tech_dep_flag  : int  0 1 1 1 1 1 1 0 0 0 ...</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="do">##  $ pccc_v3.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="do">##  $ pccc_v3.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="do">##  $ pccc_v2.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="do">##  $ pccc_v2.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="do">##  $ dx               : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; &quot;010&quot; ...</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; &quot;010&quot; ...</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    10428 obs. of  14 variables:</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;042&quot; &quot;07022&quot; &quot;07023&quot; &quot;07032&quot; ...</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="do">##  $ poaexempt                : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_icd10    : int  NA NA NA NA NA NA NA NA NA NA ...</span></span></code></pre></div>
 <p>End users should be aware that just because an ICD code exists in a
 data set does not mean that the patient has the condition. For
 Elixhauser, the presence on admission is important to consider. For PCCC
@@ -1799,58 +1754,55 @@ following example, if only considering ICD codes which flag ‘aids’,
 there would be several thousand cases of AIDS, but only six cases of
 HIV.</p>
 <!-- NOTE: the following example is also in tests/test-charlson_cdmf2019.R -->
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>cdmf_eg <span class="ot">&lt;-</span></span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="at">x =</span> mdcr,</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">subset</span>(<span class="fu">get_charlson_codes</span>(),</span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>                   condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;aids&quot;</span>, <span class="st">&quot;hiv&quot;</span>) <span class="sc">&amp;</span></span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>                   charlson_cdmf2019 <span class="sc">==</span> <span class="dv">1</span>),</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>        <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>))</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cdmf_eg)</span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>cdmf_eg <span class="ot">&lt;-</span></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">dcast</span>(<span class="at">data =</span> cdmf_eg,</span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>                    patid <span class="sc">~</span> condition,</span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>                    <span class="at">value.var =</span> <span class="st">&quot;charlson_cdmf2019&quot;</span>,</span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>                    <span class="at">fun.aggregate =</span> <span class="cf">function</span>(x) {<span class="fu">as.integer</span>(<span class="fu">sum</span>(x) <span class="sc">&gt;</span> <span class="dv">0</span>)})</span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a></span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>cdmf_eg[, .N, keyby <span class="ot">=</span> .(hiv, aids)]</span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="do">## Key: &lt;hiv, aids&gt;</span></span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="do">##      hiv  aids     N</span></span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
-<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="do">## 1:     0     1  2716</span></span>
-<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="do">## 2:     1     0     6</span></span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="do">## 3:     1     1     1</span></span></code></pre></div>
-<p>When calling <code>comorbidities</code> we get the expected
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>cdmf_eg <span class="ot">&lt;-</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="at">x =</span> mdcr,</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">subset</span>(<span class="fu">get_charlson_codes</span>(),</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                   condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;aids&quot;</span>, <span class="st">&quot;hiv&quot;</span>) <span class="sc">&amp;</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                   charlson_cdmf2019 <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>        <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cdmf_eg)</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>cdmf_eg <span class="ot">&lt;-</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">dcast</span>(<span class="at">data =</span> cdmf_eg,</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>                    patid <span class="sc">~</span> condition,</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>                    <span class="at">value.var =</span> <span class="st">&quot;charlson_cdmf2019&quot;</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>                    <span class="at">fun.aggregate =</span> <span class="cf">function</span>(x) {<span class="fu">as.integer</span>(<span class="fu">sum</span>(x) <span class="sc">&gt;</span> <span class="dv">0</span>)})</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>cdmf_eg[, .N, keyby <span class="ot">=</span> .(hiv, aids)]</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="do">## Key: &lt;hiv, aids&gt;</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="do">##      hiv  aids     N</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="do">## 1:     0     1  2716</span></span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a><span class="do">## 2:     1     0     6</span></span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a><span class="do">## 3:     1     1     1</span></span></code></pre></div>
+<p>When calling <code>comorbidities()</code> we get the expected
 result.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>cmdf_mdcr <span class="ot">&lt;-</span></span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(<span class="at">data =</span> mdcr,</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>                <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>                <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>                <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>                <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;charlson_cdmf2019&quot;</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a>                <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>                <span class="at">poa =</span> <span class="dv">1</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cmdf_mdcr)</span>
-<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>cmdf_mdcr[, .N, keyby <span class="ot">=</span> .(hiv, aids)]</span>
-<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="do">## Key: &lt;hiv, aids&gt;</span></span>
-<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="do">##      hiv  aids     N</span></span>
-<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
-<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="do">## 1:     0     0 38255</span></span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="do">## 2:     1     0     6</span></span>
-<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="do">## 3:     1     1     1</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>cmdf_mdcr <span class="ot">&lt;-</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(<span class="at">data =</span> mdcr,</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>                <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>                <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>                <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;charlson_cdmf2019&quot;</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>                <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>                <span class="at">primarydx =</span> <span class="dv">0</span><span class="dt">L</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>                <span class="at">poa =</span> <span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cmdf_mdcr)</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>cmdf_mdcr[, .N, keyby <span class="ot">=</span> .(hiv, aids)]</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="do">## Key: &lt;hiv, aids&gt;</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="do">##      hiv  aids     N</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="do">##    &lt;int&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="do">## 1:     0     0 38255</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="do">## 2:     1     0     6</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="do">## 3:     1     1     1</span></span></code></pre></div>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
 <!-- ----------------------------------------------------------------------- -->
 <!--                              End of File                                -->
 <!------------------------------------------------------------------------- -->
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-ahrq2017" class="csl-entry">
-Cost, Healthcare, and Utilization Project (HCUP). 2017.
-<span>“Elixhauser Comorbidity Software for ICD-9-CM.”</span> <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp" class="uri">https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp</a>.
-</div>
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-dewitt2025pccc" class="csl-entry">
 DeWitt, Peter, James Feinstein, and Seth Russell. 2025. <em>Pccc:
 Pediatric Complex Chronic Conditions</em>. <a href="https://github.com/CUD2V/pccc">https://github.com/CUD2V/pccc</a>.
@@ -1884,25 +1836,26 @@ Davis, and Andrew Renda. 2019. <span>“Charlson Comorbidity Index: ICD-9
 Update and ICD-10 Translation.”</span> <em>American Health &amp; Drug
 Benefits</em> 12 (4): 188. <a href="https://pubmed.ncbi.nlm.nih.gov/31428236/">https://pubmed.ncbi.nlm.nih.gov/31428236/</a>.
 </div>
+<div id="ref-ahrq2017" class="csl-entry">
+Healthcare Cost and Utilization Project (HCUP). 2017. <em>Elixhauser
+Comorbidity Software for ICD-9-CM</em>. <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp" class="uri">Https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp</a>.
+</div>
 <div id="ref-ahrq2025" class="csl-entry">
 Healthcare Research, Agency for, and Quality (AHRQ). 2025.
-<span>“Elixhauser Comorbidity Software Refined for ICD-10-CM Healthcare
-Cost and Utilization Project (HCUP).”</span> <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp">https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp</a>.
+<em>Elixhauser Comorbidity Software Refined for ICD-10-CM Healthcare
+Cost and Utilization Project (HCUP)</em>. <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp">https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp</a>.
 </div>
 <div id="ref-quan2011" class="csl-entry">
-Quan, Hude, Bo Li, Colette M. Couris, Kiyohide Fushimi, Peter Graham,
-Philip Hider, Jean-Michel Januel, and Vijaya Sundararajan. 2011.
-<span>“Updating and Validating the Charlson Comorbidity Index and Score
-for Risk Adjustment in Hospital Discharge Abstracts Using Data from 6
-Countries.”</span> <em>American Journal of Epidemiology</em> 173 (6):
-676–82. <a href="https://doi.org/10.1093/aje/kwq433">https://doi.org/10.1093/aje/kwq433</a>.
+Quan, Hude, Bo Li, Colette M. Couris, et al. 2011. <span>“Updating and
+Validating the Charlson Comorbidity Index and Score for Risk Adjustment
+in Hospital Discharge Abstracts Using Data from 6 Countries.”</span>
+<em>American Journal of Epidemiology</em> 173 (6): 676–82. <a href="https://doi.org/10.1093/aje/kwq433">https://doi.org/10.1093/aje/kwq433</a>.
 </div>
 <div id="ref-quan2005" class="csl-entry">
-Quan, Hude, Vijaya Sundararajan, Patricia Halfon, Andrew Fong, Bernard
-Burnand, Jean-Christophe Luthi, L Duncan Saunders, Catherine A. Beck,
-Thomas E. Feasby, and William A. Ghali. 2005. <span>“Coding Algorithms
-for Defining Comorbidities in ICD-9-CM and ICD-10 Administrative
-Data.”</span> <em>Medical Care</em> 43 (11): 1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+Quan, Hude, Vijaya Sundararajan, Patricia Halfon, et al. 2005.
+<span>“Coding Algorithms for Defining Comorbidities in ICD-9-CM and
+ICD-10 Administrative Data.”</span> <em>Medical Care</em> 43 (11):
+1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
 </div>
 </div>
 </div>

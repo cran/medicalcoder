@@ -15,12 +15,12 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, fig.align = "center")
 ```
 
-There are four functions in the `medicalcoder` package specifically for working
+There are four functions in the medicalcoder package specifically for working
 with International Classification of Diseases (ICD) codes.
 
-1. `get_icd_codes()`: returns a look up table of ICD codes as a `data.frame`.
+1. `get_icd_codes()`: returns a lookup table of ICD codes as a `data.frame`.
 2. `lookup_icd_codes()`: returns details on specific ICD codes.
-3. `is_icd()`: returns `TRUE` or `FLASE` for a vector of codes while considering
+3. `is_icd()`: returns `TRUE` or `FALSE` for a vector of codes while considering
    ICD version, type, and billable status.
 4. `icd_compact_to_full()`: insert a decimal point into a string to be
    consistent with ICD-9 diagnostic, ICD-9 procedure, or ICD-10 diagnostic
@@ -30,15 +30,12 @@ with International Classification of Diseases (ICD) codes.
 
 # `get_icd_codes()`
 
-A look up table for the ICD codes have been built as internal data sets within
-the `medicalcoder` package.  The sources for these look up tables come from the
+A lookup table for the ICD codes has been built as internal data sets within
+the medicalcoder package.  The sources for these lookup tables come from the
 Centers for Disease Control (CDC) and from the Centers for Medicare & Medicaid
 Services (CMS).  The specific links to the source data sets can be found in the
-source code for the `medicalcoder` package on
+source code for the medicalcoder package on
 [GitHub](https://github.com/dewittpe/medicalcoder).
-```{r label = "medicalcoder-url"}
-cat(packageDescription('medicalcoder')$URL)
-```
 
 End users can get a `data.frame` with
 ICD-9 diagnostic, ICD-9 procedure, ICD-10 diagnostic, and ICD-10 procedure codes.
@@ -59,7 +56,7 @@ The columns of this data.frame are:
 * `full_code`: the full ICD code with the decimal point if applicable.
 * `code`: compact code, any applicable decimal point has been omitted.
 * `src`: a character vector denoting the source of the information.
-* `known_start`: The first year that the `medicalcoder` package as data for this
+* `known_start`: The first year that the medicalcoder package has data for this
   code.
   * For codes based on the ICD-9-CM, ICD-9-PCS, ICD-10-CM, ICD-10-PCS standards
     the year is the _fiscal year_ for the United States Federal Government;
@@ -72,9 +69,9 @@ The columns of this data.frame are:
     _calendar year_.
 
 * `known_end`: the last year the code was part of the standard, or that the
-  `medicalcoder` package has data for.
+  medicalcoder package has data for.
   * ICD-9 last year of active use was FY 2015.
-  * ICD-10 is active.  The current version of `medicalcoder` has details on ICD-10
+  * ICD-10 is active.  The current version of medicalcoder has details on ICD-10
     codes through FY `r max(icd_codes[["known_end"]][icd_codes[["icdv"]] == 10L])`.
 
 ```{r, label = "example-for-assignable", include = FALSE}
@@ -96,6 +93,8 @@ d4
 
 * `assignable_end`: The last year the code was assignable.
 
+## with.descriptions
+
 To get the descriptions of the ICD codes call `get_icd_codes()` with
 `with.descriptions = TRUE`.
 ```{r, label = "icd-codes-with-descriptions"}
@@ -108,33 +107,54 @@ The return has the additional columns:
 * `desc_end`: the last fiscal_year that the description was documented
 
 Over time the descriptions for some ICD codes were modified within sources.
-There are also many differences between sources.  The table below has several
+There are also many differences between sources.  The tables below have several
 examples.
 
 ```{r, label = "deltas-in-desc", results = "hide"}
 delta_in_desc <-
-  subset(get_icd_codes(with.descriptions = TRUE),
-         subset = full_code %in% c("Z88.7", "010.93", "V76.49"),
-         select = c("full_code", "src", "desc", "desc_start", "desc_end"))
+  subset(
+    get_icd_codes(with.descriptions = TRUE),
+    subset = full_code %in% c("Z88.7", "010.93", "V76.49"),
+    select = c("full_code", "src", "desc", "desc_start", "desc_end")
+  )
 ```
 
-```{r, label = "deltas-in-desc-show", echo = FALSE, results = "asis"}
-knitr::kable(delta_in_desc, row.names = FALSE)
+The only difference in the description for 010.93 is a comma.
+
+```{r, label = "deltas-in-desc-show-010.93", echo = FALSE, results = "asis"}
+knitr::kable(
+  subset(delta_in_desc, subset = full_code == "010.93"),
+  row.names = FALSE
+)
 ```
 
-* Z88.7 has differences in the description over time within `cms` source and
-  between `cms` and `who`.
+ICD-10-CM Z88.7 has differences in the description over time within `cms` source
+and between `cms` and `who`.
 
-* The only difference in the description for 010.93 is a comma.
+```{r, label = "deltas-in-desc-show-Z88.7", echo = FALSE, results = "asis"}
+knitr::kable(
+  subset(delta_in_desc, subset = full_code == "Z88.7"),
+  row.names = FALSE
+)
+```
 
-* ICD-9-CM V79.49 had the description of 'other' which would require exploration
-  of the header codes to understand. Even when the most verbose description may
-  still require consideration of the header codes to fully understand.
+ICD-9-CM V79.49 had the description of 'other' which would require exploration
+of the header codes to understand. Even the most verbose description may
+still require consideration of the header codes to fully understand.
+
+```{r, label = "deltas-in-desc-show-v79.49", echo = FALSE, results = "asis"}
+knitr::kable(
+  subset(delta_in_desc, subset = full_code == "V76.49"),
+  row.names = FALSE
+)
+```
+
+## with.hierarchy
 
 Lastly, the `get_icd_codes()` function includes the argument `with.hierarchy`
 which will provide additional details for the codes.
 
-```{r label = "get-icd-descs-with-heirarchy"}
+```{r label = "get-icd-descs-with-hierarchy"}
 str(get_icd_codes(with.hierarchy = TRUE))
 ```
 The additional columns, in order of hierarchy, are:
@@ -147,9 +167,9 @@ The additional columns, in order of hierarchy, are:
 * subsubclassification
 * extension
 
-To keep the install size of `medicalcoder` under the size
+To keep the install size of medicalcoder under the size
 limits for CRAN, the stored data is structured in a way that several joins and
-other operations are need to have a data set that is end user friendly.
+other operations are needed to have a data set that is end user friendly.
 Several data sets are generated and cached when the namespace is loaded.
 
 # `lookup_icd_codes()`
@@ -157,7 +177,7 @@ Several data sets are generated and cached when the namespace is loaded.
 A related function, `lookup_icd_codes()`, allows the user to look up specific ICD
 codes. The return is a `data.frame`.  The columns report the input code, if it
 was matched as a full code (with an applicable decimal point) or a compact code
-(applicable decimal point omitted) along with the ICD version ,type, and when
+(applicable decimal point omitted) along with the ICD version, type, and when
 the code was assignable.
 
 ```{r, label = "lookup-icd-code-example"}
@@ -165,7 +185,7 @@ codes <- c("0011", "7329", "732", "73291", "not a code", "001.1", "A9248", "A924
 knitr::kable(lookup_icd_codes(codes), row.names = FALSE)
 ```
 
-It is possible to restrict the look up to just full or compact codes.  The
+It is possible to restrict the lookup to just full or compact codes.  The
 default, as shown above, is to consider full and compact codes.  Set `full.codes
 = FALSE` so only compact codes are considered.
 ```{r, label = "lookup-compact-icd-codes"}
@@ -284,7 +304,7 @@ standard.  When looking at retrospective data over several years the use of the
 
 There is also an option to considering header codes to be valid.  As seen below,
 the code "516" is a header, it was never assignable in ICD-9-CM.
-By setting `headerok = TRUE` "516" will be flagged as a valid code.  A ICD-10
+By setting `headerok = TRUE` "516" will be flagged as a valid code.  An ICD-10
 header "A00" will be FALSE in the following checks of ICD-9 codes.
 
 ```{r}
