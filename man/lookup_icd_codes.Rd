@@ -13,7 +13,9 @@ lookup_icd_codes(
 )
 }
 \arguments{
-\item{x}{Character vector of ICD codes (full or compact form).}
+\item{x}{Character vector of ICD codes (full or compact form). When
+\code{regex = TRUE}, \code{x} must contain at least one non-empty, non-missing
+string.}
 
 \item{regex}{Logical scalar. If \code{TRUE}, treat \code{x} as regular
 expressions; if \code{FALSE}, use exact matching.}
@@ -61,7 +63,8 @@ Similarly for ICD-9-CM: "055" is a header for measles; 055.0, 055.1,
 Code 055.7 is a header because 055.71 and 055.72 exist.
 
 Some codes change status across years. For example, ICD-9-CM 516.3 was
-assignable in fiscal years 2006–2011, then became a header in 2012–2015.
+assignable in fiscal years 1997–2011 for the CDC extracts (2006–2011 for CMS)
+and became a header in 2012–2015.
 }
 \seealso{
 \itemize{

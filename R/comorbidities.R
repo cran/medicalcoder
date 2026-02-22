@@ -43,6 +43,18 @@
 #' have better performance than using the date and will clear up any possible
 #' issues with non-sequential encounter ids from the source data.
 #'
+#' **Cumulative + POA defaults:**
+#'
+#' When `flag.method = "cumulative"` and neither
+#' `poa` nor `poa.var` is supplied, the first encounter for a condition is
+#' treated as `poa = 0`. Subsequent encounters for that condition are flagged as
+#' `poa = 1`.
+#'
+#' When `flag.method = "current"` and neither `poa` nor `poa.var` is supplied,
+#' then all codes will be considered present-on-admission.  If poa was assumed
+#' to be 0, then in this case the only conditions that could be flagged are the
+#' Elixhauser conditions which are poa-exempt.
+#'
 #' @return
 #'
 #' The return object will be slightly different depending on the value of
@@ -129,8 +141,8 @@
 #' * Elixhauser Comorbidities:
 #'
 #'   * Agency for Healthcare Research and Quality (AHRQ). Elixhauser
-#'     Comorbidity Software Refined for ICD-10-CM Diagnoses, v2025.1 \[Internet\].
-#'     2025. Available from:
+#'     Comorbidity Software Refined for ICD-10-CM Diagnoses, v2026.1 \[Internet\].
+#'     2026. Available from:
 #'     https://www.hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp
 #'
 #' @seealso
@@ -157,42 +169,6 @@ comorbidities <- function(data,
                           subconditions = FALSE
                           ) {
   UseMethod("comorbidities")
-}
-
-#' @export
-comorbidities.data.table <- function(data,
-                          icd.codes,
-                          method,
-                          id.vars = NULL,
-                          icdv.var = NULL, icdv = NULL,
-                          dx.var = NULL, dx = NULL,
-                          poa.var = NULL,  poa = NULL,
-                          age.var = NULL,
-                          primarydx.var = NULL, primarydx = NULL,
-                          flag.method = c("current", "cumulative"),
-                          full.codes = TRUE,
-                          compact.codes = TRUE,
-                          subconditions = FALSE
-                          ) {
-  NextMethod("comorbidities")
-}
-
-#' @export
-comorbidities.tbl_df <- function(data,
-                          icd.codes,
-                          method,
-                          id.vars = NULL,
-                          icdv.var = NULL, icdv = NULL,
-                          dx.var = NULL, dx = NULL,
-                          poa.var = NULL,  poa = NULL,
-                          age.var = NULL,
-                          primarydx.var = NULL, primarydx = NULL,
-                          flag.method = c("current", "cumulative"),
-                          full.codes = TRUE,
-                          compact.codes = TRUE,
-                          subconditions = FALSE
-                          ) {
-  NextMethod("comorbidities")
 }
 
 #' @export
@@ -245,6 +221,9 @@ comorbidities.data.frame <- function(data,
 
   if (!is.null(poa.var)) {
     is_a_column(poa.var, names(data))
+    if (!is.numeric(data[[poa.var]])) {
+      stop(sprintf("Column '%s' must be numeric (0/1/NA) when supplied as poa.var.", poa.var), call. = FALSE)
+    }
     pn <- poa.var %in% ..protected_names..
     if (pn) {
       stop(
@@ -258,6 +237,9 @@ comorbidities.data.frame <- function(data,
 
   if ((startsWith(method, "elixhauser") | startsWith(method, "charlson")) & !is.null(primarydx.var)) {
     is_a_column(primarydx.var, names(data))
+    if (!is.numeric(data[[primarydx.var]])) {
+      stop(sprintf("Column '%s' must be numeric (0/1/NA) when supplied as primarydx.var.", primarydx.var), call. = FALSE)
+    }
     pn <- primarydx.var %in% ..protected_names..
     if (pn) {
       stop(
@@ -272,11 +254,7 @@ comorbidities.data.frame <- function(data,
     primarydx.var <- primarydx <- NULL
   }
 
-  flag.method <-
-    match.arg(
-      flag.method,
-      several.ok = FALSE
-    )
+  flag.method <- match.arg(flag.method, choices = c("current", "cumulative"), several.ok = FALSE)
 
   if (startsWith(method, "charlson") && !is.null(age.var)) {
     is_a_column(age.var, names(data))
@@ -306,6 +284,9 @@ comorbidities.data.frame <- function(data,
       icdv <- NULL
     } else {
       is_a_column(icdv.var, names(data))
+      if (!is.numeric(data[[icdv.var]])) {
+        stop(sprintf("Column '%s' must be numeric (9/10/NA) when supplied as icdv.var.", icdv.var), call. = FALSE)
+      }
     }
   } else {
     if (!is.null(icdv)) {
@@ -328,6 +309,9 @@ comorbidities.data.frame <- function(data,
       dx <- NULL
     } else{
       is_a_column(dx.var, names(data))
+      if (!is.numeric(data[[dx.var]])) {
+        stop(sprintf("Column '%s' must be numeric (0/1/NA) when supplied as dx.var.", dx.var), call. = FALSE)
+      }
     }
   } else {
     if (!is.null(dx)) {
@@ -360,13 +344,13 @@ comorbidities.data.frame <- function(data,
   # Determine the lookup table and the columns for the lookup table to keep
   lookup_to_keep <- c("condition")
   if (startsWith(method, "pccc")) {
-    lookup <- get_pccc_codes()
+    lookup <- get(x = "pccc_codes", envir = ..mdcr_data_env.., inherits = FALSE)
     lookup_to_keep <- c(lookup_to_keep, "subcondition", "transplant_flag", "tech_dep_flag")
   } else if (startsWith(method, "charlson")) {
-    lookup <- get_charlson_codes()
+    lookup <- get("charlson_codes", envir = ..mdcr_data_env.., inherits = FALSE)
     lookup_to_keep <- c(lookup_to_keep)
   } else if (startsWith(method, "elixhauser")) {
-    lookup <- get_elixhauser_codes()
+    lookup <- get("elixhauser_codes", envir = ..mdcr_data_env.., inherits = FALSE)
     lookup_to_keep <- c(lookup_to_keep, "poaexempt")
   }
 
@@ -385,25 +369,21 @@ comorbidities.data.frame <- function(data,
   ##############################################################################
   # inner join the data with the lookup table
   on_full <-
-    merge(
+    mdcr_inner_join(
       x = if (full.codes) {data} else {data[0, ]},
       y = lookup,
-      all = FALSE,
       by.x = by_x,
       by.y = c("full_code", by_y),
-      suffixes = c("", ".y"),
-      sort = FALSE
+      suffixes = c("", ".y")
     )
 
   on_comp <-
-    merge(
+    mdcr_inner_join(
       x = if (compact.codes) {data} else {data[0, ]},
       y = lookup,
-      all = FALSE,
       by.x = by_x,
       by.y = c("code", by_y),
-      suffixes = c("", ".y"),
-      sort = FALSE
+      suffixes = c("", ".y")
     )
 
   ##############################################################################
@@ -490,9 +470,9 @@ comorbidities.data.frame <- function(data,
   ##############################################################################
   # create a data.frame with one unique row for the id.vars
   if (!id.vars.created) {
-    iddf <- unique(mdcr_select(data, cols = id.vars))
+    iddf <- mdcr_unique(mdcr_select(data, cols = id.vars))
   } else {
-    iddf <- unique(mdcr_select(cmrb, cols = id.vars))
+    iddf <- mdcr_unique(mdcr_select(cmrb, cols = id.vars))
     if (nrow(iddf) == 0) {
       iddf <- stats::setNames(data.frame(1L, stringsAsFactors = FALSE), id.vars)
     }
@@ -519,34 +499,40 @@ comorbidities.data.frame <- function(data,
       grps <- c(grps, "subcondition")
       byconditions <- c(byconditions, "subcondition")
     }
+    # identify first occurrence per id/condition then retain encounters on/after it
     tmp <- mdcr_select(cmrb, c(grps, encid))
     tmp <- mdcr_setorder(tmp, c(grps, encid))
     keep <- !mdcr_duplicated(tmp, by = grps)
     foc <- mdcr_subset(tmp, keep)
+
+    # add the first occurrence on to the cmrb data.frame
+    foc <-
+      mdcr_left_join(
+        x = cmrb,
+        y = foc,
+        by = c(id.vars2, encid, byconditions)
+      )
     foc <- mdcr_setnames(foc, old = encid, new = "first_occurrance")
 
-    # merge on the poa.var
-    foc <-
-      merge(x = foc,
-            y = cmrb,
-            all = TRUE,
-            by.x = c(id.vars2, "first_occurrance", byconditions),
-            by.y = c(id.vars2, encid, byconditions),
-            sort = FALSE
-      )
+    iddf2 <-
+      mdcr_inner_join(
+        x = mdcr_unique(mdcr_select(iddf, id.vars)),
+        y = mdcr_unique(mdcr_select(foc, id.vars2)),
+        by = id.vars2)
+    iddf2 <- mdcr_unique(iddf2)
 
     if (startsWith(method, "pccc")) {
       foc <- split(foc, f = mdcr_select(foc, c("condition", "subcondition")), drop = TRUE)
     } else {
       foc <- split(foc, f = mdcr_select(foc, c("condition")), drop = TRUE)
     }
+    foc <- lapply(foc, mdcr_unique)
 
-    foc <- lapply(foc, unique)
 
     foc <-
       lapply(foc,
              function(y) {
-               rtn <- merge(x = iddf, y = y, all.x = TRUE, by = c(id.vars2), allow.cartesian = TRUE, sort = FALSE)
+               rtn <- mdcr_left_join(x = iddf2, y = y, by = c(id.vars2))
                rtn <- mdcr_subset(rtn, i = !is.na(rtn[["condition"]]))
                i <- rtn[[encid]] >= rtn[["first_occurrance"]]
                mdcr_subset(rtn, i = i)
@@ -554,7 +540,10 @@ comorbidities.data.frame <- function(data,
 
     cmrb <- do.call(rbind, foc)
 
-    # set poa to 1 and primarydx to 0 for prior conditions
+    # Carry condition forward after first occurrence: set poa to 1 and
+    # primarydx to 0 on later encounters so downstream POA filtering keeps
+    # all post-first-occurrence rows and the first-occurrence row only if poa =
+    # 1 (via poa.var or poa) for the first-occurrence
     idx <- cmrb[[encid]] > cmrb[["first_occurrance"]]
     cmrb[[poa.var]][idx] <- 1L
     if (!is.null(primarydx.var)) {
@@ -562,14 +551,14 @@ comorbidities.data.frame <- function(data,
     }
     cmrb <- mdcr_set(cmrb, j = "first_occurrance", value =  NULL)
 
-    cmrb <- unique(cmrb)
+    cmrb <- mdcr_unique(cmrb)
   }
 
   ##############################################################################
   # retain only the row for present on admission for pccc and charlson.
   # elixhauser conditions may or may not need poa, so do not subset in that
   # case.
-  if (!startsWith(method, "elixhauser")) {
+  if (startsWith(method, "charlson") | startsWith(method, "pccc")) {
     cmrb <- mdcr_subset(cmrb, i = cmrb[[poa.var]] == 1L)
   }
 
@@ -582,10 +571,11 @@ comorbidities.data.frame <- function(data,
   } else if (startsWith(method, "charlson")) {
     ccc <- .charlson(id.vars = id.vars, iddf = iddf, cmrb = cmrb, primarydx.var = primarydx.var, method = method)
     if (!is.null(age.var)) {
-      ages <- unique(mdcr_select(data, cols = c(id.vars, age.var)))
+      ages <- mdcr_unique(mdcr_select(data, cols = c(id.vars, age.var)))
       ages[["age_score"]] <- as.integer(cut(ages[[age.var]], breaks = c(-Inf, 50, 60, 70, 80, Inf), right = TRUE)) - 1L
       ccc <- merge(ccc, mdcr_select(ages, cols = c(id.vars, "age_score")), all.x = TRUE, by = id.vars, sort = FALSE)
-      ccc[["cci"]] <- ccc[["cci"]] + ccc[["age_score"]]
+      nonmissing <- which(!is.na(ccc[["age_score"]]))
+      ccc[["cci"]][nonmissing] <- ccc[["cci"]][nonmissing] + ccc[["age_score"]][nonmissing]
     } else {
       ccc[["age_score"]] <- rep(NA_integer_, nrow(ccc))
     }
@@ -619,17 +609,6 @@ comorbidities.data.frame <- function(data,
 
   ##############################################################################
   # set attributes and return
-  if (requireNamespace("tibble", quietly = TRUE) && inherits(data, "tbl_df")) {
-    if (subconditions) {
-      ccc[["conditions"]] <- getExportedValue(name = "as_tibble", ns = "tibble")(x = ccc[["conditions"]])
-      for (i in seq_len(length(ccc[["subconditions"]]))) {
-        ccc[["subconditions"]][[i]] <- getExportedValue(name = "as_tibble", ns = "tibble")(x = ccc[["subconditions"]][[i]])
-      }
-    } else {
-      ccc <- getExportedValue(name = "as_tibble", ns = "tibble")(x = ccc)
-    }
-  }
-
   attr(ccc, "method") <- method
   attr(ccc, "id.vars") <- id.vars
   attr(ccc, "flag.method") <- flag.method
@@ -674,7 +653,7 @@ comorbidities_methods <- function() {
       "charlson_cdmf2019",
       "elixhauser_elixhauser1988", "elixhauser_ahrq_web", "elixhauser_quan2005",
       "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024",
-      "elixhauser_ahrq2025", "elixhauser_ahrq_icd10")
+      "elixhauser_ahrq2025", "elixhauser_ahrq2026", "elixhauser_ahrq_icd10")
 }
 
 
@@ -687,7 +666,7 @@ comorbidities_methods <- function() {
     "transplant_flag", "tech_dep_flag",
     "pccc_v3.1", "pccc_v3.0", "pccc_v2.1", "pccc_v2.0",
     "elixhauser_ahrq_web", "elixhauser_elixhauser1988", "elixhauser_quan2005",
-    "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024", "elixhauser_ahrq2025",
+    "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024", "elixhauser_ahrq2025", "elixhauser_ahrq2026",
     "elixhauser_ahrq_icd10",
     "charlson_cdmf2019", "charlson_deyo1992", "charlson_quan2005", "charlson_quan2011"
   )

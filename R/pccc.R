@@ -23,7 +23,7 @@
   # intersection, and the union. Build the matrices separately so tech-only
   # signals can be handled after checking whether a non-tech condition was
   # flagged for the patient.
-  any_transplant <- unique(mdcr_subset(x = cmrb, i = cmrb[["transplant_flag"]] == 1L, cols = c(id.vars)))
+  any_transplant <- mdcr_unique(mdcr_subset(x = cmrb, i = cmrb[["transplant_flag"]] == 1L, cols = c(id.vars)))
 
   # Build ccc indicators based on only non-tech_dep codes
   # _or_ a tech_dep transplant.  There are codes which are both tech_dep and
@@ -139,12 +139,12 @@
 
   X <- X[, colorder, drop = FALSE]
 
-  rtn <- cbind(iddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
+  rtn <- mdcr_cbind(iddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
 
   if (subconditions) {
     rtn <- list(conditions = rtn, subconditions = list())
     for (cnd in conditions) {
-      scnd <- unique(mdcr_subset(cmrb, i = cmrb[["condition"]] == cnd, cols = c(id.vars, "subcondition")))
+      scnd <- mdcr_unique(mdcr_subset(cmrb, i = cmrb[["condition"]] == cnd, cols = c(id.vars, "subcondition")))
 
       # subset the uiddf to the set of those with the condition
       uiddf <- mdcr_subset(rtn[["conditions"]],
@@ -166,7 +166,7 @@
         X[cbind(ri[keep], ci[keep])] <- 1L
       }
 
-      rtn[["subconditions"]][[cnd]] <- cbind(uiddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
+      rtn[["subconditions"]][[cnd]] <- mdcr_cbind(uiddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
     }
   }
 
@@ -177,11 +177,11 @@
 #' @noRd
 #' @keywords internal
 .pccc_v2 <- function(id.vars, iddf, cmrb, subconditions) {
-  any_tech_dep   <- unique(mdcr_subset(cmrb, i = cmrb[["tech_dep_flag"]] == 1L,   cols = c(id.vars)))
-  any_transplant <- unique(mdcr_subset(cmrb, i = cmrb[["transplant_flag"]] == 1L, cols = c(id.vars)))
+  any_tech_dep   <- mdcr_unique(mdcr_subset(cmrb, i = cmrb[["tech_dep_flag"]] == 1L,   cols = c(id.vars)))
+  any_transplant <- mdcr_unique(mdcr_subset(cmrb, i = cmrb[["transplant_flag"]] == 1L, cols = c(id.vars)))
 
   CMRB <- mdcr_select(cmrb, cols = c(id.vars, "condition"))
-  CMRB <- unique(CMRB)
+  CMRB <- mdcr_unique(CMRB)
 
   conditions <- sort(unique(..mdcr_internal_pccc_conditions..[["condition"]]))
 
@@ -209,12 +209,12 @@
   X[match(key_tran, key_iddf), "any_transplant"] <- 1L
   X <- cbind(X, num_cmrb, cmrb_flag)
 
-  rtn <- cbind(iddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
+  rtn <- mdcr_cbind(iddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
 
   if (subconditions) {
     rtn <- list(conditions = rtn, subconditions = list())
     for (cnd in conditions) {
-      scnd <- unique(mdcr_subset(cmrb, i = cmrb[["condition"]] == cnd, cols = c(id.vars, "subcondition")))
+      scnd <- mdcr_unique(mdcr_subset(cmrb, i = cmrb[["condition"]] == cnd, cols = c(id.vars, "subcondition")))
 
       # subset the uiddf to the set of those with the condition
       uiddf <- mdcr_subset(rtn[["conditions"]],
@@ -235,7 +235,7 @@
         X[cbind(ri[keep], ci[keep])] <- 1L
       }
 
-      rtn[["subconditions"]][[cnd]] <- cbind(uiddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
+      rtn[["subconditions"]][[cnd]] <- mdcr_cbind(uiddf, as.data.frame(X, check.names = FALSE, stringsAsFactors = FALSE))
     }
   }
 

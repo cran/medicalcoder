@@ -23,7 +23,7 @@
 #' @keywords internal
 .elixhauser <- function(id.vars, iddf, cmrb, poa.var, primarydx.var, method) {
   ccc <- mdcr_select(cmrb, cols = c(id.vars, "condition", "poaexempt", poa.var, primarydx.var))
-  ccc <- unique(ccc)
+  ccc <- mdcr_unique(ccc)
 
   # omit primary dx
   idx <- ccc[[primarydx.var]] == 0L
@@ -36,18 +36,16 @@
   }
 
   # build the return object
-  rtn <- cbind(iddf, as.data.frame(results$X, check.names = FALSE, stringsAsFactors = FALSE))
+  rtn <- mdcr_cbind(iddf, as.data.frame(results$X, check.names = FALSE, stringsAsFactors = FALSE))
   rtn <- mdcr_set(rtn, j = "num_cmrb", value = results$num_cmrb)
   rtn <- mdcr_set(rtn, j = "cmrb_flag", value = results$cmrb_flag)
   rtn <- mdcr_set(rtn, j = "mortality_index", value = results$mortality_index)
   rtn <- mdcr_set(rtn, j = "readmission_index", value = results$readmission_index)
   rownames(rtn) <- NULL
   rtn
-
 }
 
 .elixhauser_post2022 <- function(ccc, id.vars, iddf, cmrb, poa.var, primarydx.var, method) {
-
   conditions <- ..mdcr_internal_elixhauser_codes..[["condition"]][which(..mdcr_internal_elixhauser_codes..[[method]] == 1L)]
   conditions <- sort(unique(conditions))
 
@@ -94,26 +92,40 @@
     XANYPOA[cbind(ri[keep], ci[keep])] <- 1L
   }
 
-  # Assign comorbidities which are nutral to POA
+  # Assign comorbidities which are neutral to POA
   from_to <-
     c("DRUG_ABUSEPSYCHOSES" = "DRUG_ABUSE",
       "HFHTN_CX" = "HTN_CX",
       "HTN_CXRENLFL_SEV"= "HTN_CX",
       "HFHTN_CXRENLFL_SEV"= "HTN_CX",
       "ALCOHOLLIVER_MLD" = "ALCOHOL",
-      "VALVE_AUTOIMMUNE" = "AUTOIMMUNE"
+      "VALVE_AUTOIMMUNE" = "AUTOIMMUNE",
+      "LIVER_MLD_NEURO" = "LIVER_MLD",
+      "LIVER_MLD_NEURO" = "NEURO_OTH",
+      "NEURO_OTH_SEIZ" = "NEURO_OTH",
+      "NEURO_OTH_SEIZ" = "NEURO_SEIZ",
+      "LIVER_MLD_PULMCIRC" = "LIVER_MLD",
+      "LIVER_MLD_PULMCIRC" = "PULMCIRC"
     )
 
   for (i in seq_len(length(from_to))) {
     f <- names(from_to)[i]
     t <- unname(from_to[i])
-          XPOA[      XPOA[, f] == 1L, t] <- 1L
-    XPOAEXEMPT[XPOAEXEMPT[, f] == 1L, t] <- 1L
-       XANYPOA[   XANYPOA[, f] == 1L, t] <- 1L
-         XNPOA[     XNPOA[, f] == 1L, t] <- 1L
+    if (f %in% colnames(XPOA)) {
+      XPOA[XPOA[, f] == 1L, t] <- 1L
+    }
+    if (f %in% colnames(XPOAEXEMPT)) {
+      XPOAEXEMPT[XPOAEXEMPT[, f] == 1L, t] <- 1L
+    }
+    if (f %in% colnames(XANYPOA)) {
+      XANYPOA[XANYPOA[, f] == 1L, t] <- 1L
+    }
+    if (f %in% colnames(XNPOA)) {
+      XNPOA[XNPOA[, f] == 1L, t] <- 1L
+    }
   }
 
-  # flag if poa expempt or POA
+  # flag if POA exempt or POA
   from_to <-
     c("DRUG_ABUSEPSYCHOSES" = "PSYCHOSES",
       "HFHTN_CX" = "HF",
@@ -129,8 +141,12 @@
   for (i in seq_len(length(from_to))) {
     f <- names(from_to)[i]
     t <- unname(from_to[i])
-          XPOA[      XPOA[, f] == 1L, t] <- 1L
-    XPOAEXEMPT[XPOAEXEMPT[, f] == 1L, t] <- 1L
+    if (f %in% colnames(XPOA)) {
+      XPOA[XPOA[, f] == 1L, t] <- 1L
+    }
+    if (f %in% colnames(XPOAEXEMPT)) {
+      XPOAEXEMPT[XPOAEXEMPT[, f] == 1L, t] <- 1L
+    }
   }
 
   # CBVD_NPOA is unique in that it requires that the condition is not POA
@@ -207,7 +223,6 @@
 }
 
 .elixhauser_pre2022 <- function(ccc, id.vars, iddf, cmrb, poa.var, primarydx.var, method) {
-
   # what are the relevent coniditions
   conditions <-
     unique(..mdcr_internal_elixhauser_codes..[["condition"]][which(..mdcr_internal_elixhauser_codes..[[method]] == 1L)])

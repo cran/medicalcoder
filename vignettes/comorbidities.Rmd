@@ -37,7 +37,7 @@ implemented in the medicalcoder package:
 
 1. Pediatric Complex Chronic Condition System (PCCC)
    a. Version 2.0 [@feudtner2014pediatric]
-       i. `pccc_v2.0` is consistent with the older R package pccc (v1.0.6) [@dewitt2025pccc].
+       i. `pccc_v2.0` is consistent with the older R package pccc (v1.0.7) [@feinstein2018pccc;@dewitt2026pccc].
        ii. `pccc_v2.1` modifies the set of ICD codes to be more consistent with documentation and other implementations of v2.0.
 
    b. Version 3.0 [@feinstein2024pediatric]
@@ -50,18 +50,20 @@ implemented in the medicalcoder package:
    c. `charlson_cdmf2019`: [@glasheen2019]
 
 3. Elixhauser
-   a. Based on codes provided by the Agency for Healthcare Research and Quality (AHRQ) for fiscal years 2022 through 2025 [@ahrq2025]
+   a. Based on codes provided by the Agency for Healthcare Research and Quality (AHRQ) for fiscal years 2022 through 2026 [@ahrqicd10]
       i. `elixhauser_ahrq2022`
       ii. `elixhauser_ahrq2023`
       iii. `elixhauser_ahrq2024`
       iv. `elixhauser_ahrq2025`
+      v. `elixhauser_ahrq2026`
+      vi. `elixhauser_ahrq_icd10`: uses all codes from all the specific years
 
    b. Codes from Table 2 of @quan2005
       i. `elixhauser_elixhauser1988`: [@elixhauser1998;@quan2005]
       ii. `elixhauser_ahrq_web`: [@quan2005;@ahrq2017]
       iii. `elixhauser_quan2005`: [@quan2005]
 
-**IMPORTANT NOTE:** Elixhauser 1998 and AHRQ Web used diagnostic related
+**IMPORTANT NOTE:** Elixhauser 1998 and AHRQ Web used diagnosis-related
 group (DRG) codes as part of the methods.  The medicalcoder
 package _does not_ use DRG codes.  This is consistent with the way these
 methods were implemented in @quan2005.
@@ -116,18 +118,14 @@ a default value to be applied to the entirety of `data`. We will see some
 examples where this is useful.
 
 The `data` element is expected to be a `data.frame`, or at least something that
-inherits the `data.frame` class.  The format is expected to be a 'long' format.
-One row per code.  Two example data sets in the package show the general
+inherits the `data.frame` class.  The format is expected to be a 'long' format:
+one ICD code per row.  Two example data sets in the package show the general
 expected form of the `data`.
 
 ```{r label = "example-data"}
 head(mdcr)
 head(mdcr_longitudinal)
 ```
-
-```{r}
-```
-
 
 # When are conditions flagged?
 
@@ -136,7 +134,7 @@ the comorbidity algorithms and considering if the patient has a comorbidity at
 the start of an encounter, or if the condition is a result of the current
 hospitalization.
 
-Implementation of Elixhauser comorbidities for 2022 and beyond [@ahrq2025]
+Implementation of Elixhauser comorbidities for 2022 and beyond [@ahrqicd10]
 explicitly define the use of present on admission flags for specific conditions
 (see the `poa_required` flag reported in the data set returned by
 `get_elixhauser_poa()`).
@@ -308,6 +306,14 @@ tab <- add_header_above(tab, c(" " = 2L, c("POA = 0" = 6L, "POA = 1" = 6L, "poa.
 tab
 ```
 
+### Flag method and POA defaults
+
+When `flag.method = "cumulative"` and you do *not* supply `poa` or `poa.var`,
+`comorbidities()` treats the first encounter where a condition appears as
+`poa = 0` and carries that condition forward with `poa = 1` on later encounters.
+
+When `flag.method = "current"` and you do *not* supply `poa` or `poa.var`,
+`comorbidities()` treats all ICD codes as `poa = 1`.
 
 # Mapping ICD Codes to Comorbidities
 

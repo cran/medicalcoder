@@ -2,7 +2,7 @@
 
 
 
-# medicalcoder: An R package for working with ICD codes and Comorbidity Algorithms <img src="man/figures/hex.svg" width="200px" align="right" alt = "medicalcoder hex logo"/>
+# medicalcoder: A Unified and Longitudinally Aware Framework for ICD-Based Comorbidity Assessment <img src="man/figures/hex.svg" width="200px" align="right" alt = "medicalcoder hex logo"/>
 
 <!-- badges: start -->
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -14,14 +14,15 @@
 <!-- badges: end -->
 
 medicalcoder is a lightweight, base-R package for working with ICD-9 and
-ICD-10 diagnosis and procedure codes. It provides fast, dependency-free tools to
-look up, validate, and manipulate ICD codes, while also implementing widely used
-comorbidity algorithms such as Charlson, Elixhauser, and the Pediatric Complex
-Chronic Conditions (PCCC). Designed for portability and reproducibility, the
-package avoids external dependencies—requiring only R ≥ 3.5.0—yet offers a rich
-set of curated ICD code libraries from the United States' Centers for Medicare
-and Medicaid Services (CMS), Centers for Disease Control (CDC), and the World
-Health Organization (WHO).
+ICD-10 diagnosis and procedure codes. It implements widely used comorbidity
+algorithms such as Charlson, Elixhauser, and the Pediatric Complex Chronic
+Conditions (PCCC), supports longitudinal comorbidity flagging across encounters,
+and provides fast, dependency-free utilities to look up, validate, and
+manipulate ICD codes. Designed for portability and reproducibility, the package
+avoids external dependencies—requiring only R ≥ 3.5.0—yet offers a rich set of
+curated ICD code libraries from the United States' Centers for Medicare and
+Medicaid Services (CMS), Centers for Disease Control (CDC), and the World Health
+Organization (WHO).
 
 The package balances performance with elegance: its internal caching, efficient
 joins, and compact data structures make it practical for large-scale health data
@@ -48,11 +49,11 @@ The primary objectives of medicalcoder are:
        ease of maintenance and usability.
      - Suggested packages are needed only for development work and building
        vignettes. They are not required for installation or use.
-     - That said, there are non-trivial performance gains when passing a
-       [`data.table`](https://cran.r-project.org/package=data.table) to the
-       `comorbidities()` function compared to passing a base `data.frame` or a
-       `tibble` from the tidyverse.
-       (See [benchmarking](https://github.com/dewittpe/medicalcoder/tree/main/benchmarking)).
+    - That said, there are non-trivial performance gains when passing a
+      [`data.table`](https://cran.r-project.org/package=data.table) to the
+      `comorbidities()` function. Passing a `tibble` is typically faster than a
+      base `data.frame` but slower than a `data.table`.
+      (See [benchmarking](https://github.com/dewittpe/medicalcoder/tree/main/benchmarking)).
 
    - Internal lookup tables
      - All required data are included in the package. If you have the `.tar.gz`
@@ -86,7 +87,7 @@ medicalcoder provides novel features:
 
 ## Install
 
-### CRAN
+### From CRAN
 
 ``` r
 install.packages("medicalcoder")
@@ -106,11 +107,7 @@ you can install from within R via:
 
 
 ``` r
-install.packages(
-  pkgs = "medicalcoder_X.Y.Z.tar.gz", # replace file name with the file you have
-  repos = NULL,
-  type = "source"
-)
+install.packages(pkgs = "medicalcoder_X.Y.Z.tar.gz", repos = NULL, type = "source")
 ```
 
 From the command line:
@@ -210,7 +207,7 @@ vignette(topic = "comorbidities", package = "medicalcoder")
 
 
 ``` r
-# PCCC v3.1 example
+# PCCC v2.1 and v3.1 example
 library(medicalcoder)
 cmrbs2 <-
   comorbidities(
@@ -312,7 +309,7 @@ vignette(topic = "charlson", package = "medicalcoder")
   * `method = elixhauser_elixhauser1988`
 * [Quan et al. (2005)](https://doi.org/10.1097/01.mlr.0000182534.19832.83)
   * `method = elixhauser_quan2005`
-* AHRQ (2017, 2022, 2023, 2024, 2025, ICD10)
+* AHRQ (2017, 2022, 2023, 2024, 2025, 2026, ICD10)
   * [For ICD-9 codes](https://hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp)
     * `method = elixhauser_ahrq_web`
   * [For ICD-10 codes](https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp)
@@ -320,6 +317,7 @@ vignette(topic = "charlson", package = "medicalcoder")
     * `method = elixhauser_ahrq2023`
     * `method = elixhauser_ahrq2024`
     * `method = elixhauser_ahrq2025`
+    * `method = elixhauser_ahrq2026`
     * `method = elixhauser_ahrq_icd10`
 
 
@@ -336,7 +334,7 @@ cmrbs <-
     method = "elixhauser_ahrq_icd10"
   )
 ```
-The summary for the results from `method = elixhauser_ahrq_icd10` are similar to those for
+The summary for the results from `method = elixhauser_ahrq_icd10` is similar to those for
 Charlson. A `data.frame` with the counts and percentages of distinct
 `data[id.vars]` with the noted condition, and a summary of the index scores.
 
@@ -361,16 +359,16 @@ You can get a table of ICD codes via `get_icd_codes()`.
 
 ``` r
 str(medicalcoder::get_icd_codes())
-#> 'data.frame':	227534 obs. of  9 variables:
+#> 'data.frame':	249736 obs. of  9 variables:
 #>  $ icdv            : int  9 9 9 9 9 9 9 9 9 9 ...
-#>  $ dx              : int  0 0 0 0 0 0 1 0 1 0 ...
-#>  $ full_code       : chr  "00" "00.0" "00.01" "00.02" ...
-#>  $ code            : chr  "00" "000" "0001" "0002" ...
-#>  $ src             : chr  "cms" "cms" "cms" "cms" ...
-#>  $ known_start     : int  2003 2003 2003 2003 2003 2003 1997 2003 1997 2003 ...
-#>  $ known_end       : int  2015 2015 2015 2015 2015 2015 2015 2015 2015 2015 ...
-#>  $ assignable_start: int  NA NA 2003 2003 2003 2003 NA NA 1997 2003 ...
-#>  $ assignable_end  : int  NA NA 2015 2015 2015 2015 NA NA 2015 2015 ...
+#>  $ dx              : int  0 0 0 0 0 0 0 0 0 0 ...
+#>  $ full_code       : chr  "00" "00" "00.0" "00.0" ...
+#>  $ code            : chr  "00" "00" "000" "000" ...
+#>  $ src             : chr  "cdc" "cms" "cdc" "cms" ...
+#>  $ known_start     : int  2003 2006 2003 2006 2003 2006 2003 2006 2003 2006 ...
+#>  $ known_end       : int  2012 2015 2012 2015 2012 2015 2012 2015 2012 2015 ...
+#>  $ assignable_start: int  NA NA NA NA 2003 2006 2003 2006 2003 2006 ...
+#>  $ assignable_end  : int  NA NA NA NA 2012 2015 2012 2015 2012 2015 ...
 ```
 
 The columns are:
@@ -459,10 +457,12 @@ comorbidity algorithm to a data set are:
 
 1. Data size: number of subjects/encounters.
 2. Data storage class: medicalcoder has been built such that no imports of
-   other namespaces is required.  That said, when a `data.table` is passed to
+   other namespaces is required. That said, when a `data.table` is passed to
    `comorbidities()` and the `data.table` namespace is available, then S3
    dispatch for `merge` is used, along with some other methods, to reduce memory
-   use and reduce computation time.
+   use and reduce computation time. When a `tibble` is passed and the tidyverse
+   namespaces are available, the tibble-aware paths improve performance over a
+   base `data.frame`, but `data.table` remains fastest.
 3. `flag.method`: "current" will take less time than the "cumulative" method.
 
 Details on the benchmarking method, summary graphics, and tables,  can be found
@@ -475,4 +475,4 @@ directory.
 Along with the GitHub actions and testing on current versions of R, the
 [testing](https://github.com/dewittpe/medicalcoder/tree/main/testing)
 directory in the medicalcoder GitHub repo reports the `R CMD check` results for
-all R versions from 3.5.0 to latest.  Several with, and without Sugguests.
+all R versions from 3.5.0 to latest.  Several with, and without Suggests.

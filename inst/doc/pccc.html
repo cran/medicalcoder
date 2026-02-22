@@ -825,7 +825,7 @@ one non-technology condition is flagged.</p>
 <code>get_pccc_codes()</code> returns a data.frame.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>pccc_codes <span class="ot">&lt;-</span> <span class="fu">get_pccc_codes</span>()</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">str</span>(pccc_codes)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7913 obs. of  12 variables:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7906 obs. of  12 variables:</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
@@ -2230,10 +2230,10 @@ both diagnostic and procedure.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>pccc_codes[pccc_codes<span class="sc">$</span>code <span class="sc">==</span> <span class="st">&quot;3321&quot;</span>, ]</span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="do">##      icdv dx full_code code   condition              subcondition</span></span>
 <span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="do">## 59      9  0     33.21 3321 respiratory device_and_technology_use</span></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="do">## 1460    9  1     332.1 3321   neuromusc         movement_diseases</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="do">## 1453    9  1     332.1 3321   neuromusc         movement_diseases</span></span>
 <span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="do">##      transplant_flag tech_dep_flag pccc_v3.1 pccc_v3.0 pccc_v2.1 pccc_v2.0</span></span>
 <span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="do">## 59                 0             1         1         1         1         1</span></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="do">## 1460               0             0         1         1         1         1</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="do">## 1453               0             0         1         1         1         1</span></span>
 <span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="fu">table</span>(mdcr[mdcr<span class="sc">$</span>code <span class="sc">==</span> <span class="st">&quot;3321&quot;</span>, <span class="st">&quot;dx&quot;</span>])</span>
 <span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="do">##  0  1 </span></span>
@@ -2291,9 +2291,9 @@ omitted from the <code>comorbidities()</code> call.</p>
 <span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="do">## 4074 87420    9  5641  1</span></span>
 <span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_pccc_codes</span>(), code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;78321&quot;</span>, <span class="st">&quot;5641&quot;</span>))</span>
 <span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="do">##     icdv dx full_code code condition subcondition transplant_flag tech_dep_flag</span></span>
-<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="do">## 192    9  0     56.41 5641     renal        other               0             0</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="do">## 185    9  0     56.41 5641     renal        other               0             0</span></span>
 <span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="do">##     pccc_v3.1 pccc_v3.0 pccc_v2.1 pccc_v2.0</span></span>
-<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="do">## 192         1         1         1         1</span></span></code></pre></div>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="do">## 185         1         1         1         1</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">subset</span>(mdcr_results_v2<span class="fl">.1</span>_01, patid <span class="sc">==</span> <span class="st">&quot;87420&quot;</span>, <span class="at">select =</span> <span class="fu">c</span>(<span class="st">&quot;cmrb_flag&quot;</span>, <span class="st">&quot;renal&quot;</span>))</span>
 <span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="do">##       cmrb_flag renal</span></span>
 <span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="do">## 32849         1     1</span></span>
@@ -2310,13 +2310,17 @@ omitted from the <code>comorbidities()</code> call.</p>
 <span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a></span>
 <span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_icd_codes</span>(<span class="at">with.descriptions =</span> <span class="cn">TRUE</span>), full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;56.41&quot;</span>, <span class="st">&quot;564.1&quot;</span>))</span>
 <span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a><span class="do">##       icdv dx full_code code src known_start known_end assignable_start</span></span>
-<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="do">## 12530    9  1     564.1 5641 cms        1997      2015             1997</span></span>
-<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="do">## 12531    9  1     564.1 5641 cms        1997      2015             1997</span></span>
-<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="do">## 12532    9  0     56.41 5641 cms        1997      2015             1997</span></span>
-<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="do">##       assignable_end                     desc desc_start desc_end</span></span>
-<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="do">## 12530           2015          Irritable colon       1997     1999</span></span>
-<span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a><span class="do">## 12531           2015 Irritable bowel syndrome       2001     2015</span></span>
-<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="do">## 12532           2015     Partial ureterectomy       1997     2015</span></span></code></pre></div>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="do">## 17502    9  0     56.41 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="do">## 17503    9  0     56.41 5641 cms        2006      2015             2006</span></span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="do">## 17504    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="do">## 17505    9  1     564.1 5641 cms        2006      2015             2006</span></span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="do">## 17506    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a><span class="do">##       assignable_end                     desc desc_start desc_end</span></span>
+<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="do">## 17502           2012     Partial ureterectomy       1997     2012</span></span>
+<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="do">## 17503           2015     Partial ureterectomy       2010     2015</span></span>
+<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="do">## 17504           2012 Irritable bowel syndrome       2001     2012</span></span>
+<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="do">## 17505           2015 Irritable bowel syndrome       2010     2015</span></span>
+<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="do">## 17506           2012          Irritable colon       1997     1999</span></span></code></pre></div>
 <p>In the above, the compact code “5641” matches procedure code 56.41
 for a renal condition. In <code>mdcr_results_v2.1_01</code> and
 <code>mdcr_results_v3.1_01</code> where no distinction was made between
@@ -2503,54 +2507,56 @@ that we are not specifying the ICD version nor the diagnostic/procedure
 status of the code.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">lookup_icd_codes</span>(<span class="st">&quot;E030&quot;</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="do">##   input_code   match_type icdv dx full_code code src known_start known_end</span></span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## 1       E030    full_code    9  1      E030 E030 cms        2010      2015</span></span>
-<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## 2       E030 compact_code   10  1     E03.0 E030 who        2008      2019</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## 1       E030    full_code    9  1      E030 E030 cdc        2010      2012</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## 2       E030    full_code    9  1      E030 E030 cms        2010      2015</span></span>
 <span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="do">## 3       E030 compact_code   10  1     E03.0 E030 cdc        2001      2025</span></span>
 <span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="do">## 4       E030 compact_code   10  1     E03.0 E030 cms        2014      2026</span></span>
-<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">##   assignable_start assignable_end</span></span>
-<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="do">## 1             2010           2015</span></span>
-<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="do">## 2             2008           2019</span></span>
-<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">## 3             2001           2025</span></span>
-<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 4             2014           2026</span></span>
-<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;Ambiguous compact code&quot;</span>, <span class="st">&quot;Full ICD-9 code&quot;</span>, <span class="st">&quot;Full ICD-10 code&quot;</span>),</span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a>                   <span class="at">code  =</span> <span class="fu">c</span>(<span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E03.0&quot;</span>))</span>
-<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>data</span>
-<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="do">##                       id  code</span></span>
-<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code  E030</span></span>
-<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="do">## 2        Full ICD-9 code  E030</span></span>
-<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a><span class="do">## 3       Full ICD-10 code E03.0</span></span>
-<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a></span>
-<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a>args <span class="ot">&lt;-</span></span>
-<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a>    <span class="at">data =</span> data,</span>
-<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb22-24"><a href="#cb22-24" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb22-25"><a href="#cb22-25" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb22-26"><a href="#cb22-26" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
-<span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>  )</span>
-<span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a></span>
-<span id="cb22-29"><a href="#cb22-29" tabindex="-1"></a>default <span class="ot">&lt;-</span></span>
-<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
-<span id="cb22-31"><a href="#cb22-31" tabindex="-1"></a>full_only <span class="ot">&lt;-</span></span>
-<span id="cb22-32"><a href="#cb22-32" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">FALSE</span>)))</span>
-<span id="cb22-33"><a href="#cb22-33" tabindex="-1"></a>compact_only <span class="ot">&lt;-</span></span>
-<span id="cb22-34"><a href="#cb22-34" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">FALSE</span>, <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
-<span id="cb22-35"><a href="#cb22-35" tabindex="-1"></a></span>
-<span id="cb22-36"><a href="#cb22-36" tabindex="-1"></a>default[,       <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
-<span id="cb22-37"><a href="#cb22-37" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
-<span id="cb22-38"><a href="#cb22-38" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
-<span id="cb22-39"><a href="#cb22-39" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
-<span id="cb22-40"><a href="#cb22-40" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span>
-<span id="cb22-41"><a href="#cb22-41" tabindex="-1"></a>full_only[,     <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
-<span id="cb22-42"><a href="#cb22-42" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
-<span id="cb22-43"><a href="#cb22-43" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         0</span></span>
-<span id="cb22-44"><a href="#cb22-44" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
-<span id="cb22-45"><a href="#cb22-45" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         0</span></span>
-<span id="cb22-46"><a href="#cb22-46" tabindex="-1"></a>compact_only[,  <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
-<span id="cb22-47"><a href="#cb22-47" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
-<span id="cb22-48"><a href="#cb22-48" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
-<span id="cb22-49"><a href="#cb22-49" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         0</span></span>
-<span id="cb22-50"><a href="#cb22-50" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span></code></pre></div>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## 5       E030 compact_code   10  1     E03.0 E030 who        2008      2019</span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="do">##   assignable_start assignable_end</span></span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="do">## 1             2010           2012</span></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">## 2             2010           2015</span></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 3             2001           2025</span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## 4             2014           2026</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 5             2008           2019</span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;Ambiguous compact code&quot;</span>, <span class="st">&quot;Full ICD-9 code&quot;</span>, <span class="st">&quot;Full ICD-10 code&quot;</span>),</span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>                   <span class="at">code  =</span> <span class="fu">c</span>(<span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E03.0&quot;</span>))</span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>data</span>
+<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="do">##                       id  code</span></span>
+<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code  E030</span></span>
+<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a><span class="do">## 2        Full ICD-9 code  E030</span></span>
+<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a><span class="do">## 3       Full ICD-10 code E03.0</span></span>
+<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a>args <span class="ot">&lt;-</span></span>
+<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb22-24"><a href="#cb22-24" tabindex="-1"></a>    <span class="at">data =</span> data,</span>
+<span id="cb22-25"><a href="#cb22-25" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb22-26"><a href="#cb22-26" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb22-29"><a href="#cb22-29" tabindex="-1"></a>  )</span>
+<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a></span>
+<span id="cb22-31"><a href="#cb22-31" tabindex="-1"></a>default <span class="ot">&lt;-</span></span>
+<span id="cb22-32"><a href="#cb22-32" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
+<span id="cb22-33"><a href="#cb22-33" tabindex="-1"></a>full_only <span class="ot">&lt;-</span></span>
+<span id="cb22-34"><a href="#cb22-34" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb22-35"><a href="#cb22-35" tabindex="-1"></a>compact_only <span class="ot">&lt;-</span></span>
+<span id="cb22-36"><a href="#cb22-36" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">FALSE</span>, <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
+<span id="cb22-37"><a href="#cb22-37" tabindex="-1"></a></span>
+<span id="cb22-38"><a href="#cb22-38" tabindex="-1"></a>default[,       <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
+<span id="cb22-39"><a href="#cb22-39" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
+<span id="cb22-40"><a href="#cb22-40" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
+<span id="cb22-41"><a href="#cb22-41" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
+<span id="cb22-42"><a href="#cb22-42" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span>
+<span id="cb22-43"><a href="#cb22-43" tabindex="-1"></a>full_only[,     <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
+<span id="cb22-44"><a href="#cb22-44" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
+<span id="cb22-45"><a href="#cb22-45" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         0</span></span>
+<span id="cb22-46"><a href="#cb22-46" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
+<span id="cb22-47"><a href="#cb22-47" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         0</span></span>
+<span id="cb22-48"><a href="#cb22-48" tabindex="-1"></a>compact_only[,  <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
+<span id="cb22-49"><a href="#cb22-49" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
+<span id="cb22-50"><a href="#cb22-50" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
+<span id="cb22-51"><a href="#cb22-51" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         0</span></span>
+<span id="cb22-52"><a href="#cb22-52" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span></code></pre></div>
 <p>With no information about the “E030” being ICD-9 or ICD-10, full or
 compact, (can only be a diagnostic code in either ICD-9 or ICD-10) we
 get different flags. The default, the most liberal approach flags this
@@ -4468,13 +4474,13 @@ encounters 2, 4, and 6.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>codes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;H49.811&quot;</span>, <span class="st">&quot;J84.111&quot;</span>, <span class="st">&quot;Z96.41&quot;</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_pccc_codes</span>(), full_code <span class="sc">%in%</span> codes)</span>
 <span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="do">##      icdv dx full_code   code   condition                 subcondition</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## 6445   10  1   H49.811 H49811   metabolic    other_metabolic_disorders</span></span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="do">## 6712   10  1   J84.111 J84111 respiratory chronic_respiratory_diseases</span></span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## 7905   10  1    Z96.41  Z9641   metabolic    device_and_technology_use</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## 6438   10  1   H49.811 H49811   metabolic    other_metabolic_disorders</span></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="do">## 6705   10  1   J84.111 J84111 respiratory chronic_respiratory_diseases</span></span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## 7898   10  1    Z96.41  Z9641   metabolic    device_and_technology_use</span></span>
 <span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="do">##      transplant_flag tech_dep_flag pccc_v3.1 pccc_v3.0 pccc_v2.1 pccc_v2.0</span></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="do">## 6445               0             0         1         1         1         1</span></span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## 6712               0             0         1         1         0         0</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="do">## 7905               0             1         1         1         1         1</span></span></code></pre></div>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="do">## 6438               0             0         1         1         1         1</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## 6705               0             0         1         1         0         0</span></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="do">## 7898               0             1         1         1         1         1</span></span></code></pre></div>
 <p>The constructed data and permutations are:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>permutations <span class="ot">&lt;-</span></span>
 <span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">data.table</span>(</span>
@@ -10021,7 +10027,6 @@ Spinal Cord Injury At Birth
 0.0
 </td>
 <td style="text-align:right;">
-0.0
 </td>
 <td style="text-align:right;">
 0
@@ -10030,7 +10035,6 @@ Spinal Cord Injury At Birth
 0.0
 </td>
 <td style="text-align:right;">
-0.0
 </td>
 <td style="text-align:right;">
 0
@@ -10039,7 +10043,6 @@ Spinal Cord Injury At Birth
 0.0
 </td>
 <td style="text-align:right;">
-0.0
 </td>
 <td style="text-align:right;">
 0
@@ -10048,7 +10051,6 @@ Spinal Cord Injury At Birth
 0.0
 </td>
 <td style="text-align:right;">
-0.0
 </td>
 </tr>
 </tbody>

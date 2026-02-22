@@ -43,7 +43,7 @@ apply to \code{data}.}
 
 \item{id.vars}{Optional character vector of column names. When
 missing, the entire input \code{data} is treated as a single encounter from a
-single patient. If you want to set \code{flag.method = "current"} then
+single patient. If you want to set \code{flag.method = "cumulative"} then
 \code{length(id.vars) >= 2} is expected. The last element should be the
 encounter order (must be sortable).}
 
@@ -192,6 +192,18 @@ correctly stored. Adding a column \code{enc_seq}, e.g.,\tabular{cccc}{
 and calling \code{comorbidities()} with \code{id.vars = c("patid", "enc_seq")} will
 have better performance than using the date and will clear up any possible
 issues with non-sequential encounter ids from the source data.
+
+\strong{Cumulative + POA defaults:}
+
+When \code{flag.method = "cumulative"} and neither
+\code{poa} nor \code{poa.var} is supplied, the first encounter for a condition is
+treated as \code{poa = 0}. Subsequent encounters for that condition are flagged as
+\code{poa = 1}.
+
+When \code{flag.method = "current"} and neither \code{poa} nor \code{poa.var} is supplied,
+then all codes will be considered present-on-admission.  If poa was assumed
+to be 0, then in this case the only conditions that could be flagged are the
+Elixhauser conditions which are poa-exempt.
 }
 \examples{
 pccc_v3.1_results <-
@@ -276,8 +288,8 @@ PMC6684052.
 \item Elixhauser Comorbidities:
 \itemize{
 \item Agency for Healthcare Research and Quality (AHRQ). Elixhauser
-Comorbidity Software Refined for ICD-10-CM Diagnoses, v2025.1 [Internet].
-2025. Available from:
+Comorbidity Software Refined for ICD-10-CM Diagnoses, v2026.1 [Internet].
+2026. Available from:
 https://www.hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp
 }
 }

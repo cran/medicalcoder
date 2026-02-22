@@ -9,7 +9,9 @@
 #' @template details-header-and-assignable-codes
 #' @template details-fiscal-and-calendar-years
 #'
-#' @param x Character vector of ICD codes (full or compact form).
+#' @param x Character vector of ICD codes (full or compact form). When
+#'   `regex = TRUE`, `x` must contain at least one non-empty, non-missing
+#'   string.
 #' @param regex Logical scalar. If `TRUE`, treat `x` as regular
 #'   expressions; if `FALSE`, use exact matching.
 #' @template params-icd-form
@@ -42,8 +44,11 @@ lookup_icd_codes <- function(x, regex = FALSE, full.codes = TRUE, compact.codes 
   assert_scalar_logical(full.codes)
   assert_scalar_logical(compact.codes)
   stopifnot(isTRUE(full.codes | compact.codes))
+  if (isTRUE(regex) && (length(x) == 0L || any(is.na(x) | nchar(x) == 0L))) {
+    stop("When regex = TRUE, x must be non-empty strings.")
+  }
 
-  ICDCODES <- get_icd_codes(with.descriptions = FALSE, with.hierarchy = FALSE)
+  ICDCODES <- get("icd_codes", envir = ..mdcr_data_env.., inherits = FALSE)
 
   if (regex) {
     if(full.codes) {
@@ -154,7 +159,7 @@ lookup_icd_codes <- function(x, regex = FALSE, full.codes = TRUE, compact.codes 
   rtn <- rtn[order(rtn[["input_seq"]]), , drop = FALSE]
   rtn[["input_seq"]] <- NULL
 
-  unique(rtn)
+  mdcr_unique(rtn)
 }
 
 ################################################################################

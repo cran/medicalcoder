@@ -2,7 +2,7 @@ library(medicalcoder)
 source('utilities.R')
 ################################################################################
 # objective - the pccc_v2.0 in medicalcoder should reproduce the results from
-# pccc version 1.0.6 _almost_ identically.
+# pccc version 1.0.7 _almost_ identically.
 #
 # There are a few differences.  The reason for this difference is that the old
 # pccc package only mapped to conditions and did not map subconditions.  this
@@ -13,17 +13,17 @@ source('utilities.R')
 icd_codes <- get_icd_codes()
 icd_codes[["code_id"]] <- seq_len(nrow(icd_codes))
 
-# pccc_1.0.6 requires the input to be in a wide format and can only apply logic
+# pccc_1.0.7 requires the input to be in a wide format and can only apply logic
 # for ICD-9 or ICD-10 in one call.  Split the codes into the four sets ICD-9-CM,
 # ICD-9-PCS, ICD-10-CM, and ICD-10-PCS.  Apply pccc::ccc to each and bind the
 # results so we know when ICD codes map to which conditions.
 #
 # The following code generates the output object which is saved in the test
-# directory such that the pccc_v1.0.6 package is not needed in the SUGGESTS
+# directory such that the pccc_v1.0.7 package is not needed in the SUGGESTS
 # section of the DESCRIPTION file.
 
 ### library(pccc)
-### stopifnot(packageVersion("pccc") == "1.0.6")
+### stopifnot(packageVersion("pccc") == "1.0.7")
 ###
 ### oldpccc <- rbind(
 ###   pccc::ccc(
@@ -55,9 +55,9 @@ icd_codes[["code_id"]] <- seq_len(nrow(icd_codes))
 ###   )
 ### )
 ###
-### saveRDS(oldpccc, file = "results_pccc_1.0.6.rds", compress = "xz")
+### saveRDS(oldpccc, file = "results_pccc_1.0.7.rds", compress = "xz")
 
-oldpccc <- readRDS(file = "results_pccc_1.0.6.rds")
+oldpccc <- readRDS(file = "results_pccc_1.0.7.rds")
 
 newpccc <-
   medicalcoder::comorbidities(
@@ -99,8 +99,8 @@ stopifnot(!any(is.na(old_vs_mdcr)))
 stopifnot(nrow(old_vs_mdcr) == nrow(icd_codes))
 
 # expect no difference in the following conditions:
-#   neuromusc
 #   cvd
+#   neuromusc
 #   respiratory
 #   renal
 #   gi
@@ -110,8 +110,8 @@ stopifnot(nrow(old_vs_mdcr) == nrow(icd_codes))
 #   malignancy
 #   neonatal
 stopifnot(
-  with(old_vs_mdcr, all(neuromusc_old == neuromusc_mdcr)),
   with(old_vs_mdcr, all(cvd_old == cvd_mdcr)),
+  with(old_vs_mdcr, all(neuromusc_old == neuromusc_mdcr)),
   with(old_vs_mdcr, all(respiratory_old == respiratory_mdcr)),
   with(old_vs_mdcr, all(renal_old == renal_mdcr)),
   with(old_vs_mdcr, all(gi_old == gi_mdcr)),
@@ -156,33 +156,38 @@ stopifnot(
 # implemented in R as metabolic (transplant).  One major issue with this error is
 # that there are no codes for metabolic (transplant). It doesn't make sense to
 # retain this error so, method=pccc_v2.0 will differ from the R package
-# pccc_1.0.6 for this code.
+# pccc_1.0.7 for this code.
 #
 # subset(get_icd_codes(with.descriptions = TRUE), grepl("^V53\\.9", full_code) & icdv == 9)
 #
 # ICD-9-CM V65, and specifically V65.46 (encounter for insulin pump training),
-# is not in the documentation but is in the R pccc_v1.0.6 implementation as
+# is not in the documentation but is in the R pccc_v1.0.7 implementation as
 # metabolic.  The device flag has been added to this code.
 # subset(get_icd_codes(with.descriptions = TRUE), grepl("^V65\\.4", full_code) & icdv == 9)
 
 mismatch_tech_dep <- old_vs_mdcr[old_vs_mdcr$tech_dep != old_vs_mdcr$any_tech_dep, ]
-stopifnot(nrow(mismatch_tech_dep) == 18L)
+
+stopifnot(nrow(mismatch_tech_dep) == 32L)
+
 stopifnot(
   all(mismatch_tech_dep$tech_dep == 0L),
   all(mismatch_tech_dep$any_tech_dep == 1L)
 )
+
 stopifnot(
-          isTRUE(identical(sort(mismatch_tech_dep$full_code),
-                           c("349.1",
-                             "86.06",
-                             "V45.85",
-                             "V53.3",
-                             "V53.91",
-                             "V56", "V56.0", "V56.1", "V56.2", "V56.3", "V56.31", "V56.32", "V56.8",
-                             "V65.46",
-                             "Z49.01", "Z49.02", "Z49.31", "Z49.32")
-             )
-          )
+  isTRUE(
+    identical(
+      sort(unique(mismatch_tech_dep$full_code)),
+      c("349.1",
+        "86.06",
+        "V45.85",
+        "V53.3",
+        "V53.91",
+        "V56", "V56.0", "V56.1", "V56.2", "V56.3", "V56.31", "V56.32", "V56.8",
+        "V65.46",
+        "Z49.01", "Z49.02", "Z49.31", "Z49.32")
+    )
+  )
 )
 
 # we expect there are some differences in the transplant flag
@@ -195,7 +200,7 @@ stopifnot(
 
 # ICD-9-CM V42.0
 # documented as renal (transplant)
-# missing from the transplant set in the pccc_1.0.6/src/pccc.cpp
+# missing from the transplant set in the pccc_1.0.7/src/pccc.cpp
 
 #subset(get_pccc_codes(), grepl("^V42\\.0", full_code))
 #subset(get_icd_codes(with.descriptions = TRUE), grepl("^V42\\.0", full_code) & icdv == 9)
@@ -203,35 +208,26 @@ stopifnot(
 # ICD-10-CM Z94
 # specifically Z94.1, Z94.2, Z94.4, Z94.81, Z94.82, Z94.83, Z94.84
 # All documented as subcondition transplant but are missing from the transplant
-# set in the pccc_1.0.6/src/pccc.cpp
+# set in the pccc_1.0.7/src/pccc.cpp
 #
 #subset(get_pccc_codes(), grepl("^Z94", full_code))
 #subset(get_icd_codes(with.descriptions = TRUE), grepl("^Z94", full_code) & icdv == 10)
 
 #
 mismatch_transplant <- old_vs_mdcr[old_vs_mdcr$transplant != old_vs_mdcr$any_transplant, ]
-stopifnot(nrow(mismatch_transplant) == 15L)
+stopifnot(nrow(mismatch_transplant) == 12L)
 stopifnot(
   all(mismatch_transplant$transplant == 0L),
   all(mismatch_transplant$any_transplant == 1L)
 )
 
 stopifnot(
-          isTRUE(identical(sort(unique(mismatch_transplant$full_code)),
-                           c("37.52",
-                             "37.53",
-                             "37.54",
-                             "37.55",
-                             "V42.0",
-                             "Z94.1",
-                             "Z94.2",
-                             "Z94.4",
-                             "Z94.81",
-                             "Z94.82",
-                             "Z94.83",
-                             "Z94.84")
-                          )
-          )
+  isTRUE(
+    identical(
+      sort(unique(mismatch_transplant$full_code)),
+      c("V42.0", "Z94.1", "Z94.2", "Z94.4", "Z94.81", "Z94.82", "Z94.83", "Z94.84")
+    )
+  )
 )
 
 

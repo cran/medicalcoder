@@ -95,13 +95,13 @@ tab <-
   data.frame(
     code       = x,
     default    = is_icd(x, icdv = 9, dx = 1),
-    assignable_1997 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 1997),
-    assignable_2010 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2010),
-    assignable_2011 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2011),
-    assignable_2012 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2012),
-    assignable_2013 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2013),
-    assignable_2016 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2016),
-    assignable_ever = is_icd(x, src = "cms", icdv = 9, dx = 1, ever.assignable = TRUE)
+    assignable_1997_cdc = is_icd(x, src = "cdc", icdv = 9, dx = 1, year = 1997),
+    assignable_2010_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2010),
+    assignable_2011_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2011),
+    assignable_2012_cdc = is_icd(x, src = "cdc", icdv = 9, dx = 1, year = 2012),
+    assignable_2012_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2012),
+    assignable_2015_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2015),
+    assignable_ever_cdc = is_icd(x, src = "cdc", icdv = 9, dx = 1, ever.assignable = TRUE)
   )
 knitr::kable(tab)
 

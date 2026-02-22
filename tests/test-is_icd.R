@@ -40,10 +40,13 @@ stopifnot(
   "failed to stop on bad icdv" = inherits(tryCatchError(is_icd(x, icdv = 8)), "error"),
   "failed to stop on bad src"  = inherits(tryCatchError(is_icd(x, src = "a")), "error"),
   "failed to stop on bad dx"   = inherits(tryCatchError(is_icd(x, dx = 2)), "error"),
+
   "warning for WHO and ICD 9"   = inherits(tryCatchWarning(is_icd(x, icdv = 9, src = "who")), "warning"),
   "all FALSE for WHO and ICD 9" = identical(suppressWarnings(is_icd(x, icdv = 9, src = "who")), y),
-  "warning for CDC and ICD 9"   = inherits(tryCatchWarning(is_icd(x, icdv = 9, src = "cdc")), "warning"),
-  "all FALSE for CDC and ICD 9" = identical(suppressWarnings(is_icd(x, icdv = 9, src = "cdc")), y),
+
+  "warning for CDC and ICD 10 pr"   = inherits(tryCatchWarning(is_icd(x, icdv = 10, src = "cdc", dx = 0)), "warning"),
+  "all FALSE for CDC and ICD 10 pr" = identical(suppressWarnings(is_icd(x, icdv = 10, src = "cdc", dx = 0)), y),
+
   "warning for WHO, ICD-10, pr" = inherits(tryCatchWarning(is_icd(x, icdv = 10, src = "who", dx = 0)), "warning"),
   "all FALSE for WHO, ICD-10, pr" = identical(suppressWarnings(is_icd(x, icdv = 10, src = "who", dx = 0)), y)
 )
@@ -230,7 +233,7 @@ stopifnot(
 # 2015.
 #
 # t1:
-#   default call to is_icd for code 516.3 is TRUE becuase year is missing and
+#   default call to is_icd for code 516.3 is TRUE because year is missing and
 #   thus treated as most current, and ever.billable is TRUE because year was
 #   missing
 #
@@ -243,14 +246,14 @@ stopifnot(
 #
 # t4:
 #   with ever.assignable = FALSE and year = 2012 the return will be FALSE
-#   becuase 516.3 was not assignable in 2012
+#   because 516.3 was not assignable in 2012
 #
 # t5:
 #   with ever.assignable = TRUE and year = 2012 the return will be TRUE
-#   becuase 516.3 was billable prior to 2012
+#   because 516.3 was billable prior to 2012
 #
 # t6:
-#   with ever.assignable = FALSE and year = 2011 the return will be TRUE becuase
+#   with ever.assignable = FALSE and year = 2011 the return will be TRUE because
 #   516.3 was assignable in 2011
 
 stopifnot(

@@ -11,7 +11,7 @@ elixhauser <- comorbidities(
   icdv.var    = "icdv",
   icd.codes   = "code",
   dx.var      = "dx",
-  method      = "elixhauser_ahrq2025",
+  method      = "elixhauser_ahrq_icd10",
   flag.method = "current",
   poa         = 1,
   primarydx   = 0
@@ -120,6 +120,43 @@ summary_cumulative <- suppressWarnings(summary(elixhauser_cumulative))
 stopifnot(
   identical(summary_cumulative$conditions, summary_current$conditions),
   identical(summary_cumulative$index_summary, summary_current$index_summary)
+)
+
+################################################################################
+# Zero-row input should summarize without NaN/Inf
+df0 <- data.frame(
+  patid = integer(),
+  icdv  = integer(),
+  dx    = integer(),
+  code  = character(),
+  stringsAsFactors = FALSE
+)
+
+elixhauser_zero <- comorbidities(
+  data        = df0,
+  id.vars     = "patid",
+  icdv.var    = "icdv",
+  icd.codes   = "code",
+  dx.var      = "dx",
+  method      = "elixhauser_ahrq_icd10",
+  flag.method = "current",
+  poa         = 1L,
+  primarydx   = 0L
+)
+
+summary_zero <- summary(elixhauser_zero)
+
+stopifnot(
+  is.list(summary_zero),
+  identical(names(summary_zero), c("conditions", "index_summary")),
+  all(summary_zero$conditions$count == 0L),
+  !any(is.nan(summary_zero$conditions$percent)),
+  all(is.na(summary_zero$conditions$percent)),
+  all(is.na(summary_zero$index_summary$min)),
+  all(is.na(summary_zero$index_summary$q1)),
+  all(is.na(summary_zero$index_summary$median)),
+  all(is.na(summary_zero$index_summary$q3)),
+  all(is.na(summary_zero$index_summary$max))
 )
 
 ################################################################################
