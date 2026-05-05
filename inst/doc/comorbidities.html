@@ -602,7 +602,7 @@ Comorbidities</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.0&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.1&#39;</span></span></code></pre></div>
 <div id="comorbidity-algorithms" class="section level1">
 <h1>Comorbidity Algorithms</h1>
 <p>There are three comorbidity algorithms, each with several variants,
@@ -1739,12 +1739,12 @@ are indicator columns for the variant of each method</p>
 <span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
 <span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
 <span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="do">##  $ dx               : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; &quot;010&quot; ...</span></span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; &quot;010&quot; ...</span></span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="do">##  $ dx               : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;3848&quot; &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; ...</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;pvd&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  1 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>

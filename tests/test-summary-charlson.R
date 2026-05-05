@@ -76,11 +76,16 @@ stopifnot(
 ################################################################################
 # Age and index summaries align with expected calculations
 expected_age_summary <-
-  merge(
-    x = stats::setNames(as.data.frame(table(charlson$age_score, useNA = "always"), stringsAsFactors = FALSE), c("age_score", "count")),
-    y = stats::setNames(as.data.frame(100 * prop.table(table(charlson$age_score, useNA = "always")), stringsAsFactors = FALSE), c("age_score", "percent")),
-    by = "age_score"
-  )
+  {
+    age_count <- table(charlson$age_score, useNA = "always")
+    age_percent <- 100 * prop.table(age_count)
+    data.frame(
+      age_score = unname(names(age_count)),
+      count = unname(as.integer(age_count)),
+      percent = unname(as.numeric(age_percent)),
+      stringsAsFactors = FALSE
+    )
+  }
 
 stopifnot(identical(summary_current$age_summary, expected_age_summary))
 
@@ -95,6 +100,29 @@ expected_index_summary <-
   )
 
 stopifnot(identical(summary_current$index_summary, expected_index_summary))
+
+################################################################################
+# Missing age.var creates an all-NA age_score and should still summarize cleanly
+charlson_no_age <- comorbidities(
+  data        = mdcr,
+  id.vars     = "patid",
+  icdv.var    = "icdv",
+  icd.codes   = "code",
+  dx.var      = "dx",
+  method      = "charlson_quan2011",
+  flag.method = "current",
+  poa         = 1L,
+  primarydx   = 0L
+)
+
+summary_no_age <- summary(charlson_no_age)
+
+stopifnot(
+  identical(summary_no_age$age_summary$age_score, NA_character_),
+  identical(summary_no_age$age_summary$count, nrow(charlson_no_age)),
+  identical(summary_no_age$age_summary$percent, 100),
+  !anyNA(row.names(summary_no_age$age_summary))
+)
 
 ################################################################################
 # A non-current flag.method generates a warning but still returns the summary

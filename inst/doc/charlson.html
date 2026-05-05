@@ -598,7 +598,7 @@ Charlson</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.0&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.1&#39;</span></span></code></pre></div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>The medicalcoder package implements several variants of the Charlson
@@ -621,12 +621,12 @@ and ICD-10 codes to conditions and the index scoring in
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx               : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; &quot;010&quot; ...</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; &quot;010&quot; ...</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx               : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;3848&quot; &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; ...</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;pvd&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  1 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_index_scores</span>())</span>

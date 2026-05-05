@@ -2310,17 +2310,17 @@ omitted from the <code>comorbidities()</code> call.</p>
 <span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a></span>
 <span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_icd_codes</span>(<span class="at">with.descriptions =</span> <span class="cn">TRUE</span>), full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;56.41&quot;</span>, <span class="st">&quot;564.1&quot;</span>))</span>
 <span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a><span class="do">##       icdv dx full_code code src known_start known_end assignable_start</span></span>
-<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="do">## 17502    9  0     56.41 5641 cdc        1997      2012             1997</span></span>
-<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="do">## 17503    9  0     56.41 5641 cms        2006      2015             2006</span></span>
-<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="do">## 17504    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
-<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="do">## 17505    9  1     564.1 5641 cms        2006      2015             2006</span></span>
-<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="do">## 17506    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="do">## 4280     9  0     56.41 5641 cms        2006      2015             2006</span></span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="do">## 4281     9  0     56.41 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="do">## 22015    9  1     564.1 5641 cms        2006      2015             2006</span></span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="do">## 22016    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="do">## 22017    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
 <span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a><span class="do">##       assignable_end                     desc desc_start desc_end</span></span>
-<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="do">## 17502           2012     Partial ureterectomy       1997     2012</span></span>
-<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="do">## 17503           2015     Partial ureterectomy       2010     2015</span></span>
-<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="do">## 17504           2012 Irritable bowel syndrome       2001     2012</span></span>
-<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="do">## 17505           2015 Irritable bowel syndrome       2010     2015</span></span>
-<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="do">## 17506           2012          Irritable colon       1997     1999</span></span></code></pre></div>
+<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="do">## 4280            2015     Partial ureterectomy       2010     2015</span></span>
+<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="do">## 4281            2012     Partial ureterectomy       1997     2012</span></span>
+<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="do">## 22015           2015 Irritable bowel syndrome       2010     2015</span></span>
+<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="do">## 22016           2012 Irritable bowel syndrome       2001     2012</span></span>
+<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="do">## 22017           2012          Irritable colon       1997     1999</span></span></code></pre></div>
 <p>In the above, the compact code “5641” matches procedure code 56.41
 for a renal condition. In <code>mdcr_results_v2.1_01</code> and
 <code>mdcr_results_v3.1_01</code> where no distinction was made between
@@ -2507,17 +2507,17 @@ that we are not specifying the ICD version nor the diagnostic/procedure
 status of the code.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">lookup_icd_codes</span>(<span class="st">&quot;E030&quot;</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="do">##   input_code   match_type icdv dx full_code code src known_start known_end</span></span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## 1       E030    full_code    9  1      E030 E030 cdc        2010      2012</span></span>
-<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## 2       E030    full_code    9  1      E030 E030 cms        2010      2015</span></span>
-<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="do">## 3       E030 compact_code   10  1     E03.0 E030 cdc        2001      2025</span></span>
-<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="do">## 4       E030 compact_code   10  1     E03.0 E030 cms        2014      2026</span></span>
-<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## 5       E030 compact_code   10  1     E03.0 E030 who        2008      2019</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## 1       E030    full_code    9  1      E030 E030 cms        2010      2015</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## 2       E030    full_code    9  1      E030 E030 cdc        2010      2012</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="do">## 5       E030 compact_code   10  1     E03.0 E030 cms        2014      2026</span></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="do">## 3       E030 compact_code   10  1     E03.0 E030 who        2008      2019</span></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## 4       E030 compact_code   10  1     E03.0 E030 cdc        2001      2025</span></span>
 <span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="do">##   assignable_start assignable_end</span></span>
-<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="do">## 1             2010           2012</span></span>
-<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">## 2             2010           2015</span></span>
-<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 3             2001           2025</span></span>
-<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## 4             2014           2026</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 5             2008           2019</span></span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="do">## 1             2010           2015</span></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">## 2             2010           2012</span></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 5             2014           2026</span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## 3             2008           2019</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 4             2001           2025</span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;Ambiguous compact code&quot;</span>, <span class="st">&quot;Full ICD-9 code&quot;</span>, <span class="st">&quot;Full ICD-10 code&quot;</span>),</span>
 <span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>                   <span class="at">code  =</span> <span class="fu">c</span>(<span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E03.0&quot;</span>))</span>
 <span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>data</span>
@@ -4503,7 +4503,7 @@ encounters 2, 4, and 6.</p>
 <span id="cb29-19"><a href="#cb29-19" tabindex="-1"></a><span class="do">##  $ encounter_id: int  1 2 ...</span></span>
 <span id="cb29-20"><a href="#cb29-20" tabindex="-1"></a><span class="do">##  $ code        : chr  NA ...</span></span>
 <span id="cb29-21"><a href="#cb29-21" tabindex="-1"></a><span class="do">##  $ plabel      : chr  &quot;Permutation 1: H49.811, J84.111, Z96.41&quot; ...</span></span>
-<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="do">##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</span></span></code></pre></div>
+<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="do">##  - attr(*, &quot;.internal.selfref&quot;)=&lt;pointer: 0x101c8dc90&gt;</span></span></code></pre></div>
 <ul>
 <li>Permutation 1: H49.811, J84.111, Z96.41</li>
 <li>Permutation 2: H49.811, Z96.41, J84.111</li>
