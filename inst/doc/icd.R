@@ -68,10 +68,10 @@ knitr::kable(
 
 ## ----label = "icd-7993"-------------------------------------------------------
 is_icd(x = "7993")
-is_icd(x = "7993", icdv =  9, dx = 1)
-is_icd(x = "7993", icdv =  9, dx = 0)
-is_icd(x = "7993", icdv = 10, dx = 1)
-is_icd(x = "7993", icdv = 10, dx = 0)
+is_icd(x = "7993", icdv =  9L, dx = 1L)
+is_icd(x = "7993", icdv =  9L, dx = 0L)
+is_icd(x = "7993", icdv = 10L, dx = 1L)
+is_icd(x = "7993", icdv = 10L, dx = 0L)
 lookup_icd_codes("7993")
 
 ## -----------------------------------------------------------------------------
@@ -86,22 +86,22 @@ x <- c("7993",  # valid dx and pr code
        "799.3", # valid dx code; invalid pr code
        "7993.") # not a valid code
 data.frame(x = x,
-           icd9_dx = is_icd(x, icdv = 9, dx = 1, warn.ambiguous = FALSE),
-           icd9_pr = is_icd(x, icdv = 9, dx = 0, warn.ambiguous = FALSE))
+           icd9_dx = is_icd(x, icdv = 9L, dx = 1L, warn.ambiguous = FALSE),
+           icd9_pr = is_icd(x, icdv = 9L, dx = 0L, warn.ambiguous = FALSE))
 
 ## ----results = "asis"---------------------------------------------------------
 x <- paste0("516.3", c("", 0:9))
 tab <-
   data.frame(
     code       = x,
-    default    = is_icd(x, icdv = 9, dx = 1),
-    assignable_1997_cdc = is_icd(x, src = "cdc", icdv = 9, dx = 1, year = 1997),
-    assignable_2010_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2010),
-    assignable_2011_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2011),
-    assignable_2012_cdc = is_icd(x, src = "cdc", icdv = 9, dx = 1, year = 2012),
-    assignable_2012_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2012),
-    assignable_2015_cms = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2015),
-    assignable_ever_cdc = is_icd(x, src = "cdc", icdv = 9, dx = 1, ever.assignable = TRUE)
+    default    = is_icd(x, icdv = 9L, dx = 1L),
+    assignable_1997_cdc = is_icd(x, src = "cdc", icdv = 9L, dx = 1L, year = 1997),
+    assignable_2010_cms = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2010),
+    assignable_2011_cms = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2011),
+    assignable_2012_cdc = is_icd(x, src = "cdc", icdv = 9L, dx = 1L, year = 2012),
+    assignable_2012_cms = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2012),
+    assignable_2015_cms = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2015),
+    assignable_ever_cdc = is_icd(x, src = "cdc", icdv = 9L, dx = 1L, ever.assignable = TRUE)
   )
 knitr::kable(tab)
 
@@ -113,9 +113,9 @@ x <- c("516", "5163", "51631", "A00")
 tab <-
   data.frame(
     code     = x,
-    default  = is_icd(x, icdv = 9, dx = 1, src = "cms", headerok = FALSE, ever.assignable = FALSE, warn.ambiguous = FALSE),
-    ever     = is_icd(x, icdv = 9, dx = 1, src = "cms", headerok = FALSE, ever.assignable = TRUE,  warn.ambiguous = FALSE),
-    headerok = is_icd(x, icdv = 9, dx = 1, src = "cms", headerok = TRUE,                           warn.ambiguous = FALSE)
+    default  = is_icd(x, icdv = 9L, dx = 1L, src = "cms", headerok = FALSE, ever.assignable = FALSE, warn.ambiguous = FALSE),
+    ever     = is_icd(x, icdv = 9L, dx = 1L, src = "cms", headerok = FALSE, ever.assignable = TRUE,  warn.ambiguous = FALSE),
+    headerok = is_icd(x, icdv = 9L, dx = 1L, src = "cms", headerok = TRUE,                           warn.ambiguous = FALSE)
   )
 knitr::kable(tab)
 
@@ -124,22 +124,22 @@ x <- paste0("719.7", c("", "0", 5:9))
 tab <-
   data.frame(
     code            = x,
-    default         = is_icd(x, src = "cms", icdv = 9, dx = 1),
-    assignable_2002 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2002),
-    assignable_2003 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2003),
-    assignable_2004 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2004),
-    assignable_2005 = is_icd(x, src = "cms", icdv = 9, dx = 1, year = 2005),
-    assignable_ever = is_icd(x, src = "cms", icdv = 9, dx = 1, ever.assignable = TRUE)
+    default         = is_icd(x, src = "cms", icdv = 9L, dx = 1L),
+    assignable_2002 = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2002),
+    assignable_2003 = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2003),
+    assignable_2004 = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2004),
+    assignable_2005 = is_icd(x, src = "cms", icdv = 9L, dx = 1L, year = 2005),
+    assignable_ever = is_icd(x, src = "cms", icdv = 9L, dx = 1L, ever.assignable = TRUE)
   )
 knitr::kable(tab)
 
 ## -----------------------------------------------------------------------------
-icd_compact_to_full("E1234", icdv =  9, dx = 1)
-icd_compact_to_full("E1234", icdv = 10, dx = 1)
+icd_compact_to_full("E1234", icdv =  9L, dx = 1L)
+icd_compact_to_full("E1234", icdv = 10L, dx = 1L)
 
 lookup_icd_codes(c("E1234", "E123.4", "E12.34"))[, c("input_code", "match_type")]
 
 ## -----------------------------------------------------------------------------
-icd_compact_to_full("E1234", icdv =  9, dx = 0)
-icd_compact_to_full("E1234", icdv = 10, dx = 0)
+icd_compact_to_full("E1234", icdv =  9L, dx = 0L)
+icd_compact_to_full("E1234", icdv = 10L, dx = 0L)
 

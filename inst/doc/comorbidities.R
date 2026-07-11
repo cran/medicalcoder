@@ -25,7 +25,7 @@ medicalcoder:::comorbidities_methods()
 
 ## ----label = 'test-that-the-args-have-not-changed', include = FALSE-----------
 # IF THIS FAILS YOU NEED TO MAKE SURE THE DOCUMENTATION IN THIS VIGNETTE IS
-# UPTO DATE
+# UP TO DATE
 # dput(capture.output(args(comorbidities)))
 stopifnot(
   capture.output(args(comorbidities))  ==
@@ -33,7 +33,7 @@ stopifnot(
       "    icdv = NULL, dx.var = NULL, dx = NULL, poa.var = NULL, poa = NULL, ",
       "    age.var = NULL, primarydx.var = NULL, primarydx = NULL, flag.method = c(\"current\", ",
       "        \"cumulative\"), full.codes = TRUE, compact.codes = TRUE, ",
-      "    subconditions = FALSE) ", "NULL")
+      "    subconditions = FALSE, mapping = c(\"precomputed\", \"regex\")) ", "NULL")
 )
 
 ## ----label = "read-the-manual", eval = FALSE----------------------------------
@@ -91,7 +91,7 @@ args <-
        icd.codes = "code",
        id.vars = c("patid", "encid"),
        icdv = 10L,
-       dx = 1
+       dx = 1L
   )
 args_current_poa0    <- c(args, poa = 0L,        flag.method = "current")
 args_current_poa1    <- c(args, poa = 1L,        flag.method = "current")
@@ -143,12 +143,12 @@ tab <-
     row.names = FALSE,
     escape = FALSE,
     align = rep("c", nrow(rtn)),
-    caption = "Indicators for when a comorbidity is flagged based on the algorithm, present on admission (poa), and flag.method. The two ICD codes, C78.4 and I50.40, map to cancer and cardiovascular disease respectively."
+    caption = "Indicators for when a comorbidity is flagged based on the algorithm, present-on-admission (poa), and flag.method. The two ICD codes, C78.4 and I50.40, map to cancer and cardiovascular disease respectively."
   )
 tab <-
   footnote(
     tab,
-    symbol = c("Present on Admission"),
+    symbol = c("Present-on-admission"),
     general = "C78.4 does not need to be POA to count for Elixhauser. I50.40 does need to be POA to count for Elixhauser."
   )
 
@@ -170,7 +170,7 @@ cdmf_eg <-
   merge(x = mdcr,
         y = subset(get_charlson_codes(),
                    condition %in% c("aids", "hiv") &
-                   charlson_cdmf2019 == 1),
+                   charlson_cdmf2019 == 1L),
         by = c("icdv", "dx", "code"))
 data.table::setDT(cdmf_eg)
 

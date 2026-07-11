@@ -23,15 +23,14 @@ str(get_charlson_index_scores())
 ## -----------------------------------------------------------------------------
 mdcr_results <-
   comorbidities(
-    data = mdcr,
-    id.vars = "patid",
-    icdv.var = "icdv",
+    data      = mdcr,
+    id.vars   = "patid",
+    icdv.var  = "icdv",
     icd.codes = "code",
-    dx.var = "dx",
-    flag.method = "current",
-    poa = 1,
-    primarydx = 0,
-    method = "charlson_quan2005"
+    dx.var    = "dx",
+    poa       = 1L,
+    primarydx = 0L,
+    method    = "charlson_quan2005"
   )
 
 ## -----------------------------------------------------------------------------
@@ -46,7 +45,7 @@ tab <-
   kableExtra::kbl(
     x = x,
     format = "html",
-    caption = "Counts and percentages of patients in the mdcr example data sets with the @quan2005 comorbidities.",
+    caption = "Counts and percentages of patients in the mdcr example datasets with the @quan2005 comorbidities.",
     col.names = c("", "Count", "Percentage"),
     digits = 3
   )

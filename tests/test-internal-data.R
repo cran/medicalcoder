@@ -1,7 +1,7 @@
 library(medicalcoder)
 source("utilities.R")
 ################################################################################
-# testing the internal data sets - both the internal sets and the user visible
+# testing the internal datasets - both the internal sets and the user visible
 # versions.
 
 # The internal sets can to look for: this cannot be done dynamically
@@ -13,13 +13,16 @@ internal_data_sets <-
   c(
     "..mdcr_internal_charlson_codes..",
     "..mdcr_internal_charlson_index_scores..",
+    "..mdcr_internal_charlson_regex..",
     "..mdcr_internal_desc_start_stop..",
     "..mdcr_internal_elixhauser_codes..",
     "..mdcr_internal_elixhauser_index_scores..",
     "..mdcr_internal_elixhauser_poa..",
     "..mdcr_internal_icd_chapters..",
     "..mdcr_internal_icd_codes..",
-    "..mdcr_internal_icd_descs..",
+    #"..mdcr_internal_icd_descs..",
+    "..mdcr_internal_desc_tokens..",
+    "..mdcr_internal_icd_desc_token_ids..",
     "..mdcr_internal_icd_subchapters..",
     "..mdcr_internal_known_and_assignable_start_stop..",
     "..mdcr_internal_pccc_codes..",
@@ -31,7 +34,7 @@ mdcr <- getNamespace("medicalcoder")
 # are all the expected sets in the medicalcoder namespace?
 stopifnot(all(internal_data_sets %in% names(mdcr)))
 
-# check that there are not unaccounted for data sets.  the ..mdcr_internal_
+# check that there are not unaccounted for datasets.  the ..mdcr_internal_
 # prefix and .. suffix is expected.  noted in the data-raw/build_sysdata.R
 stopifnot(
   all(
@@ -40,26 +43,33 @@ stopifnot(
 )
 
 ################################################################################
-# verify all the sets are data.frames and only data.frames
-t01 <-  all(sapply(sapply(internal_data_sets, get, envir = mdcr), inherits, "data.frame"))
+# verify all the sets are data.frames and only data.frames with the exception of
+# ..mdcr_internal_desc_tokens.. which is should be a unnamed character vector
+# and ..mdcr_internal_icd_desc_token_ids.. a unnamed list
+t01 <- sapply(sapply(internal_data_sets, get, envir = mdcr), inherits, "data.frame")
+t01[["..mdcr_internal_icd_desc_token_ids.."]] <- is.list(get("..mdcr_internal_icd_desc_token_ids..", envir = mdcr))
+t01[["..mdcr_internal_desc_tokens.."]] <- is.vector(get("..mdcr_internal_desc_tokens..", envir = mdcr)) & is.character(get("..mdcr_internal_desc_tokens..", envir = mdcr))
+
 t02 <- !any(sapply(sapply(internal_data_sets, get, envir = mdcr), inherits, "data.table"))
 t03 <- !any(sapply(sapply(internal_data_sets, get, envir = mdcr), inherits, "tbl_df"))
 
 stopifnot(t01, t02, t03)
 
 ################################################################################
-# Verify the names and classes of the internal data sets
+# Verify the names and classes of the internal datasets
 expected_internal_names_and_classes <-
   list(
-    "..mdcr_internal_charlson_codes.." = c(code_id = "integer", condition = "character", charlson_cdmf2019 = "integer", charlson_deyo1992 = "integer", charlson_quan2005 = "integer", charlson_quan2011 = "integer"),
-    "..mdcr_internal_charlson_index_scores.." = c(condition_description = "character", condition = "character", charlson_cdmf2019 = "integer", charlson_quan2011 = "integer", charlson_quan2005 = "integer", charlson_deyo1992 = "integer"),
+    "..mdcr_internal_charlson_codes.." = c(code_id = "integer", condition = "character", charlson_beyrer2021 = "integer", charlson_cdmf2019 = "integer", charlson_deyo1992 = "integer", charlson_ludvigsson2021 = "integer", charlson_mimicivcode = "integer", charlson_quan2005 = "integer", charlson_sundararajan2004 = "integer", charlson_quan2011 = "integer"),
+    "..mdcr_internal_charlson_index_scores.." = c(condition_description = "character", condition = "character", charlson_cdmf2019 = "integer", charlson_quan2011 = "integer", charlson_quan2005 = "integer", charlson_beyrer2021 = "integer", charlson_deyo1992 = "integer", charlson_sundararajan2004 = "integer", charlson_ludvigsson2021 = "integer", charlson_mimicivcode = "integer"),
+    "..mdcr_internal_charlson_regex.." = c(condition = "character", icdv = "integer", dx = "integer", pattern = "character", charlson_cdmf2019 = "integer", charlson_deyo1992 = "integer", charlson_ludvigsson2021 = "integer", charlson_mimicivcode = "integer", charlson_quan2005 = "integer", charlson_sundararajan2004 = "integer", charlson_quan2011 = "integer"),
     "..mdcr_internal_desc_start_stop.." = c(code_id = "integer", desc_id = "integer", src = "factor", desc_start = "integer", desc_end = "integer"),
     "..mdcr_internal_elixhauser_codes.." = c(code_id = "integer", poaexempt = "integer", condition = "character", elixhauser_ahrq_web = "integer", elixhauser_elixhauser1988 = "integer", elixhauser_quan2005 = "integer", elixhauser_ahrq2022 = "integer", elixhauser_ahrq2023 = "integer", elixhauser_ahrq2024 = "integer", elixhauser_ahrq2025 = "integer", elixhauser_ahrq2026 = "integer", elixhauser_ahrq_icd10 = "integer"),
     "..mdcr_internal_elixhauser_index_scores.." = c(condition = "character", index = "character", elixhauser_ahrq_web = "integer", elixhauser_elixhauser1988 = "integer", elixhauser_quan2005 = "integer", elixhauser_ahrq2022 = "integer", elixhauser_ahrq2023 = "integer", elixhauser_ahrq2024 = "integer", elixhauser_ahrq2025 = "integer", elixhauser_ahrq2026 = "integer", elixhauser_ahrq_icd10 = "integer"),
     "..mdcr_internal_elixhauser_poa.." = c(condition = "character", poa_required = "integer", elixhauser_ahrq2022 = "integer", elixhauser_ahrq2023 = "integer", elixhauser_ahrq2024 = "integer", elixhauser_ahrq2025 = "integer", elixhauser_ahrq2026 = "integer", elixhauser_ahrq_icd10 = "integer"),
     "..mdcr_internal_icd_chapters.." = c(chapter = "character", chap_id = "integer"),
     "..mdcr_internal_icd_codes.." = c(icdv = "integer", dx = "integer", full_code = "character", code = "character", code_id = "integer", chap_id = "integer", subchap_id = "integer"),
-    "..mdcr_internal_icd_descs.." = c(desc = "character", desc_id = "integer"),
+    "..mdcr_internal_icd_desc_token_ids.." = character(0), ## LIST WITHOUT NAMES
+    "..mdcr_internal_desc_tokens.." = character(0),   ## character vector without names
     "..mdcr_internal_icd_subchapters.." = c(subchapter = "character", subchap_id = "integer"),
     "..mdcr_internal_known_and_assignable_start_stop.." = c(code_id = "integer", src = "factor", known_start = "integer", known_end = "integer", assignable_start = "integer", assignable_end = "integer"),
     "..mdcr_internal_pccc_codes.." = c(code_id = "integer", condition = "character", subcondition = "character", transplant_flag = "integer", tech_dep_flag = "integer", pccc_v3.1 = "integer", pccc_v3.0 = "integer", pccc_v2.1 = "integer", pccc_v2.0 = "integer"),
@@ -68,17 +78,28 @@ expected_internal_names_and_classes <-
 
 current_names_and_classes <- sapply(sapply(internal_data_sets, get, envir = mdcr), sapply, class)
 
-stopifnot(identical(length(current_names_and_classes), length(expected_internal_names_and_classes)))
+stopifnot(
+  identical(
+    length(current_names_and_classes)
+    ,
+    length(expected_internal_names_and_classes)
+  ))
 
 for(n in names(current_names_and_classes)) {
-  z <- identical(current_names_and_classes[[n]], expected_internal_names_and_classes[[n]])
+  if (n == "..mdcr_internal_desc_tokens..") {
+    z <- all(current_names_and_classes[[n]] == "character")
+  } else if (n == "..mdcr_internal_icd_desc_token_ids..") {
+    z <- all(current_names_and_classes[[n]] == "integer")
+  } else {
+    z <- identical(current_names_and_classes[[n]], expected_internal_names_and_classes[[n]])
+  }
   if (!z) {
-    stop(sprintf("user visible %s does not have the expected structure", n))
+    stop(sprintf("internal %s does not have the expected structure", n))
   }
 }
 
 ################################################################################
-# get the data sets via get_ methods
+# get the datasets via get_ methods
 
 # expected methods
 user_visible_get_methods <-
@@ -138,7 +159,7 @@ stopifnot(t04, t05, t06)
 # define the expected structure
 user_visible_expected_structures <-
   list(
-    charlson_codes = c(icdv = "integer", dx = "integer", full_code = "character", code = "character", condition = "character", charlson_cdmf2019 = "integer", charlson_deyo1992 = "integer", charlson_quan2005 = "integer", charlson_quan2011 = "integer"),
+    charlson_codes = c(icdv = "integer", dx = "integer", full_code = "character", code = "character", condition = "character", charlson_beyrer2021 = "integer", charlson_cdmf2019 = "integer", charlson_deyo1992 = "integer", charlson_ludvigsson2021 = "integer", charlson_mimicivcode = "integer", charlson_quan2005 = "integer", charlson_sundararajan2004 = "integer", charlson_quan2011 = "integer"),
     charlson_index_scores = expected_internal_names_and_classes$..mdcr_internal_charlson_index_scores..,
     elixhauser_codes = c(icdv = "integer", dx = "integer", full_code = "character", code = "character", poaexempt = "integer", condition = "character", elixhauser_ahrq_web = "integer", elixhauser_elixhauser1988 = "integer", elixhauser_quan2005 = "integer", elixhauser_ahrq2022 = "integer", elixhauser_ahrq2023 = "integer", elixhauser_ahrq2024 = "integer", elixhauser_ahrq2025 = "integer", elixhauser_ahrq2026 = "integer", elixhauser_ahrq_icd10 = "integer"),
     elixhauser_index_scores = expected_internal_names_and_classes$..mdcr_internal_elixhauser_index_scores..,
@@ -172,7 +193,8 @@ for (n in names(user_visible)) {
 ################################################################################
 # verify *_codes are all valid codes
 for (n in grep("_codes$", names(user_visible), value = TRUE)) {
-  z <- is_icd(x = user_visible[[n]][["code"]],
+  z <- is_icd(
+    x    = user_visible[[n]][["code"]],
     icdv = user_visible[[n]][["icdv"]],
     dx   = user_visible[[n]][["dx"]],
     headerok = TRUE,
@@ -193,6 +215,7 @@ for (n in grep("_codes$", names(user_visible), value = TRUE)) {
     stop(sprintf("not all user_visible[['%s']][['full_code']] are valid ever.assignable ICD codes", n))
   }
 }
+
 ################################################################################
 # PCCC specific checks
 #
@@ -232,10 +255,48 @@ for (n in grep("^icd_", names(user_visible), value = TRUE)) {
 # Verify that the src column is as expected
 for (n in grep("^icd_", names(user_visible), value = TRUE)) {
   stopifnot(
-    identical(c("cdc", "cms", "who"), sort(unique(user_visible[[n]][["src"]])))
+    identical(c("cdc", "cms", "ihacpa", "socialstyrelsen", "who"), sort(unique(user_visible[[n]][["src"]])))
   )
 }
 
+# For the biggest set of icd codes let's make sure fields are at least populated
+# as exptected
+stopifnot(
+  !any(is.na(user_visible[["icd_dh"]][["icdv"]])),
+  all(user_visible[["icd_dh"]][["icdv"]] %in% c(9L, 10L)),
+  !any(is.na(user_visible[["icd_dh"]][["dx"]])),
+  all(user_visible[["icd_dh"]][["dx"]] %in% c(0L, 1L)),
+  !any(is.na(user_visible[["icd_dh"]][["full_code"]])),
+  !any(is.na(user_visible[["icd_dh"]][["code"]])),
+  all(user_visible[["icd_dh"]][["code"]] == sub("\\.", "", user_visible[["icd_dh"]][["full_code"]])),
+  !any(is.na(user_visible[["icd_dh"]][["src"]])),
+  all(user_visible[["icd_dh"]][["src"]] %in% c("cdc", "cms", "who", "ihacpa", "socialstyrelsen")),
+  !any(is.na(user_visible[["icd_dh"]][["known_start"]])),
+  !any(is.na(user_visible[["icd_dh"]][["known_end"]])),
+  all(user_visible[["icd_dh"]][["known_start"]] <= user_visible[["icd_dh"]][["known_end"]]),
+  identical(is.na(user_visible[["icd_dh"]][["assignable_start"]]), is.na(user_visible[["icd_dh"]][["assignable_end"]])),
+  all(user_visible[["icd_dh"]][["assignable_start"]] <= user_visible[["icd_dh"]][["assignable_end"]], na.rm = TRUE),
+  !any(is.na(user_visible[["icd_dh"]][["desc"]])),
+  !any(is.na(user_visible[["icd_dh"]][["desc_start"]])),
+  !any(is.na(user_visible[["icd_dh"]][["desc_end"]])),
+  all(user_visible[["icd_dh"]][["desc_start"]] <= user_visible[["icd_dh"]][["desc_end"]]),
+  !any(is.na(user_visible[["icd_dh"]][["chapter"]])),
+  !any(is.na(user_visible[["icd_dh"]][["category"]]))
+)
+
+# check subchapter
+i9d <- which(user_visible[["icd_dh"]][["icdv"]] == 9 & user_visible[["icd_dh"]][["dx"]] == 1)
+i9p <- which(user_visible[["icd_dh"]][["icdv"]] == 9 & user_visible[["icd_dh"]][["dx"]] == 0)
+i10d <- which(user_visible[["icd_dh"]][["icdv"]] == 10 & user_visible[["icd_dh"]][["dx"]] == 1)
+i10p <- which(user_visible[["icd_dh"]][["icdv"]] == 10 & user_visible[["icd_dh"]][["dx"]] == 0)
+stopifnot(
+  !any(is.na(user_visible[["icd_dh"]][["subchapter"]][i9d])),
+  all(is.na(user_visible[["icd_dh"]][["subchapter"]][i9p])),
+  !any(is.na(user_visible[["icd_dh"]][["subchapter"]][i10d])),
+  !any(is.na(user_visible[["icd_dh"]][["subchapter"]][i10p]))
+)
+
+#subset(user_visible[["icd_dh"]], is.na(subchapter) & icdv == 10 & dx == 1) |> head()
 
 
 ################################################################################

@@ -21,7 +21,8 @@ comorbidities(
   flag.method = c("current", "cumulative"),
   full.codes = TRUE,
   compact.codes = TRUE,
-  subconditions = FALSE
+  subconditions = FALSE,
+  mapping = c("precomputed", "regex")
 )
 }
 \arguments{
@@ -44,34 +45,41 @@ apply to \code{data}.}
 \item{id.vars}{Optional character vector of column names. When
 missing, the entire input \code{data} is treated as a single encounter from a
 single patient. If you want to set \code{flag.method = "cumulative"} then
-\code{length(id.vars) >= 2} is expected. The last element should be the
-encounter order (must be sortable).}
+\code{length(id.vars) >= 2} is
+expected. The last element should be the encounter order. It must not
+contain missing values, must not be a factor, and must be numeric,
+character, \code{Date}, or \code{POSIXt}. Character encounter order columns are
+allowed with a warning because they are sorted lexicographically.}
 
 \item{icdv.var}{Character scalar naming the column in \code{data} that indicates
-the ICD version (9 or 10). If present it must be integer values \code{9} or
-\code{10}.  \code{icdv.var} takes precedence over \code{icdv} if both are provided.}
+the ICD version. If present it must be numeric. Rows with values other than
+\code{9L} or \code{10L} will not be used to map ICD codes to comorbidities.
+\code{icdv.var} takes precedence over \code{icdv} if both are provided.}
 
 \item{icdv}{An integer value of \code{9L} or \code{10L} indicating that all
 \code{data[[icd.codes]]} are ICD version 9 or 10, respectively. Ignored
 (with a warning) if \code{icdv.var} is provided.}
 
 \item{dx.var}{Character scalar naming the column in \code{data} that indicates
-diagnostic (\code{1}) vs procedural (\code{0}) codes. If present it must be integer
-values \code{0} or \code{1}.  \code{dx.var} takes precedence over \code{dx} if both are
-provided.}
+diagnostic (\code{1L}) vs procedural (\code{0L}) codes. If present it must be numeric.
+Rows with values other than \code{0L} or \code{1L} will not be used to map ICD codes to
+comorbidities. \code{dx.var} takes precedence over \code{dx} if both are provided.}
 
 \item{dx}{An integer indicating that all \code{data[[icd.codes]]} are
-diagnostic (\code{1}) or procedure (\code{0}) codes. Ignored (with a
+diagnostic (\code{1L}) or procedure (\code{0L}) codes. Ignored (with a
 warning) if \code{dx.var} is provided.}
 
 \item{poa.var}{Character scalar naming the column with present-on-admission
 flags: integer \code{1L} (present), \code{0L} (not present), or \code{NA}.
+For AHRQ SAS-compatible present-on-admission indicators, convert \code{"Y"}
+and \code{"W"} to \code{1L}, convert \code{"N"} and \code{"U"} to \code{0L}, and convert blank or
+missing values to \code{NA_integer_} before calling \code{comorbidities()}.
 PCCC and Charlson will only flag conditions when the code is
 present-on-admission. Elixhauser has a mix of conditions; some require
 present-on-admission while others do not. \code{poa.var} takes precedence over
 \code{poa} if both are provided.}
 
-\item{poa}{Integer scalar \code{0} or \code{1}. Use when all \code{icd.codes} share the same
+\item{poa}{Integer scalar \code{0L} or \code{1L}. Use when all \code{icd.codes} share the same
 present-on-admission status. Ignored with a warning if \code{poa} and \code{poa.var}
 are both provided.}
 
@@ -84,14 +92,14 @@ or not (\code{0L}). Primary diagnosis is used only for Elixhauser and Charlson
 comorbidities and is ignored when the method is a PCCC variant.
 \code{primarydx.var} takes precedence over \code{primarydx} if both are provided.}
 
-\item{primarydx}{An integer value of \code{0} or \code{1}. If \code{0},
-treat all codes as non-primary diagnoses; if \code{1}, treat all codes as
+\item{primarydx}{An integer value of \code{0L} or \code{1L}. If \code{0L},
+treat all codes as non-primary diagnoses; if \code{1L}, treat all codes as
 primary diagnoses. Ignored, with a warning, if \code{primarydx.var} is provided.}
 
-\item{flag.method}{When \code{flag.method = 'current'} (default) only codes
+\item{flag.method}{When \code{flag.method = "current"} (default) only codes
 associated with the current \code{id.vars} are considered when flagging
-comorbidities.  When \code{flag.method = 'cumulative'} then all prior encounters
-are considered when flagging comorbidities. See \strong{Details}.}
+comorbidities. The \code{flag.method = "cumulative"} option also
+considers prior encounters when flagging comorbidities. See \strong{Details}.}
 
 \item{full.codes, compact.codes}{Logical; when \code{TRUE} compare
 \code{data[[icd.codes]]} against full and/or compact ICD codes in the
@@ -103,6 +111,12 @@ is the associated compact code.}
 
 \item{subconditions}{Logical scalar; when \code{TRUE}, report both conditions and
 subconditions (PCCC only).}
+
+\item{mapping}{Character string specifying how \code{data[[icd.codes]]} should be
+mapped to comorbidity conditions. \code{mapping = "precomputed"} uses the
+precomputed ICD code-condition links included with medicalcoder and is the
+default. \code{mapping = "regex"} applies the method's regular expressions
+directly to the input ICD codes. See Details.}
 }
 \value{
 The return object will be slightly different depending on the value of
@@ -114,7 +128,7 @@ defined in the function call.  For all methods there will be the following
 columns:
 \itemize{
 \item \code{num_cmrb} a count of comorbidities/conditions flagged
-\item \code{cmrb_flag} a 0/1 integer indicator for at least one
+\item \code{cmrb_flag} a \code{0L}/\code{1L} integer indicator for at least one
 comorbidity/condition.
 }
 
@@ -132,11 +146,11 @@ presence of either a diagnostic or procedure code, or was flagged due to
 the presence of a technology dependence code along with at least one
 comorbidity being flagged by a diagnostic or procedure code.
 \item \verb{<condition>_dxpr_only}: the condition was flagged due to the
-presence of a non-technology dependent diagnostic or procedure code
+presence of a non-technology-dependent diagnostic or procedure code
 only.
 \item \verb{<condition>_tech_only}: the condition was flagged due to the
-presence of a technology dependent code only and at least one other
-comorbidity was flagged by a non-technology dependent code.
+presence of a technology-dependent code only and at least one other
+comorbidity was flagged by a non-technology-dependent code.
 \item \verb{<condition>_dxpr_and_tech}: The patient had both diagnostic or
 procedure codes and a technology dependence code for the condition.
 }
@@ -159,15 +173,15 @@ Elixhauser, and the Pediatric Complex Chronic Conditions (PCCC).
 }
 \details{
 When \code{flag.method = "current"}, only codes from the index encounter
-contribute to flags. When a longitudinal method is selected (e.g.,
-\code{"cumulative"}), prior encounters for the same \code{id.vars}
-combination may contribute to condition flags. For the cumulative method to
-work, \code{id.vars} needs to be a character vector of length 2 or more. The last
-element is treated as the encounter identifier and must be sortable. For
-example, say you have data with a hospital, patient, and encounter id. The
-\code{id.vars} could be one of two entries: \code{c("hospital", "patient", "encounter")}
-or \code{c("patient", "hospital", "encounter")}. In both cases the return will be
-the same because the encounter identifier is unchanged regardless of whether
+contribute to flags. The \code{flag.method = "cumulative"} option
+lets prior encounters for the same \code{id.vars} combination contribute to
+condition flags. For the cumulative method to work, \code{id.vars}
+needs to be a character vector of length 2 or more. The last element is
+treated as the encounter identifier and must be sortable. For example, say
+you have data with a hospital, patient, and encounter id. The \code{id.vars} could
+be one of two entries: \code{c("hospital", "patient", "encounter")} or
+\code{c("patient", "hospital", "encounter")}. In both cases the return will be the
+same because the encounter identifier is unchanged regardless of whether
 hospital or patient is listed first.
 
 It is critically important that the \code{data[[tail(id.vars, 1)]]} variable can
@@ -193,17 +207,39 @@ and calling \code{comorbidities()} with \code{id.vars = c("patid", "enc_seq")} w
 have better performance than using the date and will clear up any possible
 issues with non-sequential encounter ids from the source data.
 
-\strong{Cumulative + POA defaults:}
+For \code{flag.method = "cumulative"}, the encounter order column must not contain
+missing values, must not be a factor, and must be numeric, character, \code{Date},
+or \code{POSIXt}. Character encounter order columns are allowed, but they are
+sorted lexicographically; use an integer sequence, \code{Date}, or \code{POSIXt} column
+when possible.
+
+\strong{Cumulative flagging + POA defaults:}
 
 When \code{flag.method = "cumulative"} and neither
 \code{poa} nor \code{poa.var} is supplied, the first encounter for a condition is
-treated as \code{poa = 0}. Subsequent encounters for that condition are flagged as
-\code{poa = 1}.
+treated as \code{poa = 0L}. Subsequent encounters for that condition are flagged
+as \code{poa = 1L}.
 
 When \code{flag.method = "current"} and neither \code{poa} nor \code{poa.var} is supplied,
 then all codes will be considered present-on-admission.  If poa was assumed
 to be 0, then in this case the only conditions that could be flagged are the
 Elixhauser conditions which are poa-exempt.
+
+The \code{mapping} option controls how ICD codes are mapped to conditions. The
+default, \code{mapping = "precomputed"}, uses a precomputed table that links
+valid ICD codes to comorbidity conditions. Those links are built from the ICD
+code sources included with medicalcoder: the United States Centers for
+Disease Control and Prevention (CDC), the Centers for Medicare and Medicaid
+Services (CMS), the World Health Organization (WHO), the Independent
+Health and Aged Care Pricing Authority (IHACPA) ICD-10 Australian
+Modification (ICD-10-AM) data, and Socialstyrelsen ICD-10-SE data.
+
+\code{mapping = "precomputed"} is generally fastest and is the behavior used by
+medicalcoder before the \code{mapping} argument was added. \code{mapping = "regex"}
+applies the method's regular expressions directly to the input ICD codes.
+Regex mapping is currently implemented for Charlson methods and is useful
+when codes come from an ICD modification that may not be completely covered
+by the precomputed code-condition links, or when auditing a method.
 }
 \examples{
 pccc_v3.1_results <-
@@ -213,7 +249,7 @@ pccc_v3.1_results <-
                 dx.var = "dx",
                 method = "pccc_v3.1",
                 flag.method = 'current',
-                poa = 1)
+                poa = 1L)
 summary(pccc_v3.1_results)
 
 pccc_v3.1_subcondition_results <-
@@ -223,7 +259,7 @@ pccc_v3.1_subcondition_results <-
                 dx.var = "dx",
                 method = "pccc_v3.1",
                 flag.method = 'current',
-                poa = 1,
+                poa = 1L,
                 subconditions = TRUE)
 summary(pccc_v3.1_subcondition_results)
 
@@ -234,7 +270,7 @@ charlson_results <-
                 dx.var = "dx",
                 method = "charlson_quan2011",
                 flag.method = 'current',
-                poa = 1)
+                poa = 1L)
 summary(charlson_results)
 
 elixhauser_results <-
@@ -243,9 +279,9 @@ elixhauser_results <-
                 id.vars = "patid",
                 dx.var = "dx",
                 method = "elixhauser_ahrq2025",
-                primarydx = 1,
+                primarydx = 1L,
                 flag.method = 'current',
-                poa = 1)
+                poa = 1L)
 summary(elixhauser_results)
 }
 \references{
@@ -270,6 +306,10 @@ https://doi.org/10.1016/0021-9681(87)90171-8.
 \item Deyo RA, Cherkin DC, Ciol MA. Adapting a clinical comorbidity index
 for use with ICD-9-CM administrative databases. J Clin Epidemiol. 1992
 Jun;45(6):613-9. https://doi.org/10.1016/0895-4356(92)90133-8. PMID: 1607900.
+\item Sundararajan V, Henderson T, Perry C, Muggivan A, Quan H, Ghali WA.
+New ICD-10 version of the Charlson comorbidity index predicted
+in-hospital mortality. J Clin Epidemiol. 2004 Dec;57(12):1288-94.
+https://doi.org/10.1016/j.jclinepi.2004.03.012. PMID: 15617955.
 \item Quan H, Sundararajan V, Halfon P, Fong A, Burnand B, Luthi JC,
 Saunders LD, Beck CA, Feasby TE, Ghali WA. Coding algorithms for defining
 comorbidities in ICD-9-CM and ICD-10 administrative data. Med Care. 2005
@@ -284,6 +324,12 @@ https://doi.org/10.1093/aje/kwq433. Epub 2011 Feb 17. PMID: 21330339.
 Charlson Comorbidity Index: ICD-9 Update and ICD-10 Translation. Am Health
 Drug Benefits. 2019 Jun-Jul;12(4):188-197. PMID: 31428236; PMCID:
 PMC6684052.
+\item Ludvigsson JF, Appelros P, Askling J, et al. Adaptation of the Charlson
+Comorbidity Index for Register-Based Research in Sweden. Clin Epidemiol.
+2021;13:21-41. https://doi.org/10.2147/CLEP.S282475.
+\item Ludvigsson JF, Appelros P, Askling J, et al. Adaptation of the Charlson
+Comorbidity Index for Register-Based Research in Sweden [Corrigendum].
+Clin Epidemiol. 2023;15:753-754. https://doi.org/10.2147/CLEP.S420607.
 }
 \item Elixhauser Comorbidities:
 \itemize{

@@ -26,27 +26,25 @@ str(get_elixhauser_poa())
 mdcr_results0 <-
   comorbidities(
     data = mdcr,
-    id.vars = "patid",
-    icdv.var = "icdv",
+    id.vars   = "patid",
+    icdv.var  = "icdv",
     icd.codes = "code",
-    dx.var = "dx",
-    flag.method = "current",
-    poa = 1,
-    method = "elixhauser_ahrq2025"
+    dx.var    = "dx",
+    poa       = 1L,
+    method    = "elixhauser_ahrq2025"
   )
 
 # no warning
 mdcr_results <-
   comorbidities(
-    data = mdcr,
-    id.vars = "patid",
-    icdv.var = "icdv",
+    data      = mdcr,
+    id.vars   = "patid",
+    icdv.var  = "icdv",
     icd.codes = "code",
-    dx.var = "dx",
-    flag.method = "current",
-    poa = 1,
-    method = "elixhauser_ahrq2025",
-    primarydx = 0
+    dx.var    = "dx",
+    poa       = 1L,
+    method    = "elixhauser_ahrq2025",
+    primarydx = 0L
   )
 
 identical(mdcr_results, mdcr_results0)
@@ -63,7 +61,7 @@ tab <-
   kableExtra::kbl(
     x = x,
     format = "html",
-    caption = "Counts and percentages of patients in the mdcr example data sets with the Elixhauser @quan2005 comorbidities.",
+    caption = "Counts and percentages of patients in the mdcr example datasets with the Elixhauser @quan2005 comorbidities.",
     col.names = c("", "Count", "Percentage"),
     digits = 3
   )

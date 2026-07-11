@@ -32,11 +32,11 @@ the decimal point.}
 A \code{data.frame} with one or more rows per input, including columns
 \itemize{
 \item \code{match_type}: did the input match a full or compact code
-\item \code{icdv}: icd version (9 or 10)
-\item \code{dx}: diagnostic code (1) or procedure code (0)
+\item \code{icdv}: ICD version (\code{9L} or \code{10L})
+\item \code{dx}: diagnostic code (\code{1L}) or procedure code (\code{0L})
 \item \code{full_code}: the full code string
-\item \code{code}: the compact codes string
-\item \code{src}: the source - CMS, CDC, or WHO.
+\item \code{code}: the compact code string
+\item \code{src}: the source CMS, CDC, WHO, IHACPA, or Socialstyrelsen
 \item year ranges (\verb{known_*}, \verb{assignable_*}).
 }
 }
@@ -48,10 +48,11 @@ C00.0, C00.1, C00.2, C00.3, C00.4, C00.5, C00.6, C00.7, C00.8, and C00.9
 exist. Those four-character codes are assignable (as of 2025) because no
 five-character descendants (e.g., C00.40) exist.
 
-When the source is the World Health Organization (WHO) or CDC Mortality,
-years refer to calendar years. CDC/CMS sources use the U.S. federal fiscal
-year, which starts on October 1 (e.g., fiscal year 2024 runs 2023-10-01 to
-2024-09-30).
+When the source is the World Health Organization (WHO), CDC Mortality, or
+Socialstyrelsen, years refer to calendar years. CMS sources use the U.S.
+federal fiscal year, which starts on October 1 (e.g., fiscal year 2024 runs
+2023-10-01 to 2024-09-30). IHACPA sources use the Australian financial year,
+which starts on July 1 and ends on June 30.
 }
 \details{
 ICD codes should be character vectors. These tools work with either

@@ -8,15 +8,15 @@
 #'
 #' @details
 #' When `flag.method = "current"`, only codes from the index encounter
-#' contribute to flags. When a longitudinal method is selected (e.g.,
-#' `"cumulative"`), prior encounters for the same `id.vars`
-#' combination may contribute to condition flags. For the cumulative method to
-#' work, `id.vars` needs to be a character vector of length 2 or more. The last
-#' element is treated as the encounter identifier and must be sortable. For
-#' example, say you have data with a hospital, patient, and encounter id. The
-#' `id.vars` could be one of two entries: `c("hospital", "patient", "encounter")`
-#' or `c("patient", "hospital", "encounter")`. In both cases the return will be
-#' the same because the encounter identifier is unchanged regardless of whether
+#' contribute to flags. The `flag.method = "cumulative"` option
+#' lets prior encounters for the same `id.vars` combination contribute to
+#' condition flags. For the cumulative method to work, `id.vars`
+#' needs to be a character vector of length 2 or more. The last element is
+#' treated as the encounter identifier and must be sortable. For example, say
+#' you have data with a hospital, patient, and encounter id. The `id.vars` could
+#' be one of two entries: `c("hospital", "patient", "encounter")` or
+#' `c("patient", "hospital", "encounter")`. In both cases the return will be the
+#' same because the encounter identifier is unchanged regardless of whether
 #' hospital or patient is listed first.
 #'
 #' It is critically important that the `data[[tail(id.vars, 1)]]` variable can
@@ -43,17 +43,39 @@
 #' have better performance than using the date and will clear up any possible
 #' issues with non-sequential encounter ids from the source data.
 #'
-#' **Cumulative + POA defaults:**
+#' For `flag.method = "cumulative"`, the encounter order column must not contain
+#' missing values, must not be a factor, and must be numeric, character, `Date`,
+#' or `POSIXt`. Character encounter order columns are allowed, but they are
+#' sorted lexicographically; use an integer sequence, `Date`, or `POSIXt` column
+#' when possible.
+#'
+#' **Cumulative flagging + POA defaults:**
 #'
 #' When `flag.method = "cumulative"` and neither
 #' `poa` nor `poa.var` is supplied, the first encounter for a condition is
-#' treated as `poa = 0`. Subsequent encounters for that condition are flagged as
-#' `poa = 1`.
+#' treated as `poa = 0L`. Subsequent encounters for that condition are flagged
+#' as `poa = 1L`.
 #'
 #' When `flag.method = "current"` and neither `poa` nor `poa.var` is supplied,
 #' then all codes will be considered present-on-admission.  If poa was assumed
 #' to be 0, then in this case the only conditions that could be flagged are the
 #' Elixhauser conditions which are poa-exempt.
+#'
+#' The `mapping` option controls how ICD codes are mapped to conditions. The
+#' default, `mapping = "precomputed"`, uses a precomputed table that links
+#' valid ICD codes to comorbidity conditions. Those links are built from the ICD
+#' code sources included with medicalcoder: the United States Centers for
+#' Disease Control and Prevention (CDC), the Centers for Medicare and Medicaid
+#' Services (CMS), the World Health Organization (WHO), the Independent
+#' Health and Aged Care Pricing Authority (IHACPA) ICD-10 Australian
+#' Modification (ICD-10-AM) data, and Socialstyrelsen ICD-10-SE data.
+#'
+#' `mapping = "precomputed"` is generally fastest and is the behavior used by
+#' medicalcoder before the `mapping` argument was added. `mapping = "regex"`
+#' applies the method's regular expressions directly to the input ICD codes.
+#' Regex mapping is currently implemented for Charlson methods and is useful
+#' when codes come from an ICD modification that may not be completely covered
+#' by the precomputed code-condition links, or when auditing a method.
 #'
 #' @return
 #'
@@ -65,7 +87,7 @@
 #'   defined in the function call.  For all methods there will be the following
 #'   columns:
 #'   * `num_cmrb` a count of comorbidities/conditions flagged
-#'   * `cmrb_flag` a 0/1 integer indicator for at least one
+#'   * `cmrb_flag` a `0L`/`1L` integer indicator for at least one
 #'   comorbidity/condition.
 #'
 #'   Additional columns:
@@ -81,11 +103,11 @@
 #'         the presence of a technology dependence code along with at least one
 #'         comorbidity being flagged by a diagnostic or procedure code.
 #'       * `<condition>_dxpr_only`: the condition was flagged due to the
-#'         presence of a non-technology dependent diagnostic or procedure code
+#'         presence of a non-technology-dependent diagnostic or procedure code
 #'         only.
 #'       * `<condition>_tech_only`: the condition was flagged due to the
-#'         presence of a technology dependent code only and at least one other
-#'         comorbidity was flagged by a non-technology dependent code.
+#'         presence of a technology-dependent code only and at least one other
+#'         comorbidity was flagged by a non-technology-dependent code.
 #'       * `<condition>_dxpr_and_tech`: The patient had both diagnostic or
 #'         procedure codes and a technology dependence code for the condition.
 #'
@@ -123,6 +145,10 @@
 #'   * Deyo RA, Cherkin DC, Ciol MA. Adapting a clinical comorbidity index
 #'       for use with ICD-9-CM administrative databases. J Clin Epidemiol. 1992
 #'       Jun;45(6):613-9. https://doi.org/10.1016/0895-4356(92)90133-8. PMID: 1607900.
+#'   * Sundararajan V, Henderson T, Perry C, Muggivan A, Quan H, Ghali WA.
+#'       New ICD-10 version of the Charlson comorbidity index predicted
+#'       in-hospital mortality. J Clin Epidemiol. 2004 Dec;57(12):1288-94.
+#'       https://doi.org/10.1016/j.jclinepi.2004.03.012. PMID: 15617955.
 #'   * Quan H, Sundararajan V, Halfon P, Fong A, Burnand B, Luthi JC,
 #'       Saunders LD, Beck CA, Feasby TE, Ghali WA. Coding algorithms for defining
 #'       comorbidities in ICD-9-CM and ICD-10 administrative data. Med Care. 2005
@@ -137,6 +163,12 @@
 #'       Charlson Comorbidity Index: ICD-9 Update and ICD-10 Translation. Am Health
 #'       Drug Benefits. 2019 Jun-Jul;12(4):188-197. PMID: 31428236; PMCID:
 #'       PMC6684052.
+#'   * Ludvigsson JF, Appelros P, Askling J, et al. Adaptation of the Charlson
+#'       Comorbidity Index for Register-Based Research in Sweden. Clin Epidemiol.
+#'       2021;13:21-41. https://doi.org/10.2147/CLEP.S282475.
+#'   * Ludvigsson JF, Appelros P, Askling J, et al. Adaptation of the Charlson
+#'       Comorbidity Index for Register-Based Research in Sweden \[Corrigendum\].
+#'       Clin Epidemiol. 2023;15:753-754. https://doi.org/10.2147/CLEP.S420607.
 #'
 #' * Elixhauser Comorbidities:
 #'
@@ -166,7 +198,8 @@ comorbidities <- function(data,
                           flag.method = c("current", "cumulative"),
                           full.codes = TRUE,
                           compact.codes = TRUE,
-                          subconditions = FALSE
+                          subconditions = FALSE,
+                          mapping = c("precomputed", "regex")
                           ) {
   UseMethod("comorbidities")
 }
@@ -184,7 +217,9 @@ comorbidities.data.frame <- function(data,
                                      flag.method = c("current", "cumulative"),
                                      full.codes = TRUE,
                                      compact.codes = TRUE,
-                                     subconditions = FALSE) {
+                                     subconditions = FALSE,
+                                     mapping = c("precomputed", "regex")
+                                     ) {
 
   ##############################################################################
   # verify input arguments
@@ -199,19 +234,17 @@ comorbidities.data.frame <- function(data,
       several.ok = FALSE
     )
 
-  is_a_column <- function(x, cols) {
-    stopifnot(is.character(x) && length(x) == 1L && x %in% cols)
-  }
+  mapping <- match.arg(arg = mapping, choices = c("precomputed", "regex"), several.ok = FALSE)
 
-  is_a_column(icd.codes, names(data))
+  assert_column(icd.codes, names(data))
 
   if (!is.null(id.vars)) {
     for (x in id.vars) {
-      is_a_column(x, names(data))
+      assert_column(x, names(data))
     }
     pn <- which(id.vars %in% ..protected_names..)
     if (length(pn)) {
-      stop(sprintf("The value(s) \"%s\" in 'id.vars' are protected name(s).  It is ill-advised to use a protected name as medicalcoder is expecting to use them internally to apply the comorbidity algorithms.  Sorry for the inconvenience, but you will need to rename the column(s) in your data set.  Protected names that you should not use for 'id.vars' are: %s.",
+      stop(sprintf("The value(s) \"%s\" in 'id.vars' are protected name(s).  It is ill-advised to use a protected name as medicalcoder is expecting to use them internally to apply the comorbidity algorithms.  Sorry for the inconvenience, but you will need to rename the column(s) in your dataset.  Protected names that you should not use for 'id.vars' are: %s.",
         paste(id.vars[pn], collapse = ", "),
         paste(..protected_names.., collapse = ", ")
         )
@@ -220,14 +253,21 @@ comorbidities.data.frame <- function(data,
   }
 
   if (!is.null(poa.var)) {
-    is_a_column(poa.var, names(data))
+    assert_column(poa.var, names(data))
     if (!is.numeric(data[[poa.var]])) {
       stop(sprintf("Column '%s' must be numeric (0/1/NA) when supplied as poa.var.", poa.var), call. = FALSE)
     }
+    warn_unexpected_column_values(
+      data = data,
+      var = poa.var,
+      allowed = c(0L, 1L),
+      allowed_text = "0/1/NA",
+      consequence = "Values outside 0/1/NA may be ignored by present-on-admission logic."
+    )
     pn <- poa.var %in% ..protected_names..
     if (pn) {
       stop(
-        sprintf("The value \"%s\" in 'poa.var' is a protected name.  It is ill-advised to use a protected name as medicalcoder is expecting to use them internally to apply the comorbidity algorithms.  Sorry for the inconvenience, but you will need to rename the column in your data set.  Protected names that you should not use for 'poa.var' are: %s.",
+        sprintf("The value \"%s\" in 'poa.var' is a protected name.  It is ill-advised to use a protected name as medicalcoder is expecting to use them internally to apply the comorbidity algorithms.  Sorry for the inconvenience, but you will need to rename the column in your dataset.  Protected names that you should not use for 'poa.var' are: %s.",
           poa.var,
           paste(..protected_names.., collapse = ", ")
         )
@@ -236,14 +276,21 @@ comorbidities.data.frame <- function(data,
   }
 
   if ((startsWith(method, "elixhauser") | startsWith(method, "charlson")) & !is.null(primarydx.var)) {
-    is_a_column(primarydx.var, names(data))
+    assert_column(primarydx.var, names(data))
     if (!is.numeric(data[[primarydx.var]])) {
       stop(sprintf("Column '%s' must be numeric (0/1/NA) when supplied as primarydx.var.", primarydx.var), call. = FALSE)
     }
+    warn_unexpected_column_values(
+      data = data,
+      var = primarydx.var,
+      allowed = c(0L, 1L),
+      allowed_text = "0/1/NA",
+      consequence = "Values outside 0/1/NA may be ignored by primary-diagnosis logic."
+    )
     pn <- primarydx.var %in% ..protected_names..
     if (pn) {
       stop(
-        sprintf("The value \"%s\" in 'primarydx.var' is a protected name.  It is ill-advised to use a protected name as medicalcoder is expecting to use them internally to apply the comorbidity algorithms.  Sorry for the inconvenience, but you will need to rename the column in your data set.  Protected names that you should not use for 'primarydx.var' are: %s.",
+        sprintf("The value \"%s\" in 'primarydx.var' is a protected name.  It is ill-advised to use a protected name as medicalcoder is expecting to use them internally to apply the comorbidity algorithms.  Sorry for the inconvenience, but you will need to rename the column in your dataset.  Protected names that you should not use for 'primarydx.var' are: %s.",
           primarydx.var,
           paste(..protected_names.., collapse = ", ")
         )
@@ -257,7 +304,7 @@ comorbidities.data.frame <- function(data,
   flag.method <- match.arg(flag.method, choices = c("current", "cumulative"), several.ok = FALSE)
 
   if (startsWith(method, "charlson") && !is.null(age.var)) {
-    is_a_column(age.var, names(data))
+    assert_column(age.var, names(data))
   }
 
   assert_scalar_logical(subconditions)
@@ -275,6 +322,51 @@ comorbidities.data.frame <- function(data,
     stop("When using `flag.method = 'cumulative'` the `id.vars` are expected to be provided and have a minimum length of 2, e.g., c('subject_id', 'encounter_number')", call. = FALSE)
   }
 
+  if (flag.method == "cumulative") {
+    encid <- id.vars[length(id.vars)]
+    enc <- data[[encid]]
+
+    if (any(is.na(enc))) {
+      stop(
+        sprintf(
+          "When using `flag.method = 'cumulative'`, the encounter order column '%s' must not contain missing values.",
+          encid
+        ),
+        call. = FALSE
+      )
+    }
+
+    if (is.factor(enc)) {
+      stop(
+        sprintf(
+          "When using `flag.method = 'cumulative'`, the encounter order column '%s' must not be a factor. Use an integer sequence, Date, POSIXt, or character column with the intended sort order.",
+          encid
+        ),
+        call. = FALSE
+      )
+    }
+
+    if (!(is.numeric(enc) || is.character(enc) || inherits(enc, "Date") || inherits(enc, "POSIXt"))) {
+      stop(
+        sprintf(
+          "When using `flag.method = 'cumulative'`, the encounter order column '%s' must be numeric, character, Date, or POSIXt.",
+          encid
+        ),
+        call. = FALSE
+      )
+    }
+
+    if (is.character(enc)) {
+      warning(
+        sprintf(
+          "When using `flag.method = 'cumulative'`, the encounter order column '%s' is character and will be sorted lexicographically. Use an integer sequence, Date, or POSIXt column when possible.",
+          encid
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
   # Check if icdv.var and/or icdv have been specified and check for expected
   # values.  if icdv is specified and icdv.var is NULL then then the icdv will
   # be used to subset the lookup table of ICD codes and conditions by method
@@ -283,10 +375,17 @@ comorbidities.data.frame <- function(data,
       warning("'icdv.var' and 'icdv' were both specified; ignoring 'icdv'", call. = FALSE)
       icdv <- NULL
     } else {
-      is_a_column(icdv.var, names(data))
+      assert_column(icdv.var, names(data))
       if (!is.numeric(data[[icdv.var]])) {
         stop(sprintf("Column '%s' must be numeric (9/10/NA) when supplied as icdv.var.", icdv.var), call. = FALSE)
       }
+      warn_unexpected_column_values(
+        data = data,
+        var = icdv.var,
+        allowed = c(9L, 10L),
+        allowed_text = "9/10/NA",
+        consequence = "Rows with other ICD versions are not used by comorbidity methods that only map ICD-9 and ICD-10 codes."
+      )
     }
   } else {
     if (!is.null(icdv)) {
@@ -308,10 +407,17 @@ comorbidities.data.frame <- function(data,
       warning("'dx.var' and 'dx' were both specified; ignoring 'dx'", call. = FALSE)
       dx <- NULL
     } else{
-      is_a_column(dx.var, names(data))
+      assert_column(dx.var, names(data))
       if (!is.numeric(data[[dx.var]])) {
         stop(sprintf("Column '%s' must be numeric (0/1/NA) when supplied as dx.var.", dx.var), call. = FALSE)
       }
+      warn_unexpected_column_values(
+        data = data,
+        var = dx.var,
+        allowed = c(0L, 1L),
+        allowed_text = "0/1/NA",
+        consequence = "Rows with other code-type values are not used by comorbidity methods that only map procedure and diagnosis indicators 0 and 1."
+      )
     }
   } else {
     if (!is.null(dx)) {
@@ -340,17 +446,41 @@ comorbidities.data.frame <- function(data,
     by_y <- c(by_y, "dx")
   }
 
+  data_for_lookup <-
+    mdcr_select(
+      data,
+      cols = unique(c(icd.codes, id.vars, icdv.var, dx.var, poa.var, primarydx.var))
+    )
+  empty_data_for_lookup <- mdcr_subset(data_for_lookup, i = integer(0))
+
   ##############################################################################
   # Determine the lookup table and the columns for the lookup table to keep
   lookup_to_keep <- c("condition")
   if (startsWith(method, "pccc")) {
-    lookup <- get(x = "pccc_codes", envir = ..mdcr_data_env.., inherits = FALSE)
+    if (mapping == "precomputed") {
+      lookup <- get(x = "pccc_codes", envir = ..mdcr_data_env.., inherits = FALSE)
+    } else {
+      stop('mapping = "regex" for PCCC methods has not yet been implemented', call. = FALSE)
+      #lookup <- ..mdcr_internal_pccc_regex..
+    }
     lookup_to_keep <- c(lookup_to_keep, "subcondition", "transplant_flag", "tech_dep_flag")
   } else if (startsWith(method, "charlson")) {
-    lookup <- get("charlson_codes", envir = ..mdcr_data_env.., inherits = FALSE)
+    if (mapping == "precomputed") {
+      lookup <- get("charlson_codes", envir = ..mdcr_data_env.., inherits = FALSE)
+    } else {
+      if (method == "charlson_beyrer2021") {
+        stop("method = 'charlson_beyrer2021' does not have a regex variant.  Exact ICD codes only to be consistent with the publication.", call. = FALSE)
+      }
+      lookup <- ..mdcr_internal_charlson_regex..
+    }
     lookup_to_keep <- c(lookup_to_keep)
   } else if (startsWith(method, "elixhauser")) {
-    lookup <- get("elixhauser_codes", envir = ..mdcr_data_env.., inherits = FALSE)
+    if (mapping == "precomputed") {
+      lookup <- get("elixhauser_codes", envir = ..mdcr_data_env.., inherits = FALSE)
+    } else {
+      stop('mapping = "regex" for Elixhauser methods has not yet been implemented', call. = FALSE)
+      # lookup <- ..mdcr_internal_elixhauser_regex..
+    }
     lookup_to_keep <- c(lookup_to_keep, "poaexempt")
   }
 
@@ -368,23 +498,119 @@ comorbidities.data.frame <- function(data,
 
   ##############################################################################
   # inner join the data with the lookup table
-  on_full <-
-    mdcr_inner_join(
-      x = if (full.codes) {data} else {data[0, ]},
-      y = lookup,
-      by.x = by_x,
-      by.y = c("full_code", by_y),
-      suffixes = c("", ".y")
-    )
+  if (mapping == "precomputed") {
+    on_full <-
+      mdcr_inner_join(
+        x = if (full.codes) {data_for_lookup} else {empty_data_for_lookup},
+        y = lookup,
+        by.x = by_x,
+        by.y = c("full_code", by_y),
+        suffixes = c("", ".y")
+      )
 
-  on_comp <-
-    mdcr_inner_join(
-      x = if (compact.codes) {data} else {data[0, ]},
-      y = lookup,
-      by.x = by_x,
-      by.y = c("code", by_y),
-      suffixes = c("", ".y")
-    )
+    on_comp <-
+      mdcr_inner_join(
+        x = if (compact.codes) {data_for_lookup} else {empty_data_for_lookup},
+        y = lookup,
+        by.x = by_x,
+        by.y = c("code", by_y),
+        suffixes = c("", ".y")
+      )
+  } else {
+    # use the names on_comp and on_full
+    # As of v0.8.1, the only mapping between icd codes and conditions was done
+    # by precomputed link tables of ICD codes and conditions.
+    # An extension to use regex is being built, and at least for the initial,
+    # "get it done" reuse these names here.  Let on_comp be empty and on_full be
+    # based on the regex matching.
+    on_comp <-
+      mdcr_inner_join(
+        x = empty_data_for_lookup,
+        y = lookup,
+        by.x = by_x,
+        by.y = c("pattern", by_y),
+        suffixes = c("", ".y")
+      )
+
+    if (is.null(dx.var) & is.null(icdv.var)) {
+      unique_codes <- mdcr_unique(data_for_lookup, by = icd.codes)
+      on_full <- map_by_regex(unique_codes, lookup, icd.codes, by_x, by_y)
+    } else if (!is.null(dx.var) & is.null(icdv.var)) {
+      unique_codes <- mdcr_unique(data_for_lookup, by = c(icd.codes, dx.var))
+      unique_codes <- split(x = unique_codes, f = unique_codes[[dx.var]])
+      m0 <- map_by_regex(
+        unique_codes[["0"]],
+        mdcr_subset(lookup, lookup[["dx"]] == 0L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      m1 <- map_by_regex(
+        unique_codes[["1"]],
+        mdcr_subset(lookup, lookup[["dx"]] == 1L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      on_full <- rbind(m0, m1)
+    } else if (is.null(dx.var) & !is.null(icdv.var)) {
+      unique_codes <- mdcr_unique(data_for_lookup, by = c(icd.codes, icdv.var))
+      unique_codes <- split(x = unique_codes, f = unique_codes[[icdv.var]])
+      m9 <- map_by_regex(
+        unique_codes[["9"]],
+        mdcr_subset(lookup, lookup[["icdv"]] == 9L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      m10 <- map_by_regex(
+        unique_codes[["10"]],
+        mdcr_subset(lookup, lookup[["icdv"]] == 10L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      on_full <- rbind(m9, m10)
+    } else if (!is.null(dx.var) & !is.null(icdv.var)) {
+      unique_codes <- mdcr_unique(data_for_lookup, by = c(icd.codes, icdv.var, dx.var))
+      unique_codes <- split(x = unique_codes, f = unique_codes[c(icdv.var, dx.var)])
+      m9.0 <- map_by_regex(
+        uc = unique_codes[["9.0"]],
+        ptrns = mdcr_subset(lookup, lookup[["icdv"]] == 9L & lookup[["dx"]] == 0L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      m9.1 <- map_by_regex(
+        uc = unique_codes[["9.1"]]
+        ,
+        ptrns = mdcr_subset(lookup, lookup[["icdv"]] == 9L & lookup[["dx"]] == 1L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      m10.0 <- map_by_regex(
+        unique_codes[["10.0"]],
+        mdcr_subset(lookup, lookup[["icdv"]] == 10L & lookup[["dx"]] == 0L),
+        icd.codes,
+        by_x,
+        by_y
+      )
+      m10.1 <- map_by_regex(
+        uc = unique_codes[["10.1"]],
+        ptrns = mdcr_subset(lookup, lookup[["icdv"]] == 10L & lookup[["dx"]] == 1L),
+        icd.codes = icd.codes,
+        by_x = by_x,
+        by_y = by_y
+      )
+      on_full <- rbind(m9.0, m9.1, m10.0, m10.1)
+    } else {
+      # you should never get here
+    }
+    if (is.null(on_full)) {
+      on_full <- on_comp[0, , drop = FALSE]
+    }
+  }
 
   ##############################################################################
   # Now determine if the id.vars, poa.var, and primarydx.var need to be
@@ -426,7 +652,7 @@ comorbidities.data.frame <- function(data,
     if (!is.null(poa)) {
       warning("'poa.var' and 'poa' were both specified; ignoring 'poa'", call. = FALSE)
     }
-    is_a_column(poa.var, nms)
+    assert_column(poa.var, nms)
   }
 
   if (startsWith(method, "elixhauser") | startsWith(method, "charlson")) {
@@ -450,7 +676,7 @@ comorbidities.data.frame <- function(data,
       if (!is.null(primarydx)) {
         warning("'primarydx.var' and 'primarydx' were both specified; ignoring 'primarydx'", call. = FALSE)
       }
-      is_a_column(primarydx.var, nms)
+      assert_column(primarydx.var, nms)
     }
   }
 
@@ -460,9 +686,14 @@ comorbidities.data.frame <- function(data,
       mdcr_select(on_comp, c(id.vars, poa.var, primarydx.var, method, lookup_to_keep))
     )
 
-  # retain only meaningful rows, that is, unique rows.  If a condition is
-  # reported more than once with the same information except for poa, then keep
-  # a row for poa = 1 and omit the other poa = 1 row(s) and any poa = 0 row(s).
+  # Retain only meaningful rows. If a condition is reported more than once with
+  # the same information except for poa, keep one row with poa = 1L when one is
+  # available. Primary-diagnosis status is part of the grouping key, so rows
+  # with primarydx = 0L and primarydx = 1L are retained separately and POA is
+  # resolved independently within each status. Downstream Charlson and
+  # Elixhauser processing removes primary-diagnosis rows. Consequently, when a
+  # condition is represented by both primary and non-primary diagnoses, it is
+  # flagged only when the non-primary row satisfies that method's POA rules.
   cmrb <- mdcr_setorder(cmrb, by = c(names(cmrb)[names(cmrb) != poa.var], poa.var))
   keep <- !mdcr_duplicated(cmrb, by = names(cmrb)[names(cmrb) != poa.var], fromLast = TRUE)
   cmrb <- mdcr_subset(cmrb, keep)
@@ -492,7 +723,7 @@ comorbidities.data.frame <- function(data,
     id.vars2 <- id.vars[-length(id.vars)]
     encid <- id.vars[length(id.vars)]
 
-    # find the first occurance of each condition
+    # find the first occurrence of each condition
     grps <- c(id.vars2, "condition")
     byconditions <- c("condition")
     if (startsWith(method, "pccc")) {
@@ -505,14 +736,14 @@ comorbidities.data.frame <- function(data,
     keep <- !mdcr_duplicated(tmp, by = grps)
     foc <- mdcr_subset(tmp, keep)
 
-    # add the first occurrence on to the cmrb data.frame
+    # add the first occurrence to the cmrb data.frame
     foc <-
       mdcr_left_join(
         x = cmrb,
         y = foc,
         by = c(id.vars2, encid, byconditions)
       )
-    foc <- mdcr_setnames(foc, old = encid, new = "first_occurrance")
+    foc <- mdcr_setnames(foc, old = encid, new = "first_occurrence")
 
     iddf2 <-
       mdcr_inner_join(
@@ -534,29 +765,29 @@ comorbidities.data.frame <- function(data,
              function(y) {
                rtn <- mdcr_left_join(x = iddf2, y = y, by = c(id.vars2))
                rtn <- mdcr_subset(rtn, i = !is.na(rtn[["condition"]]))
-               i <- rtn[[encid]] >= rtn[["first_occurrance"]]
+               i <- rtn[[encid]] >= rtn[["first_occurrence"]]
                mdcr_subset(rtn, i = i)
              })
 
     cmrb <- do.call(rbind, foc)
 
-    # Carry condition forward after first occurrence: set poa to 1 and
-    # primarydx to 0 on later encounters so downstream POA filtering keeps
+    # Carry condition forward after first occurrence: set poa to 1L and
+    # primarydx to 0L on later encounters so downstream POA filtering keeps
     # all post-first-occurrence rows and the first-occurrence row only if poa =
-    # 1 (via poa.var or poa) for the first-occurrence
-    idx <- cmrb[[encid]] > cmrb[["first_occurrance"]]
+    # 1L (via poa.var or poa) for the first occurrence.
+    idx <- cmrb[[encid]] > cmrb[["first_occurrence"]]
     cmrb[[poa.var]][idx] <- 1L
     if (!is.null(primarydx.var)) {
-      cmrb[[primarydx.var]][cmrb[[encid]] > cmrb[["first_occurrance"]]] <- 0L
+      cmrb[[primarydx.var]][cmrb[[encid]] > cmrb[["first_occurrence"]]] <- 0L
     }
-    cmrb <- mdcr_set(cmrb, j = "first_occurrance", value =  NULL)
+    cmrb <- mdcr_set(cmrb, j = "first_occurrence", value =  NULL)
 
     cmrb <- mdcr_unique(cmrb)
   }
 
   ##############################################################################
-  # retain only the row for present on admission for pccc and charlson.
-  # elixhauser conditions may or may not need poa, so do not subset in that
+  # retain only present-on-admission rows for PCCC and Charlson.
+  # Elixhauser conditions may or may not need POA, so do not subset in that
   # case.
   if (startsWith(method, "charlson") | startsWith(method, "pccc")) {
     cmrb <- mdcr_subset(cmrb, i = cmrb[[poa.var]] == 1L)
@@ -600,6 +831,8 @@ comorbidities.data.frame <- function(data,
   } else if (startsWith(method, "elixhauser")) {
     ccc <- .elixhauser(id.vars = id.vars, iddf = iddf, cmrb = cmrb, poa.var = poa.var, primarydx.var = primarydx.var, method = method)
   } else {
+    # As of v0.9.0 this guard cannot be reached through comorbidities():
+    # method is constrained by match.arg() before dispatch reaches this branch.
     stop(sprintf("method '%s' has not yet been implemented", method))
   }
 
@@ -647,7 +880,10 @@ comorbidities.data.frame <- function(data,
 
 #' @export
 print.medicalcoder_comorbidities <- function(x, ...) {
-  cat(sprintf("\nComorbidities via %s\n\n", attr(x, "method")))
+  m <- attr(x, "method")
+  if (!is.null(m)) {
+    cat(sprintf("\nComorbidities via %s\n\n", m))
+  }
   NextMethod(generic = "print", object = x, ...)
   invisible(x)
 }
@@ -668,12 +904,74 @@ print.medicalcoder_comorbidities_with_subconditions <- function(x, ...) {
 comorbidities_methods <- function() {
     c("pccc_v2.0", "pccc_v2.1", "pccc_v3.0", "pccc_v3.1",
       "charlson_deyo1992", "charlson_quan2011", "charlson_quan2005",
-      "charlson_cdmf2019",
+      "charlson_cdmf2019", "charlson_sundararajan2004", "charlson_ludvigsson2021",
+      "charlson_beyrer2021", "charlson_mimicivcode",
       "elixhauser_elixhauser1988", "elixhauser_ahrq_web", "elixhauser_quan2005",
       "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024",
       "elixhauser_ahrq2025", "elixhauser_ahrq2026", "elixhauser_ahrq_icd10")
 }
 
+warn_unexpected_column_values <- function(data, var, allowed, allowed_text, consequence) {
+  vals <- unique(data[[var]][!is.na(data[[var]])])
+  unexpected <- vals[!(vals %in% allowed)]
+
+  if (length(unexpected) > 0L) {
+    warning(
+      sprintf(
+        "Column '%s' contains value(s) outside %s: %s. %s",
+        var,
+        allowed_text,
+        paste(sort(unexpected), collapse = ", "),
+        consequence
+      ),
+      call. = FALSE
+    )
+  }
+
+  invisible(NULL)
+}
+
+# map_by_regex is used to...
+# @param uc a data.frame with unique codes
+# @param ptrns a data.frame with regex ptrns mapping to conditions
+# @param icd.codes name of the column in uc with the ICD codes
+# @param by_x,by_y the columns to join the uc and found conditions by
+map_by_regex <- function(uc, ptrns, icd.codes, by_x, by_y) {
+  if (is.null(uc) || nrow(uc) == 0L || is.null(ptrns) || nrow(ptrns) == 0L) {
+    return(NULL)
+  }
+  mapped <- lapply(uc[[icd.codes]], function(x) {
+    y <- sapply(ptrns[["pattern"]], grepl, x)
+    if (length(y) > 0L) {
+      which(y)
+    } else {
+      # As of v0.9.0 this branch cannot be reached through comorbidities():
+      # map_by_regex() returns before this point when no regex patterns exist.
+      integer(0)
+    }
+  })
+  mapped <- stats::setNames(mapped, uc[[icd.codes]])
+  mapped <- Filter(length, mapped)
+  mapped <-
+    Map(
+      f = function(nm, i) {
+        rtn <- mdcr_subset(ptrns, i = i)
+        rtn <- mdcr_set(rtn, j = "code_via_regex", value = nm)
+        rtn
+      },
+      nm = names(mapped),
+      i = mapped
+    )
+  mapped <- do.call(rbind, mapped)
+  if (length(mapped) > 0L) {
+    mdcr_inner_join(
+      x = uc,
+      y = mapped,
+      by.x = by_x,
+      by.y = c("code_via_regex", by_y)
+    )
+  }
+}
 
 # protected names... throw and error and tell end users that it is ill-advised
 # to use these names for id.vars, poa.var, primarydx.var
@@ -686,5 +984,6 @@ comorbidities_methods <- function() {
     "elixhauser_ahrq_web", "elixhauser_elixhauser1988", "elixhauser_quan2005",
     "elixhauser_ahrq2022", "elixhauser_ahrq2023", "elixhauser_ahrq2024", "elixhauser_ahrq2025", "elixhauser_ahrq2026",
     "elixhauser_ahrq_icd10",
-    "charlson_cdmf2019", "charlson_deyo1992", "charlson_quan2005", "charlson_quan2011"
+    "charlson_cdmf2019", "charlson_deyo1992", "charlson_ludvigsson2021",
+    "charlson_quan2005", "charlson_quan2011", "charlson_sundararajan2004"
   )

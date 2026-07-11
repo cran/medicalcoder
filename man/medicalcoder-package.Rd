@@ -13,12 +13,13 @@ medicalcoder is a lightweight, base-R package for working with ICD-9 and
 ICD-10 diagnosis and procedure codes. It provides fast, dependency-free tools
 to look up, validate, and manipulate ICD codes, while also implementing
 widely used comorbidity algorithms such as Charlson, Elixhauser, and the
-Pediatric Complex Chronic Conditions (PCCC).
-Designed for portability and reproducibility, the package avoids external
-dependencies—requiring only R >= 3.5.0—yet offers a rich set of curated ICD
-code libraries from the United States' Centers for Medicare and Medicaid
-Services (CMS), Centers for Disease Control (CDC), and the World Health
-Organization (WHO).
+Pediatric Complex Chronic Conditions (PCCC). Designed for portability and
+reproducibility, the package avoids external dependencies, requiring only
+\verb{R >= 3.5.0}, yet offers a rich set of curated ICD code libraries from the
+United States' Centers for Medicare and Medicaid Services (CMS), Centers for
+Disease Control (CDC), the World Health Organization (WHO), the Independent
+Health and Aged Care Pricing Authority (IHACPA), and from Sweden's National
+Board of Health and Welfare (Socialstyrelsen).
 
 The package balances performance with elegance: its internal caching,
 efficient joins, and compact data structures make it practical for
@@ -38,10 +39,10 @@ This design choice was made for several reasons.
 \enumerate{
 \item Ease of installation:
 \itemize{
-\item Only requirement is R >= 3.5.0.
+\item The only requirement is \verb{R >= 3.5.0}.
 \item No need for external files, downloads, or other packages for the ICD database.
 }
-\item Works well with different data paradigms
+\item Works well with different data paradigms:
 \itemize{
 \item Base R \code{data.frames},
 \item \href{https://tidyverse.org/}{tidyverse} \code{tibble}s, and
@@ -51,14 +52,14 @@ This design choice was made for several reasons.
 
 One of the reasons for focusing on building a self-contained package with no
 need for additional namespaces is to make installation and use in a
-restricted and secured system easier. The author of this package routinely works
-on machines with extremely limited access to the world-wide web. As
+restricted and secure systems easier. The author of this package routinely
+works on machines with extremely limited access to the world-wide web. As
 such, relying on any system dependencies or other R packages can become
-difficult as the machine may or may not have the needed software. So long as
+difficult because the machine may or may not have the needed software. So long as
 R >= 3.5.0 is available, medicalcoder will work.
 
 A great deal of thought went into performance of the methods and the size of
-the package.  The internal data sets, for example, are not stored in a
+the package.  The internal datasets, for example, are not stored in a
 structure that is easy to use for end users. When the package namespace is
 loaded, the needed internal lookup tables are generated and cached.
 }

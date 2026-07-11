@@ -37,7 +37,7 @@ str(pccc_codes)
 ## ----label = "define-pat1"----------------------------------------------------
 pat1 <-
   data.frame(
-    dx = c(1, 1, 1, 1, 0, 0),
+    dx = c(1L, 1L, 1L, 1L, 0L, 0L),
     icdv = 9L,
     code = c("34590", "78065", "3432", "78065", "9929", "8606")
   )
@@ -48,24 +48,22 @@ merge(x = pccc_codes, y = pat1, all = FALSE, by = c("icdv", "dx", "code"))
 ## ----label = "pat1-pccc-v2"---------------------------------------------------
 pat1_pccc_v2.0 <-
   comorbidities(
-    data = pat1,
+    data      = pat1,
     icd.codes = "code",
-    dx.var = "dx",
-    icdv = 9,
-    method = "pccc_v2.0",
-    flag.method = "current", # default
-    poa = 1                  # default for flag.method = 'current'
+    dx.var    = "dx",
+    icdv      = 9L,
+    method    = "pccc_v2.0",
+    poa       = 1L                 # default for flag.method = 'current'
   )
 
 pat1_pccc_v2.1 <-
   comorbidities(
-    data = pat1,
+    data      = pat1,
     icd.codes = "code",
-    dx.var = "dx",
-    icdv = 9,
-    method = "pccc_v2.1",
-    flag.method = "current",
-    poa = 1
+    dx.var    = "dx",
+    icdv      = 9L,
+    method    = "pccc_v2.1",
+    poa       = 1L
   )
 
 all.equal(pat1_pccc_v2.0, pat1_pccc_v2.1, check.attributes = FALSE)
@@ -74,24 +72,22 @@ pat1_pccc_v2.1
 ## ----label = "pat1-pccc-v3"---------------------------------------------------
 pat1_pccc_v3.0 <-
   comorbidities(
-    data = pat1,
-    icd.codes = "code",
-    dx.var = "dx",
-    icdv = 9,
-    method = "pccc_v3.0",
-    flag.method = 'current',
-    poa = 1
+    data        = pat1,
+    icd.codes   = "code",
+    dx.var      = "dx",
+    icdv        = 9L,
+    method      = "pccc_v3.0",
+    poa         = 1L
   )
 
 pat1_pccc_v3.1 <-
   comorbidities(
-    data = pat1,
-    icd.codes = "code",
-    dx.var = "dx",
-    icdv = 9,
-    method = "pccc_v3.1",
-    flag.method = 'current',
-    poa = 1
+    data        = pat1,
+    icd.codes   = "code",
+    dx.var      = "dx",
+    icdv        = 9L,
+    method      = "pccc_v3.1",
+    poa         = 1L
   )
 
 all.equal(pat1_pccc_v3.0, pat1_pccc_v3.1, check.attributes = FALSE)
@@ -127,26 +123,24 @@ pat2 <- subset(pat1, code != "3432")
 ## ----label = "pat2-pccc-v2"---------------------------------------------------
 pat2_pccc_v2.1 <-
   comorbidities(
-    data = pat2,
+    data      = pat2,
     icd.codes = "code",
-    dx.var = "dx",
-    icdv = 9,
-    method = "pccc_v2.1",
-    flag.method = 'current',
-    poa = 1
+    dx.var    = "dx",
+    icdv      = 9L,
+    method    = "pccc_v2.1",
+    poa       = 1L
   )
 Filter(f = function(x) x > 0, pat2_pccc_v2.1)
 
 ## ----label = "pat2-pccc-v3"---------------------------------------------------
 pat2_pccc_v3.1 <-
   comorbidities(
-    data = pat2,
-    icd.codes = "code",
-    dx.var = "dx",
-    icdv = 9,
-    method = "pccc_v3.1",
-    flag.method = 'current',
-    poa = 1
+    data        = pat2,
+    icd.codes   = "code",
+    dx.var      = "dx",
+    icdv        = 9L,
+    method      = "pccc_v3.1",
+    poa         = 1L
   )
 Filter(f = function(x) x > 0, pat2_pccc_v3.1)
 
@@ -157,22 +151,20 @@ str(mdcr)
 ## ----label = "mdcr-results-01"------------------------------------------------
 mdcr_results_v2.1_01 <-
   comorbidities(
-    data = mdcr,
+    data      = mdcr,
     icd.codes = "code",
-    id.vars = "patid",
-    poa = 1,
-    flag.method = 'current',
-    method = "pccc_v2.1"
+    id.vars   = "patid",
+    poa       = 1L,
+    method    = "pccc_v2.1"
   )
 
 mdcr_results_v3.1_01 <-
   comorbidities(
-    data = mdcr,
+    data      = mdcr,
     icd.codes = "code",
-    id.vars = "patid",
-    poa = 1,
-    flag.method = 'current',
-    method = "pccc_v3.1"
+    id.vars   = "patid",
+    poa       = 1L,
+    method    = "pccc_v3.1"
   )
 
 ## ----label = "comorbidities-summary-table-str"--------------------------------
@@ -219,24 +211,22 @@ table(mdcr[mdcr$code == "3321", "dx"])
 ## ----label = "mdcr-results-02"------------------------------------------------
 mdcr_results_v2.1_02 <-
   comorbidities(
-    data = mdcr,
-    id.vars = "patid",
-    icd.codes = "code",
-    dx.var = "dx",
-    flag.method = 'current',
-    poa = 1,
-    method = "pccc_v2.1"
+    data        = mdcr,
+    id.vars     = "patid",
+    icd.codes   = "code",
+    dx.var      = "dx",
+    poa         = 1L,
+    method      = "pccc_v2.1"
   )
 
 mdcr_results_v3.1_02 <-
   comorbidities(
-    data = mdcr,
-    id.vars = "patid",
-    icd.codes = "code",
-    dx.var = "dx",
-    flag.method = 'current',
-    poa = 1,
-    method = "pccc_v3.1"
+    data        = mdcr,
+    id.vars     = "patid",
+    icd.codes   = "code",
+    dx.var      = "dx",
+    poa         = 1L,
+    method      = "pccc_v3.1"
   )
 
 ## -----------------------------------------------------------------------------
@@ -306,90 +296,90 @@ DF <-
 
 # ideal: using the dx/pr status and matching on full and compact codes.
 comorbidities(
-  data = DF,
-  id.vars = "id",
-  dx.var = "dx",
+  data      = DF,
+  id.vars   = "id",
+  dx.var    = "dx",
   icd.codes = "code",
-  poa = 1,
-  method = "pccc_v3.1"
+  poa       = 1L,
+  method    = "pccc_v3.1"
 )[, c("id", "cmrb_flag", "renal_dxpr_or_tech")]
 
 # false positive for the compact dx
 comorbidities(
-  data = DF,
-  id.vars = "id",
+  data      = DF,
+  id.vars   = "id",
   icd.codes = "code",
-  poa = 1,
-  method = "pccc_v3.1"
+  poa       = 1L,
+  method    = "pccc_v3.1"
 )[, c("id", "cmrb_flag", "renal_dxpr_or_tech")]
 
 # false negative for compact pr
 comorbidities(
-  data = DF,
-  id.vars = "id",
-  icd.codes = "code",
-  poa = 1,
-  full.code = TRUE,
+  data          = DF,
+  id.vars       = "id",
+  icd.codes     = "code",
+  poa           = 1L,
+  full.code     = TRUE,
   compact.codes = FALSE,
-  method = "pccc_v3.1"
+  method        = "pccc_v3.1"
 )[, c("id", "cmrb_flag", "renal_dxpr_or_tech")]
 
 # false positive for compact dx
 comorbidities(
-  data = DF,
-  id.vars = "id",
-  icd.codes = "code",
-  poa = 1,
-  full.code = FALSE,
+  data          = DF,
+  id.vars       = "id",
+  icd.codes     = "code",
+  poa           = 1L,
+  full.code     = FALSE,
   compact.codes = TRUE,
-  method = "pccc_v3.1"
+  method        = "pccc_v3.1"
 )[, c("id", "cmrb_flag", "renal_dxpr_or_tech")]
 
 # false negatives for compact and full pr
 comorbidities(
-  data = DF,
-  id.vars = "id",
-  icd.codes = "code",
-  dx.var = "dx",
-  poa = 1,
-  full.code = FALSE,
+  data          = DF,
+  id.vars       = "id",
+  icd.codes     = "code",
+  dx.var        = "dx",
+  poa           = 1L,
+  full.code     = FALSE,
   compact.codes = TRUE,
-  method = "pccc_v3.1"
+  method        = "pccc_v3.1"
 )[, c("id", "cmrb_flag", "renal_dxpr_or_tech")]
 
 ## ----label = "patid95471"-----------------------------------------------------
 subset(mdcr, patid == "95471")
 
-# no flag becuse icdv = 9 which treats all input codes as ICD-9
+# no flag because icdv = 9L treats all input codes as ICD-9
 comorbidities(
-  data = subset(mdcr, patid == "95471"),
+  data      = subset(mdcr, patid == "95471"),
   icd.codes = "code",
-  id.vars = 'patid',
-  dx.var = "dx",
-  icdv = 9L,
-  poa = 1,
+  id.vars   = 'patid',
+  dx.var    = "dx",
+  icdv      = 9L,
+  poa       = 1L,
   method = "pccc_v3.1"
 )[, c('patid', 'cmrb_flag')]
 
-# flag because icdv = 10 - same as using `icdv.var = "icdv"`
+# flag because icdv = 10L - same as using `icdv.var = "icdv"`
 comorbidities(
-  data = subset(mdcr, patid == "95471"),
+  data      = subset(mdcr, patid == "95471"),
   icd.codes = "code",
-  id.vars = 'patid',
-  dx.var = "dx",
-  icdv = 10L,
-  poa = 1,
-  method = "pccc_v3.1"
+  id.vars   = 'patid',
+  dx.var    = "dx",
+  icdv      = 10L,
+  poa       = 1L,
+  method    = "pccc_v3.1"
 )[, c('patid', 'cmrb_flag')]
 
 comorbidities(
-  data = subset(mdcr, patid == "95471"),
+  data      = subset(mdcr, patid == "95471"),
   icd.codes = "code",
-  id.vars = 'patid',
-  dx.var = "dx",
-  icdv.var = "icdv",
-  poa = 1,
-  method = "pccc_v3.0"
+  id.vars   = 'patid',
+  dx.var    = "dx",
+  icdv.var  = "icdv",
+  poa       = 1L,
+  method    = "pccc_v3.0"
 )[, c('patid', 'cmrb_flag')]
 
 ## -----------------------------------------------------------------------------
@@ -403,7 +393,7 @@ args <-
     data = data,
     id.vars = "id",
     icd.codes = "code",
-    poa = 1,
+    poa = 1L,
     method = "pccc_v3.1"
   )
 
@@ -424,13 +414,13 @@ head(mdcr_longitudinal)
 ## ----results = 'asis'---------------------------------------------------------
 longitudinal_v2_patid <-
   comorbidities(
-    data = mdcr_longitudinal,
-    icd.codes = "code",
-    id.vars = c("patid"),
-    icdv.var = "icdv",
-    method = "pccc_v2.1",
-    flag.method = "current",
-    poa = 1
+    data        = mdcr_longitudinal,
+    icd.codes   = "code",
+    id.vars     = c("patid"),
+    icdv.var    = "icdv",
+    method      = "pccc_v2.1",
+    flag.method = "current", # Default value
+    poa         = 1L
   )
 tab <- kableExtra::kbl(longitudinal_v2_patid)
 tab <- kableExtra::kable_styling(tab, bootstrap_options = c("striped"), font_size = 10)
@@ -438,13 +428,14 @@ tab
 
 ## -----------------------------------------------------------------------------
 longitudinal_v2_patid_date <-
-  comorbidities(data = mdcr_longitudinal,
-    icd.codes = "code",
-    id.vars = c("patid", "date"),
-    icdv.var = "icdv",
-    method = "pccc_v2.1",
+  comorbidities(
+    data        = mdcr_longitudinal,
+    icd.codes   = "code",
+    id.vars     = c("patid", "date"),
+    icdv.var    = "icdv",
+    method      = "pccc_v2.1",
     flag.method = "current",
-    poa = 1
+    poa         = 1L
   )
 
 ## ----echo = FALSE, results = 'asis'-------------------------------------------
@@ -459,13 +450,13 @@ tab
 ## -----------------------------------------------------------------------------
 longitudinal_v2_patid_date_cumulative_poa0 <-
   comorbidities(
-    data = mdcr_longitudinal,
-    icd.codes = "code",
-    id.vars = c("patid", "date"),
-    icdv.var = "icdv",
-    method = "pccc_v2.1",
+    data        = mdcr_longitudinal,
+    icd.codes   = "code",
+    id.vars     = c("patid", "date"),
+    icdv.var    = "icdv",
+    method      = "pccc_v2.1",
     flag.method = "cumulative",
-    poa = 0
+    poa         = 0L
   )
 
 ## ----echo = FALSE, results = 'asis'-------------------------------------------
@@ -480,13 +471,13 @@ tab
 ## -----------------------------------------------------------------------------
 longitudinal_v2_patid_date_cumulative_poa1 <-
   comorbidities(
-    data = mdcr_longitudinal,
-    icd.codes = "code",
-    id.vars = c("patid", "date"),
-    icdv.var = "icdv",
-    method = "pccc_v2.1",
+    data        = mdcr_longitudinal,
+    icd.codes   = "code",
+    id.vars     = c("patid", "date"),
+    icdv.var    = "icdv",
+    method      = "pccc_v2.1",
     flag.method = "cumulative",
-    poa = 1
+    poa         = 1L
   )
 
 ## ----echo = FALSE, results = 'asis'-------------------------------------------
@@ -526,14 +517,14 @@ cat(paste("*", permutations[, unique(plabel)]), sep = "\n")
 ## -----------------------------------------------------------------------------
 rtn <-
   comorbidities(
-    data = permutations,
-    icd.codes = "code",
-    id.vars = c("permutation", "plabel", "encounter_id"),
-    icdv = 10L,
+    data          = permutations,
+    icd.codes     = "code",
+    id.vars       = c("permutation", "plabel", "encounter_id"),
+    icdv          = 10L,
     compact.codes = FALSE,
-    method = "pccc_v3.1",
-    flag.method = "cumulative",
-    poa = 1
+    method        = "pccc_v3.1",
+    flag.method   = "cumulative",
+    poa           = 1L
   )
 
 ## ----label = "setup-rtn-for-discussion", include = FALSE----------------------
@@ -612,25 +603,25 @@ tab
 ## -----------------------------------------------------------------------------
 without_subconditions <-
   comorbidities(
-    data = mdcr,
-    id.vars = "patid",
-    icd.codes = "code",
-    icdv.var = "icdv",
-    dx.var = "dx",
-    poa = 1,
-    method = "pccc_v3.1",
+    data          = mdcr,
+    id.vars       = "patid",
+    icd.codes     = "code",
+    icdv.var      = "icdv",
+    dx.var        = "dx",
+    poa           = 1L,
+    method        = "pccc_v3.1",
     subconditions = FALSE
   )
 
 with_subconditions <-
   comorbidities(
-    data = mdcr,
-    id.vars = "patid",
-    icd.codes = "code",
-    icdv.var = "icdv",
-    dx.var = "dx",
-    poa = 1,
-    method = "pccc_v3.1",
+    data          = mdcr,
+    id.vars       = "patid",
+    icd.codes     = "code",
+    icdv.var      = "icdv",
+    dx.var        = "dx",
+    poa           = 1L,
+    method        = "pccc_v3.1",
     subconditions = TRUE
   )
 
@@ -638,7 +629,7 @@ with_subconditions <-
 with_subconditions
 
 all.equal(
-  with_subconditions$conditions,
+  with_subconditions[["conditions"]],
   without_subconditions,
   check.attributes = FALSE
 )
@@ -649,12 +640,12 @@ str(summary(with_subconditions))
 ## ----include = FALSE----------------------------------------------------------
 args <-
   list(
-    data = mdcr,
-    id.vars = "patid",
-    icd.codes = "code",
-    icdv.var = "icdv",
-    dx.var = "dx",
-    poa = 1,
+    data          = mdcr,
+    id.vars       = "patid",
+    icd.codes     = "code",
+    icdv.var      = "icdv",
+    dx.var        = "dx",
+    poa           = 1L,
     subconditions = TRUE
   )
 with_subconditions_v2.0 <- do.call(comorbidities, c(args, list(method = "pccc_v2.0")))
@@ -780,19 +771,21 @@ tabs[["respiratory"]]
 ## -----------------------------------------------------------------------------
 rslts <-
   comorbidities(
-    data = permutations,
-    icd.codes = "code",
-    id.vars = c("permutation", "plabel", "encounter_id"),
-    icdv = 10L,
+    data          = permutations,
+    icd.codes     = "code",
+    id.vars       = c("permutation", "plabel", "encounter_id"),
+    icdv          = 10L,
     compact.codes = FALSE,
-    method = "pccc_v3.1",
-    flag.method = "cumulative",
-    poa = 1,
+    method        = "pccc_v3.1",
+    flag.method   = "cumulative",
+    poa           = 1L,
     subconditions = TRUE
   )
 
 ## -----------------------------------------------------------------------------
-all(rslts$subconditions$respiratory$chronic_respiratory_diseases == 1)
+stopifnot(
+  all(rslts$subconditions$respiratory$chronic_respiratory_diseases == 1)
+)
 sapply(rslts$subconditions$respiratory[, -(1:3)], max)
 
 # which encounters flag for primary condition respiratory?
@@ -835,11 +828,11 @@ cnd <-
 # which encounters flag for the subconditions?
 scnd <-
   data.table::melt(
-    rslts$subconditions$metabolic,
-    id.vars = c("plabel", "encounter_id"),
-    measure.vars = c("device_and_technology_use", "other_metabolic_disorders"),
+    data            = rslts$subconditions$metabolic,
+    id.vars         = c("plabel", "encounter_id"),
+    measure.vars    = c("device_and_technology_use", "other_metabolic_disorders"),
     variable.factor = FALSE,
-    variable.name = "subcondition"
+    variable.name   = "subcondition"
   )
 scnd <- scnd[value == 1]
 scnd <-
@@ -851,8 +844,8 @@ scnd <-
 
 scnd <-
   data.table::dcast(
-    scnd,
-    plabel ~ subcondition,
+    data      = scnd,
+    formula   = plabel ~ subcondition,
     value.var = "sencid"
   )
 

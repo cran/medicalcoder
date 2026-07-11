@@ -598,18 +598,27 @@ Charlson</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.1&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.9.0&#39;</span></span></code></pre></div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>The medicalcoder package implements several variants of the Charlson
-comorbidities algorithm.</p>
+<p>The <em>medicalcoder</em> package implements several variants of the
+Charlson comorbidities algorithm.</p>
 <ul>
 <li><code>charlson_deyo1992</code>: Deyo’s original set of codes <span class="citation">(Deyo et al. 1992; Quan et al. 2005)</span></li>
 <li><code>charlson_quan2005</code> and <code>charlson_quan2011</code>:
 Codes and index scoring <span class="citation">(Quan et al. 2005,
 2011)</span></li>
+<li><code>charlson_sundararajan2004</code>: Australian ICD-10-AM
+adaptation <span class="citation">(Sundararajan et al. 2004)</span></li>
 <li><code>charlson_cdmf2019</code>: <span class="citation">(Glasheen et
 al. 2019)</span></li>
+<li><code>charlson_ludvigsson2021</code>: Swedish ICD-10-SE adaptation
+<span class="citation">(<span class="nocase">Ludvigsson et al.</span>
+2021, 2023)</span></li>
+<li><code>charlson_beyrer2021</code>: U.S. ICD-10-CM and ICD-10-PCS
+adaptation <span class="citation">(Beyrer et al. 2021, 2020)</span></li>
+<li><code>charlson_mimicivcode</code>: mapping used by the MIMIC-IV
+Charlson SQL in <a href="https://github.com/MIT-LCP/mimic-code"><code>mimic-code</code></a></li>
 </ul>
 </div>
 <div id="icd-codes-and-index-scores" class="section level1">
@@ -619,24 +628,32 @@ and ICD-10 codes to conditions and the index scoring in
 <code>data.frame</code>s from the <code>get_charlson_codes()</code> and
 <code>get_charlson_index_scores()</code> calls respectively.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx               : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;3848&quot; &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; ...</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;pvd&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  1 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_index_scores</span>())</span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    21 obs. of  6 variables:</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="do">##  $ condition_description: chr  &quot;AIDS&quot; &quot;AIDS/HIV&quot; &quot;HIV infection, no AIDS&quot; &quot;Any malignancy&quot; ...</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="do">##  $ condition            : chr  &quot;aids&quot; &quot;aidshiv&quot; &quot;hiv&quot; &quot;mal&quot; ...</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019    : int  6 NA 3 2 1 1 1 1 2 1 ...</span></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="do">##  $ charlson_quan2011    : int  NA 4 NA 2 0 1 2 2 1 0 ...</span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="do">##  $ charlson_quan2005    : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992    : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    9248 obs. of  13 variables:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx                       : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;3848&quot; &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; ...</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;pvd&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">##  $ charlson_beyrer2021      : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019        : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992        : int  1 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">##  $ charlson_ludvigsson2021  : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">##  $ charlson_mimicivcode     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="do">##  $ charlson_quan2005        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="do">##  $ charlson_sundararajan2004: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="do">##  $ charlson_quan2011        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_index_scores</span>())</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    22 obs. of  10 variables:</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="do">##  $ condition_description    : chr  &quot;AIDS&quot; &quot;AIDS/HIV&quot; &quot;HIV infection, no AIDS&quot; &quot;Any malignancy&quot; ...</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;aids&quot; &quot;aidshiv&quot; &quot;hiv&quot; &quot;mal&quot; ...</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019        : int  6 NA 3 2 1 1 1 1 2 1 ...</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="do">##  $ charlson_quan2011        : int  NA 4 NA 2 0 1 2 2 1 0 ...</span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="do">##  $ charlson_quan2005        : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="do">##  $ charlson_beyrer2021      : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992        : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="do">##  $ charlson_sundararajan2004: int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="do">##  $ charlson_ludvigsson2021  : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="do">##  $ charlson_mimicivcode     : int  NA 6 NA 2 1 1 1 1 2 1 ...</span></span></code></pre></div>
 </div>
 <div id="applying-charlson" class="section level1">
 <h1>Applying Charlson</h1>
@@ -645,22 +662,22 @@ and ICD-10 codes to conditions and the index scoring in
 <code>mdcr</code> data can be done as follows.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>mdcr_results <span class="ot">&lt;-</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">data      =</span> mdcr,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">id.vars   =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">icdv.var  =</span> <span class="st">&quot;icdv&quot;</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">primarydx =</span> <span class="dv">0</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;charlson_quan2005&quot;</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  )</span></code></pre></div>
-<p>The return object is a <code>data.frame</code> with 0/1 integer
-indicator columns for the relevant conditions, the id.vars (if
-applicable), <code>age_score</code> (if age, in years, is supplied),
-<code>num_cmrb</code> the number of comorbidities,
-<code>cmrb_flag</code> a 0/1 indicator for presence of at least one
-comorbidity, and <code>cci</code> the Charlson Comorbidity Index.</p>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">primarydx =</span> <span class="dv">0</span><span class="dt">L</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;charlson_quan2005&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  )</span></code></pre></div>
+<p>The return object is a <code>data.frame</code> with
+<code>0L</code>/<code>1L</code> integer indicator columns for the
+relevant conditions, the id.vars (if applicable), <code>age_score</code>
+(if age, in years, is supplied), <code>num_cmrb</code> the number of
+comorbidities, <code>cmrb_flag</code> a <code>0L</code>/<code>1L</code>
+indicator for presence of at least one comorbidity, and <code>cci</code>
+the Charlson Comorbidity Index.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">str</span>(mdcr_results)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## Classes &#39;medicalcoder_comorbidities&#39; and &#39;data.frame&#39;:   38262 obs. of  22 variables:</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="do">##  $ patid    : int  10000 10002 10005 10006 10008 10010 10014 10015 10017 10018 ...</span></span>
@@ -710,8 +727,8 @@ user’s liking.</p>
 <span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="do">##   ..$ max   : int 12</span></span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-Counts and percentages of patients in the mdcr example data sets with
-the <span class="citation">Quan et al. (2005)</span> comorbidities.
+Counts and percentages of patients in the mdcr example datasets with the
+<span class="citation">Quan et al. (2005)</span> comorbidities.
 </caption>
 <thead>
 <tr>
@@ -987,6 +1004,18 @@ Rheumatic disease
 <!--                              End of File                                -->
 <!-- ----------------------------------------------------------------------- -->
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-beyrer_2020_3968784" class="csl-entry">
+Beyrer, Julie, Janna Manjelievskaia, Machaon Bonafede, et al. 2020.
+<em>Codes Used to Identify Hospital Complications in Validation of
+Charlson Comorbidity Index ICD-10 for the US</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.3968784">https://doi.org/10.5281/zenodo.3968784</a>.
+</div>
+<div id="ref-beyrer2021validation" class="csl-entry">
+Beyrer, Julie, Janna Manjelievskaia, Machaon Bonafede, et al. 2021.
+<span>“Validation of an International Classification of Disease, 10th
+Revision Coding Adaptation for the Charlson Comorbidity Index in United
+States Healthcare Claims Data.”</span> <em>Pharmacoepidemiology and Drug
+Safety</em> 30 (5): 582–93. https://doi.org/<a href="https://doi.org/10.1002/pds.5204">https://doi.org/10.1002/pds.5204</a>.
+</div>
 <div id="ref-deyo1992adapting" class="csl-entry">
 Deyo, Richard A, Daniel C Cherkin, and Marcia A Ciol. 1992.
 <span>“Adapting a Clinical Comorbidity Index for Use with ICD-9-CM
@@ -999,6 +1028,18 @@ Davis, and Andrew Renda. 2019. <span>“Charlson Comorbidity Index: ICD-9
 Update and ICD-10 Translation.”</span> <em>American Health &amp; Drug
 Benefits</em> 12 (4): 188. <a href="https://pubmed.ncbi.nlm.nih.gov/31428236/">https://pubmed.ncbi.nlm.nih.gov/31428236/</a>.
 </div>
+<div id="ref-ludvigsson2021adaptation" class="csl-entry">
+<span class="nocase">Ludvigsson, Jonas F, Peter Appelros, Johan Askling,
+et al.</span> 2021. <span>“Adaptation of the Charlson Comorbidity Index
+for Register-Based Research in Sweden.”</span> <em>Clinical
+Epidemiology</em>, 21–41. https://doi.org/<a href="https://doi.org/10.2147/CLEP.S282475">https://doi.org/10.2147/CLEP.S282475</a>.
+</div>
+<div id="ref-ludvigsson2023adaptation" class="csl-entry">
+<span class="nocase">Ludvigsson, Jonas F, Peter Appelros, Johan Askling,
+et al.</span> 2023. <span>“Adaptation of the Charlson Comorbidity Index
+for Register-Based Research in Sweden [Corrigendum].”</span>
+<em>Clinical Epidemiology</em> 15: 753–54. https://doi.org/<a href="https://doi.org/10.2147/clep.s425901">https://doi.org/10.2147/clep.s425901</a>.
+</div>
 <div id="ref-quan2011" class="csl-entry">
 Quan, Hude, Bo Li, Colette M. Couris, et al. 2011. <span>“Updating and
 Validating the Charlson Comorbidity Index and Score for Risk Adjustment
@@ -1010,6 +1051,12 @@ Quan, Hude, Vijaya Sundararajan, Patricia Halfon, et al. 2005.
 <span>“Coding Algorithms for Defining Comorbidities in ICD-9-CM and
 ICD-10 Administrative Data.”</span> <em>Medical Care</em> 43 (11):
 1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+</div>
+<div id="ref-sundararajan2004" class="csl-entry">
+Sundararajan, Vijaya, Toni Henderson, Catherine Perry, Amanda Muggivan,
+Hude Quan, and William A Ghali. 2004. <span>“New ICD-10 Version of the
+Charlson Comorbidity Index Predicted in-Hospital Mortality.”</span>
+<em>Journal of Clinical Epidemiology</em> 57 (12): 1288–94.
 </div>
 </div>
 </div>

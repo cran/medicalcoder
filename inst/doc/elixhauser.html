@@ -598,10 +598,10 @@ Elixhauser</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.1&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.9.0&#39;</span></span></code></pre></div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>The medicalcoder package implements several variants of the
+<p>The <em>medicalcoder</em> package implements several variants of the
 Elixhauser comorbidity algorithm.</p>
 <ul>
 <li>Based on codes provided by the Agency for Healthcare Research and
@@ -628,15 +628,15 @@ al. 2005)</span></li>
 </ul>
 <p><strong>IMPORTANT NOTE:</strong> Elixhauser 1998 and AHRQ Web used
 diagnosis-related group (DRG) codes as part of the methods. The
-medicalcoder package <em>does not</em> use DRG codes. This is consistent
-with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
+<em>medicalcoder</em> package <em>does not</em> use DRG codes. This is
+consistent with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
 </div>
 <div id="icd-codes-and-index-scores" class="section level1">
 <h1>ICD Codes and Index Scores</h1>
 <p>End users may access three lookup tables relevant to Elixhauser
 variants.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    10455 obs. of  15 variables:</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    11294 obs. of  15 variables:</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
@@ -702,37 +702,36 @@ argument.</p>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>mdcr_results0 <span class="ot">&lt;-</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">id.vars   =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>    <span class="at">icdv.var  =</span> <span class="st">&quot;icdv&quot;</span>,</span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;elixhauser_ahrq2025&quot;</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>  )</span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="do">## Warning: Assuming all codes provided are secondary diagnostic codes.  Define</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="do">## `primarydx.var` or `primarydx` if this assumption is incorrect.</span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co"># no warning</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>mdcr_results <span class="ot">&lt;-</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;elixhauser_ahrq2025&quot;</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>    <span class="at">primarydx =</span> <span class="dv">0</span></span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>  )</span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="fu">identical</span>(mdcr_results, mdcr_results0)</span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
-<p>The return object is a <code>data.frame</code> with 0/1 integer
-indicator columns for the relevant conditions, the id.vars (if
-applicable), <code>num_cmrb</code>, the number of comorbidities,
-<code>cmrb_flag</code>, a 0/1 indicator for presence of at least one
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>    <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;elixhauser_ahrq2025&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>  )</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="do">## Warning: Assuming all codes provided are secondary diagnostic codes.  Define</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="do">## `primarydx.var` or `primarydx` if this assumption is incorrect.</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co"># no warning</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>mdcr_results <span class="ot">&lt;-</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>    <span class="at">data      =</span> mdcr,</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>    <span class="at">id.vars   =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a>    <span class="at">icdv.var  =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>    <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;elixhauser_ahrq2025&quot;</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>    <span class="at">primarydx =</span> <span class="dv">0</span><span class="dt">L</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>  )</span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="fu">identical</span>(mdcr_results, mdcr_results0)</span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="do">## [1] TRUE</span></span></code></pre></div>
+<p>The return object is a <code>data.frame</code> with
+<code>0L</code>/<code>1L</code> integer indicator columns for the
+relevant conditions, the id.vars (if applicable), <code>num_cmrb</code>,
+the number of comorbidities, <code>cmrb_flag</code>, a
+<code>0L</code>/<code>1L</code> indicator for presence of at least one
 comorbidity, and the mortality and readmission index scores.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">str</span>(mdcr_results)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="do">## Classes &#39;medicalcoder_comorbidities&#39; and &#39;data.frame&#39;:   38262 obs. of  54 variables:</span></span>
@@ -851,8 +850,8 @@ used to generate summary tables.</p>
 <span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="do">## 2   mortality -24  0      0  0  75</span></span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-Counts and percentages of patients in the mdcr example data sets with
-the Elixhauser <span class="citation">Quan et al. (2005)</span>
+Counts and percentages of patients in the mdcr example datasets with the
+Elixhauser <span class="citation">Quan et al. (2005)</span>
 comorbidities.
 </caption>
 <thead>

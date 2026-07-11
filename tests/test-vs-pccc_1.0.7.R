@@ -27,31 +27,31 @@ icd_codes[["code_id"]] <- seq_len(nrow(icd_codes))
 ###
 ### oldpccc <- rbind(
 ###   pccc::ccc(
-###     data = icd_codes[icd_codes$icdv ==  9 & icd_codes$dx == 1, c("code_id", "code")],
+###     data = icd_codes[icd_codes$icdv ==  9L & icd_codes$dx == 1L, c("code_id", "code")],
 ###     id = code_id,
 ###     dx_cols = "code",
-###     icdv = 9
+###     icdv = 9L
 ###   )
 ###   ,
 ###   pccc::ccc(
-###     data = icd_codes[icd_codes$icdv ==  9 & icd_codes$dx == 0, c("code_id", "code")],
+###     data = icd_codes[icd_codes$icdv ==  9L & icd_codes$dx == 0L, c("code_id", "code")],
 ###     id = code_id,
 ###     pc_cols = "code",
-###     icdv = 9
+###     icdv = 9L
 ###   )
 ###   ,
 ###   pccc::ccc(
-###     data = icd_codes[icd_codes$icdv ==  10 & icd_codes$dx == 1, c("code_id", "code")],
+###     data = icd_codes[icd_codes$icdv ==  10L & icd_codes$dx == 1L, c("code_id", "code")],
 ###     id = code_id,
 ###     dx_cols = "code",
-###     icdv = 10
+###     icdv = 10L
 ###   )
 ###   ,
 ###   pccc::ccc(
-###     data = icd_codes[icd_codes$icdv ==  10 & icd_codes$dx == 0, c("code_id", "code")],
+###     data = icd_codes[icd_codes$icdv ==  10L & icd_codes$dx == 0L, c("code_id", "code")],
 ###     id = code_id,
 ###     pc_cols = "code",
-###     icdv = 10
+###     icdv = 10L
 ###   )
 ### )
 ###
@@ -210,12 +210,14 @@ stopifnot(
 # All documented as subcondition transplant but are missing from the transplant
 # set in the pccc_1.0.7/src/pccc.cpp
 #
+# Z94.85 is only in ICD-10-AM
+#
 #subset(get_pccc_codes(), grepl("^Z94", full_code))
 #subset(get_icd_codes(with.descriptions = TRUE), grepl("^Z94", full_code) & icdv == 10)
 
-#
 mismatch_transplant <- old_vs_mdcr[old_vs_mdcr$transplant != old_vs_mdcr$any_transplant, ]
-stopifnot(nrow(mismatch_transplant) == 12L)
+stopifnot(nrow(mismatch_transplant) == 22L)
+stopifnot(mismatch_transplant$full_code %in% c("V42.0", "Z94.1", "Z94.2", "Z94.4", "Z94.81", "Z94.82", "Z94.83", "Z94.84"))
 stopifnot(
   all(mismatch_transplant$transplant == 0L),
   all(mismatch_transplant$any_transplant == 1L)

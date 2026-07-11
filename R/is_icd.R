@@ -35,7 +35,7 @@
 #' @family ICD tools
 #' @export
 is_icd <- function(x, icdv = c(9L, 10L), dx = c(1L, 0L),
-                   src = c("cms", "who", "cdc"),
+                   src = c("cdc", "cms", "ihacpa", "socialstyrelsen", "who"),
                    year, headerok = FALSE,
                    ever.assignable = missing(year),
                    warn.ambiguous = TRUE,
@@ -121,6 +121,8 @@ is_icd <- function(x, icdv = c(9L, 10L), dx = c(1L, 0L),
       codes[["assignable_end"]] >= year
   }
   if (!any(keep)) {
+    # As of v0.9.0 this warning cannot be reached with current lookup tables:
+    # every source/version/type combination has at least one assignable code.
     msg <-
       paste0(
         "The combination of ", icdv_dx_src_msg,

@@ -602,19 +602,19 @@ Comorbidities</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.8.1&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.9.0&#39;</span></span></code></pre></div>
 <div id="comorbidity-algorithms" class="section level1">
 <h1>Comorbidity Algorithms</h1>
 <p>There are three comorbidity algorithms, each with several variants,
-implemented in the medicalcoder package:</p>
+implemented in the <em>medicalcoder</em> package:</p>
 <ol style="list-style-type: decimal">
 <li>Pediatric Complex Chronic Condition System (PCCC)
 <ol style="list-style-type: lower-alpha">
 <li>Version 2.0 <span class="citation">(Feudtner et al. 2014)</span>
 <ol style="list-style-type: lower-roman">
-<li><code>pccc_v2.0</code> is consistent with the older R package pccc
-(v1.0.7) <span class="citation">(Feinstein et al. 2018; DeWitt et al.
-2026)</span>.</li>
+<li><code>pccc_v2.0</code> is consistent with the older R package
+<em>pccc</em> (v1.0.7) <span class="citation">(Feinstein et al. 2018;
+DeWitt et al. 2026)</span>.</li>
 <li><code>pccc_v2.1</code> modifies the set of ICD codes to be more
 consistent with documentation and other implementations of v2.0.</li>
 </ol></li>
@@ -633,8 +633,17 @@ consistent with documentation.</li>
 <li><code>charlson_quan2005</code> and <code>charlson_quan2011</code>:
 Codes and index scoring <span class="citation">(Quan et al. 2005,
 2011)</span></li>
+<li><code>charlson_sundararajan2004</code>: Australian ICD-10-AM
+adaptation <span class="citation">(Sundararajan et al. 2004)</span></li>
 <li><code>charlson_cdmf2019</code>: <span class="citation">(Glasheen et
 al. 2019)</span></li>
+<li><code>charlson_ludvigsson2021</code>: Swedish ICD-10-SE adaptation
+<span class="citation">(<span class="nocase">Ludvigsson et al.</span>
+2021, 2023)</span></li>
+<li><code>charlson_beyrer2021</code>: U.S. ICD-10-CM and ICD-10-PCS
+adaptation <span class="citation">(Beyrer et al. 2021, 2020)</span></li>
+<li><code>charlson_mimicivcode</code>: mapping used by the MIMIC-IV
+Charlson SQL in <a href="https://github.com/MIT-LCP/mimic-code"><code>mimic-code</code></a></li>
 </ol></li>
 <li>Elixhauser
 <ol style="list-style-type: lower-alpha">
@@ -663,8 +672,8 @@ al. 2005)</span></li>
 </ol>
 <p><strong>IMPORTANT NOTE:</strong> Elixhauser 1998 and AHRQ Web used
 diagnosis-related group (DRG) codes as part of the methods. The
-medicalcoder package <em>does not</em> use DRG codes. This is consistent
-with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
+<em>medicalcoder</em> package <em>does not</em> use DRG codes. This is
+consistent with the way these methods were implemented in <span class="citation">Quan et al. (2005)</span>.</p>
 <p>A list of the valid methods for the package can be accessed via a
 non-exported function. In general, the methods are listed in the form of
 <code>&lt;algorithm&gt;_&lt;version&gt;</code>.</p>
@@ -673,11 +682,13 @@ non-exported function. In general, the methods are listed in the form of
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  [3] &quot;pccc_v3.0&quot;                 &quot;pccc_v3.1&quot;                </span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  [5] &quot;charlson_deyo1992&quot;         &quot;charlson_quan2011&quot;        </span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  [7] &quot;charlson_quan2005&quot;         &quot;charlson_cdmf2019&quot;        </span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  [9] &quot;elixhauser_elixhauser1988&quot; &quot;elixhauser_ahrq_web&quot;      </span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## [11] &quot;elixhauser_quan2005&quot;       &quot;elixhauser_ahrq2022&quot;      </span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## [13] &quot;elixhauser_ahrq2023&quot;       &quot;elixhauser_ahrq2024&quot;      </span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">## [15] &quot;elixhauser_ahrq2025&quot;       &quot;elixhauser_ahrq2026&quot;      </span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">## [17] &quot;elixhauser_ahrq_icd10&quot;</span></span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  [9] &quot;charlson_sundararajan2004&quot; &quot;charlson_ludvigsson2021&quot;  </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## [11] &quot;charlson_beyrer2021&quot;       &quot;charlson_mimicivcode&quot;     </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## [13] &quot;elixhauser_elixhauser1988&quot; &quot;elixhauser_ahrq_web&quot;      </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">## [15] &quot;elixhauser_quan2005&quot;       &quot;elixhauser_ahrq2022&quot;      </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">## [17] &quot;elixhauser_ahrq2023&quot;       &quot;elixhauser_ahrq2024&quot;      </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">## [19] &quot;elixhauser_ahrq2025&quot;       &quot;elixhauser_ahrq2026&quot;      </span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">## [21] &quot;elixhauser_ahrq_icd10&quot;</span></span></code></pre></div>
 <p>Vignettes for each of the major methods are available.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;pccc&quot;</span>,       <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">topic =</span> <span class="st">&quot;charlson&quot;</span>,   <span class="at">package =</span> <span class="st">&quot;medicalcoder&quot;</span>)</span>
@@ -691,21 +702,21 @@ non-exported function. In general, the methods are listed in the form of
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">##     icdv = NULL, dx.var = NULL, dx = NULL, poa.var = NULL, poa = NULL, </span></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">##     age.var = NULL, primarydx.var = NULL, primarydx = NULL, flag.method = c(&quot;current&quot;, </span></span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">##         &quot;cumulative&quot;), full.codes = TRUE, compact.codes = TRUE, </span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">##     subconditions = FALSE) </span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">##     subconditions = FALSE, mapping = c(&quot;precomputed&quot;, &quot;regex&quot;)) </span></span>
 <span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## NULL</span></span></code></pre></div>
 <p>We highlight a general concept for the arguments. Note that several
 arguments are in pairs, e.g., <code>dx.var</code> and <code>dx</code>
 (used for denoting if codes are diagnostic or procedural), or
-<code>poa.var</code> and <code>poa</code> (used for denoting if a codes
-are present on admission). The <code>.var</code> version is the name of
-a variable within the <code>data.frame</code> passed into the
+<code>poa.var</code> and <code>poa</code> (used for denoting whether
+codes are present-on-admission). The <code>.var</code> version is the
+name of a variable within the <code>data.frame</code> passed into the
 <code>data</code> argument. The version without <code>.var</code> is a
 default value to be applied to the entirety of <code>data</code>. We
 will see some examples where this is useful.</p>
 <p>The <code>data</code> element is expected to be a
 <code>data.frame</code>, or at least something that inherits the
 <code>data.frame</code> class. The format is expected to be a ‘long’
-format: one ICD code per row. Two example data sets in the package show
+format: one ICD code per row. Two example datasets in the package show
 the general expected form of the <code>data</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">head</span>(mdcr)</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="do">##   patid icdv  code dx</span></span>
@@ -726,14 +737,14 @@ the general expected form of the <code>data</code>.</p>
 </div>
 <div id="when-are-conditions-flagged" class="section level1">
 <h1>When are conditions flagged?</h1>
-<p>Whether or not the code is present on admission (POA) is useful when
+<p>Whether or not the code is present-on-admission (POA) is useful when
 applying the comorbidity algorithms and considering if the patient has a
 comorbidity at the start of an encounter, or if the condition is a
 result of the current hospitalization.</p>
 <p>Implementation of Elixhauser comorbidities for 2022 and beyond <span class="citation">(Healthcare Research and (AHRQ) 2025)</span> explicitly
-define the use of present on admission flags for specific conditions
-(see the <code>poa_required</code> flag reported in the data set
-returned by <code>get_elixhauser_poa()</code>).</p>
+define the use of present-on-admission flags for specific conditions
+(see the <code>poa_required</code> flag reported in the dataset returned
+by <code>get_elixhauser_poa()</code>).</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_poa</span>())</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    50 obs. of  8 variables:</span></span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="do">##  $ condition            : chr  &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ANEMDEF&quot; &quot;AUTOIMMUNE&quot; ...</span></span>
@@ -774,29 +785,33 @@ indicators, meanwhile, the data that we present … can help researchers
 make decisions on a condition-by-condition basis of whether to include
 particular variables, depending on their study objectives.</p>
 </blockquote>
-<p>PCCC does not explicitly note the if POA is required.</p>
-<p>medicalcoder has been built to consider POA for all comorbidity
-algorithms.</p>
-<p>End users can use a 0/1 indicator variable in the data set to report
-which codes are POA via the function argument <code>poa.var</code>. If
-all the codes are to be considered POA or not, the functional argument
-<code>poa</code> can be used to set a common status without adding a
-column to the input data set.</p>
-<p>Additionally, medicalcoder provides a <code>flag.method</code>
-argument for longitudinal data sets.</p>
+<p>PCCC does not explicitly state whether POA is required.</p>
+<p><em>medicalcoder</em> has been built to consider POA for all
+comorbidity algorithms.</p>
+<p>End users can use a <code>0L</code>/<code>1L</code> indicator
+variable in the dataset to report which codes are POA via the function
+argument <code>poa.var</code>. If all the codes are to be considered POA
+or not, the functional argument <code>poa</code> can be used to set a
+common status without adding a column to the input dataset.</p>
+<p>Additionally, <em>medicalcoder</em> provides a
+<code>flag.method</code> argument for longitudinal datasets. The default
+<code>flag.method = &quot;current&quot;</code> evaluates each encounter on its
+own. The <code>flag.method = &quot;cumulative&quot;</code> option also considers
+prior encounters for the same patient or grouping.</p>
 <p><strong>Example:</strong> Let’s assume we have a patient record for
 six encounters. We use ICD-10 diagnostic codes C78.4 and I50.40 which
 maps to a cancer and heart failure (cardiovascular disease) comorbidity
 respectively for PCCC, Charlson, and Elixhauser. For demonstration, we
 also flag POA with the second report of I50.40 intentionally marked as
-not present on admission.</p>
+not present-on-admission.</p>
 <p>We will call <code>comorbidities()</code> for the three methods using
-static POA flags and dynamic POA flags, and both flag methods. Results
-are shown in the following table.</p>
+static POA flags and dynamic POA flags, the default current-encounter
+flagging method, and the cumulative flagging method. Results are shown
+in the following table.</p>
 <table style="NAborder-bottom: 0; font-size: 8px; width: auto !important; margin-left: auto; margin-right: auto;" class="table table-striped table-bordered">
 <caption style="font-size: initial !important;">
 Indicators for when a comorbidity is flagged based on the algorithm,
-present on admission (poa), and flag.method. The two ICD codes, C78.4
+present-on-admission (poa), and flag.method. The two ICD codes, C78.4
 and I50.40, map to cancer and cardiovascular disease respectively.
 </caption>
 <thead>
@@ -1695,22 +1710,28 @@ I50.40 does need to be POA to count for Elixhauser.
 </tr>
 <tr>
 <td style="padding: 0; " colspan="100%">
-<sup>*</sup> Present on Admission
+<sup>*</sup> Present-on-admission
 </td>
 </tr>
 </tfoot>
 </table>
 <div id="flag-method-and-poa-defaults" class="section level3">
 <h3>Flag method and POA defaults</h3>
-<p>When <code>flag.method = &quot;cumulative&quot;</code> and you do <em>not</em>
-supply <code>poa</code> or <code>poa.var</code>,
+<p>When <code>flag.method = &quot;cumulative&quot;</code> is used and you do
+<em>not</em> supply <code>poa</code> or <code>poa.var</code>,
 <code>comorbidities()</code> treats the first encounter where a
-condition appears as <code>poa = 0</code> and carries that condition
-forward with <code>poa = 1</code> on later encounters.</p>
+condition appears as <code>poa = 0L</code> and carries that condition
+forward with <code>poa = 1L</code> on later encounters.</p>
 <p>When <code>flag.method = &quot;current&quot;</code> and you do <em>not</em>
 supply <code>poa</code> or <code>poa.var</code>,
 <code>comorbidities()</code> treats all ICD codes as
-<code>poa = 1</code>.</p>
+<code>poa = 1L</code>.</p>
+<p>For <code>flag.method = &quot;cumulative&quot;</code>, the last column named in
+<code>id.vars</code> is the encounter order column. It must not contain
+missing values, must not be a factor, and must be numeric, character,
+<code>Date</code>, or <code>POSIXt</code>. Character encounter order
+columns are allowed with a warning because they are sorted
+lexicographically.</p>
 </div>
 </div>
 <div id="mapping-icd-codes-to-comorbidities" class="section level1">
@@ -1720,10 +1741,10 @@ associated with a comorbidity algorithm using the
 <code>get_&lt;comorbidity&gt;_codes</code> functions. Each
 <code>data.frame</code> has columns for the ICD version, diagnostic or
 procedure flag, the compact code, and the full code. A column for the
-condition and other method specific flags are provided. Lastly, there
-are indicator columns for the variant of each method</p>
+condition and other method-specific flags are provided. Lastly, there
+are indicator columns for the variant of each method.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_pccc_codes</span>())</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7906 obs. of  12 variables:</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    8900 obs. of  12 variables:</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
@@ -1737,38 +1758,42 @@ are indicator columns for the variant of each method</p>
 <span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="do">##  $ pccc_v2.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="do">##  $ pccc_v2.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7410 obs. of  9 variables:</span></span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="do">##  $ icdv             : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="do">##  $ dx               : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">##  $ full_code        : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="do">##  $ code             : chr  &quot;3848&quot; &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; ...</span></span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="do">##  $ condition        : chr  &quot;pvd&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019: int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992: int  1 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="do">##  $ charlson_quan2005: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="do">##  $ charlson_quan2011: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    10455 obs. of  15 variables:</span></span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;042&quot; &quot;07022&quot; &quot;07023&quot; &quot;07032&quot; ...</span></span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="do">##  $ poaexempt                : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
-<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
-<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
-<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2026      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
-<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_icd10    : int  NA NA NA NA NA NA NA NA NA NA ...</span></span></code></pre></div>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    9248 obs. of  13 variables:</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="do">##  $ dx                       : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;3848&quot; &quot;0031&quot; &quot;0072&quot; &quot;0074&quot; ...</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;pvd&quot; &quot;aids&quot; &quot;aids&quot; &quot;aids&quot; ...</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="do">##  $ charlson_beyrer2021      : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="do">##  $ charlson_cdmf2019        : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="do">##  $ charlson_deyo1992        : int  1 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="do">##  $ charlson_ludvigsson2021  : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="do">##  $ charlson_mimicivcode     : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="do">##  $ charlson_quan2005        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="do">##  $ charlson_sundararajan2004: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="do">##  $ charlson_quan2011        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    11294 obs. of  15 variables:</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="do">##  $ code                     : chr  &quot;042&quot; &quot;07022&quot; &quot;07023&quot; &quot;07032&quot; ...</span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="do">##  $ poaexempt                : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2024      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2025      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2026      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_icd10    : int  NA NA NA NA NA NA NA NA NA NA ...</span></span></code></pre></div>
 <p>End users should be aware that just because an ICD code exists in a
-data set does not mean that the patient has the condition. For
-Elixhauser, the presence on admission is important to consider. For PCCC
-version 3.0 and 3.1, tech dependencies on their own are insufficient to
-flag a condition (see
+dataset does not mean that the patient has the condition. For AHRQ
+variants of Elixhauser, the present-on-admission status of the ICD is
+considered. For PCCC version 3.0 and 3.1, tech dependencies on their own
+are insufficient to flag a condition (see
 <code>vignette(topic = &quot;pccc&quot;, package = &quot;medicalcoder&quot;)</code>).</p>
 <p>For the <code>charlson_cdmf2019</code> method <span class="citation">(Glasheen et al. 2019)</span>, the AIDS categories are
 defined by the presence of HIV and an opportunistic infection. In the
@@ -1780,7 +1805,7 @@ HIV.</p>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">merge</span>(<span class="at">x =</span> mdcr,</span>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>        <span class="at">y =</span> <span class="fu">subset</span>(<span class="fu">get_charlson_codes</span>(),</span>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                   condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;aids&quot;</span>, <span class="st">&quot;hiv&quot;</span>) <span class="sc">&amp;</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                   charlson_cdmf2019 <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                   charlson_cdmf2019 <span class="sc">==</span> <span class="dv">1</span><span class="dt">L</span>),</span>
 <span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>        <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;icdv&quot;</span>, <span class="st">&quot;dx&quot;</span>, <span class="st">&quot;code&quot;</span>))</span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>data.table<span class="sc">::</span><span class="fu">setDT</span>(cdmf_eg)</span>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a></span>
@@ -1825,6 +1850,18 @@ result.</p>
 <!--                              End of File                                -->
 <!------------------------------------------------------------------------- -->
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-beyrer_2020_3968784" class="csl-entry">
+Beyrer, Julie, Janna Manjelievskaia, Machaon Bonafede, et al. 2020.
+<em>Codes Used to Identify Hospital Complications in Validation of
+Charlson Comorbidity Index ICD-10 for the US</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.3968784">https://doi.org/10.5281/zenodo.3968784</a>.
+</div>
+<div id="ref-beyrer2021validation" class="csl-entry">
+Beyrer, Julie, Janna Manjelievskaia, Machaon Bonafede, et al. 2021.
+<span>“Validation of an International Classification of Disease, 10th
+Revision Coding Adaptation for the Charlson Comorbidity Index in United
+States Healthcare Claims Data.”</span> <em>Pharmacoepidemiology and Drug
+Safety</em> 30 (5): 582–93. https://doi.org/<a href="https://doi.org/10.1002/pds.5204">https://doi.org/10.1002/pds.5204</a>.
+</div>
 <div id="ref-dewitt2026pccc" class="csl-entry">
 DeWitt, Peter, James Feinstein, and Seth Russell. 2026. <em>Pccc:
 Pediatric Complex Chronic Conditions</em>. <a href="https://github.com/CUD2V/pccc">https://github.com/CUD2V/pccc</a>.
@@ -1873,6 +1910,18 @@ Healthcare Research, Agency for, and Quality (AHRQ). 2025.
 <em>Elixhauser Comorbidity Software Refined for ICD-10-CM Healthcare
 Cost and Utilization Project (HCUP)</em>. <a href="https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp">https://hcup-us.ahrq.gov/toolssoftware/comorbidityicd10/comorbidity_icd10.jsp</a>.
 </div>
+<div id="ref-ludvigsson2021adaptation" class="csl-entry">
+<span class="nocase">Ludvigsson, Jonas F, Peter Appelros, Johan Askling,
+et al.</span> 2021. <span>“Adaptation of the Charlson Comorbidity Index
+for Register-Based Research in Sweden.”</span> <em>Clinical
+Epidemiology</em>, 21–41. https://doi.org/<a href="https://doi.org/10.2147/CLEP.S282475">https://doi.org/10.2147/CLEP.S282475</a>.
+</div>
+<div id="ref-ludvigsson2023adaptation" class="csl-entry">
+<span class="nocase">Ludvigsson, Jonas F, Peter Appelros, Johan Askling,
+et al.</span> 2023. <span>“Adaptation of the Charlson Comorbidity Index
+for Register-Based Research in Sweden [Corrigendum].”</span>
+<em>Clinical Epidemiology</em> 15: 753–54. https://doi.org/<a href="https://doi.org/10.2147/clep.s425901">https://doi.org/10.2147/clep.s425901</a>.
+</div>
 <div id="ref-quan2011" class="csl-entry">
 Quan, Hude, Bo Li, Colette M. Couris, et al. 2011. <span>“Updating and
 Validating the Charlson Comorbidity Index and Score for Risk Adjustment
@@ -1884,6 +1933,12 @@ Quan, Hude, Vijaya Sundararajan, Patricia Halfon, et al. 2005.
 <span>“Coding Algorithms for Defining Comorbidities in ICD-9-CM and
 ICD-10 Administrative Data.”</span> <em>Medical Care</em> 43 (11):
 1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+</div>
+<div id="ref-sundararajan2004" class="csl-entry">
+Sundararajan, Vijaya, Toni Henderson, Catherine Perry, Amanda Muggivan,
+Hude Quan, and William A Ghali. 2004. <span>“New ICD-10 Version of the
+Charlson Comorbidity Index Predicted in-Hospital Mortality.”</span>
+<em>Journal of Clinical Epidemiology</em> 57 (12): 1288–94.
 </div>
 </div>
 </div>

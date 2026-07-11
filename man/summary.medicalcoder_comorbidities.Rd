@@ -13,11 +13,16 @@
 \item{...}{additional parameters, not currently used}
 }
 \value{
-either a list or a data \code{data.frame}
+Either a list or a \code{data.frame}.
 }
 \description{
 Build summaries (counts and percentages) for each comorbidity and other
 summary statistics by method.
+}
+\details{
+If a \code{medicalcoder_comorbidities} object has been modified so that it no
+longer has the structure required by medicalcoder's summary methods, summary
+falls back to the next applicable summary method with a warning.
 }
 \examples{
 pccc_v3.1_results <-
@@ -27,7 +32,7 @@ pccc_v3.1_results <-
                 dx.var = "dx",
                 method = "pccc_v3.1",
                 flag.method = 'current',
-                poa = 1)
+                poa = 1L)
 summary(pccc_v3.1_results)
 
 charlson_results <-
@@ -37,7 +42,7 @@ charlson_results <-
                 dx.var = "dx",
                 method = "charlson_quan2011",
                 flag.method = 'current',
-                poa = 1)
+                poa = 1L)
 summary(charlson_results)
 
 elixhauser_results <-
@@ -46,9 +51,9 @@ elixhauser_results <-
                 id.vars = "patid",
                 dx.var = "dx",
                 method = "elixhauser_ahrq2025",
-                primarydx = 1,
+                primarydx = 1L,
                 flag.method = 'current',
-                poa = 1)
+                poa = 1L)
 summary(elixhauser_results)
 
 }

@@ -8,7 +8,7 @@ is_icd(
   x,
   icdv = c(9L, 10L),
   dx = c(1L, 0L),
-  src = c("cms", "who", "cdc"),
+  src = c("cdc", "cms", "ihacpa", "socialstyrelsen", "who"),
   year,
   headerok = FALSE,
   ever.assignable = missing(year),
@@ -24,17 +24,21 @@ is_icd(
 \code{10L}. Defaults to both.}
 
 \item{dx}{Integer vector indicating allowed code type(s): \code{1L} for
-diagnostic (ICD-9-CM, ICD-10-CM, CDC mortality, WHO), \code{0L} for procedural
-(ICD-9-PCS, ICD-10-PCS). Defaults to both.}
+diagnostic (ICD-9-CM, ICD-10-CM, ICD-10-AM, ICD-10-SE, CDC mortality,
+WHO), \code{0L} for procedural (ICD-9-PCS, ICD-10-PCS). Defaults to both.}
 
-\item{src}{Character vector of code sources. One or more of \code{"cms"}, \code{"who"},
-\code{"cdc"}. Defaults to all.}
+\item{src}{Character vector of code sources. One or more of \code{"cdc"}, \code{"cms"},
+\code{"ihacpa"}, \code{"socialstyrelsen"}, and \code{"who"}. Defaults to all. CDC and CMS
+are from the United States (ICD-9/10-CM and ICD-9/10-PCS), IHACPA from
+Australia (ICD-10-AM), Socialstyrelsen from Sweden (ICD-10-SE), and the
+World Health Organization (ICD-10).}
 
-\item{year}{Numeric scalar. Calendar or fiscal year to reference. Default
-is the most current year available per source. For ICD-9, CMS data run
-through fiscal year 2015 and CDC extracts through 2012; ICD-10 sources are
-updated annually. Calendar year for WHO and CDC mortality. Fiscal year for
-CMS.}
+\item{year}{Numeric scalar. Calendar, fiscal, or financial year to
+reference. Default is the most current year available per source. For
+ICD-9, CMS data run through fiscal year 2015 and CDC extracts through 2012;
+ICD-10 sources are updated annually. Calendar year for WHO, CDC mortality,
+and Socialstyrelsen. U.S. federal fiscal year for CMS. Australian financial
+year for IHACPA.}
 
 \item{headerok}{Logical scalar. If \code{FALSE} (default), only assignable
 codes are considered valid; if \code{TRUE}, header codes are also accepted.}
@@ -65,10 +69,11 @@ C00.0, C00.1, C00.2, C00.3, C00.4, C00.5, C00.6, C00.7, C00.8, and C00.9
 exist. Those four-character codes are assignable (as of 2025) because no
 five-character descendants (e.g., C00.40) exist.
 
-When the source is the World Health Organization (WHO) or CDC Mortality,
-years refer to calendar years. CDC/CMS sources use the U.S. federal fiscal
-year, which starts on October 1 (e.g., fiscal year 2024 runs 2023-10-01 to
-2024-09-30).
+When the source is the World Health Organization (WHO), CDC Mortality, or
+Socialstyrelsen, years refer to calendar years. CMS sources use the U.S.
+federal fiscal year, which starts on October 1 (e.g., fiscal year 2024 runs
+2023-10-01 to 2024-09-30). IHACPA sources use the Australian financial year,
+which starts on July 1 and ends on June 30.
 }
 \details{
 Similarly for ICD-9-CM: "055" is a header for measles; 055.0, 055.1,
@@ -84,13 +89,13 @@ and became a header in 2012–2015.
 # Some ICD-9 diagnostic codes
 x <- c("136.2", "718.60", "642.02")
 
-is_icd(x, icdv =  9, dx = 1)
-is_icd(x, icdv =  9, dx = 0)
-is_icd(x, icdv = 10, dx = 1)
-is_icd(x, icdv = 10, dx = 0)
+is_icd(x, icdv =  9L, dx = 1L)
+is_icd(x, icdv =  9L, dx = 0L)
+is_icd(x, icdv = 10L, dx = 1L)
+is_icd(x, icdv = 10L, dx = 0L)
 
-is_icd(x, icdv = 9, dx = 1, headerok = TRUE)
-is_icd(x, icdv = 9, dx = 1, year = 2006)
+is_icd(x, icdv = 9L, dx = 1L, headerok = TRUE)
+is_icd(x, icdv = 9L, dx = 1L, year = 2006)
 
 ################################################################################
 # ICD code with, or without a dot.  The ICD-9 diagnostic code 799.3 and ICD-9
@@ -102,8 +107,8 @@ is_icd(x, icdv = 9, dx = 1, year = 2006)
 x <- c("7993", ".7993", "7.993", "79.93", "799.3", "7993.")
 data.frame(
   x,
-  dx = is_icd(x, icdv = 9, dx = 1),
-  pr = is_icd(x, icdv = 9, dx = 0)
+  dx = is_icd(x, icdv = 9L, dx = 1L),
+  pr = is_icd(x, icdv = 9L, dx = 0L)
 )
 
 ################################################################################
@@ -130,16 +135,16 @@ is_icd("516.3", year = 2011)
 is_icd("516.3", year = 2015, ever.assignable = TRUE)
 
 ################################################################################
-# Consiser the string E010
-#   - This could be a ICD-9-CM full code
-#   - Could be a ICD-10-CM compact code
+# Consider the string E010
+#   - This could be an ICD-9-CM full code
+#   - Could be an ICD-10-CM compact code
 lookup_icd_codes("E010")
 subset(get_icd_codes(with.descriptions = TRUE), grepl("^E010$", code))
 
 is_icd("E010")
-is_icd("E010", icdv = 9) # FALSE because it is a header code and was never assignable
-is_icd("E010", icdv = 9, ever.assignable = TRUE) # FALSE
-is_icd("E010", icdv = 9, headerok = TRUE) # TRUE
+is_icd("E010", icdv = 9L) # FALSE because it is a header code and was never assignable
+is_icd("E010", icdv = 9L, ever.assignable = TRUE) # FALSE
+is_icd("E010", icdv = 9L, headerok = TRUE) # TRUE
 }
 \seealso{
 \itemize{

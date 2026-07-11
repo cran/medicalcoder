@@ -825,7 +825,7 @@ one non-technology condition is flagged.</p>
 <code>get_pccc_codes()</code> returns a data.frame.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>pccc_codes <span class="ot">&lt;-</span> <span class="fu">get_pccc_codes</span>()</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">str</span>(pccc_codes)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    7906 obs. of  12 variables:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    8900 obs. of  12 variables:</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
@@ -841,8 +841,8 @@ one non-technology condition is flagged.</p>
 <p>The columns are:</p>
 <ul>
 <li><code>icdv</code>: integer, ICD version</li>
-<li><code>dx</code>: 1 for diagnostic (ICD-9-CM or ICD-10-CM) codes, 0
-for procedure (ICD-9-PCS or ICD-10-PCS) codes.</li>
+<li><code>dx</code>: denotes type, <code>1L</code> for diagnostic codes,
+<code>0L</code> for procedure codes.</li>
 <li><code>full_code</code>: character, the ICD code retaining any
 applicable decimal point.</li>
 <li><code>code</code>: character, the compact ICD code; any applicable
@@ -867,7 +867,7 @@ associated with technology dependence, 0L otherwise.</li>
 two procedure ICD-9 codes:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>pat1 <span class="ot">&lt;-</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">dx =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>    <span class="at">dx =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="dt">L</span>, <span class="dv">1</span><span class="dt">L</span>, <span class="dv">1</span><span class="dt">L</span>, <span class="dv">1</span><span class="dt">L</span>, <span class="dv">0</span><span class="dt">L</span>, <span class="dv">0</span><span class="dt">L</span>),</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>    <span class="at">code =</span> <span class="fu">c</span>(<span class="st">&quot;34590&quot;</span>, <span class="st">&quot;78065&quot;</span>, <span class="st">&quot;3432&quot;</span>, <span class="st">&quot;78065&quot;</span>, <span class="st">&quot;9929&quot;</span>, <span class="st">&quot;8606&quot;</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  )</span></code></pre></div>
@@ -890,75 +890,72 @@ and metabolic. This patient also has a flag for device and technology
 use.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>pat1_pccc_v2<span class="fl">.0</span> <span class="ot">&lt;-</span></span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="at">data =</span> pat1,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="at">data      =</span> pat1,</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.0&quot;</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>, <span class="co"># default</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>                  <span class="co"># default for flag.method = &#39;current&#39;</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  )</span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>pat1_pccc_v2<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>    <span class="at">data =</span> pat1,</span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span>,</span>
-<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
-<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
-<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>  )</span>
-<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="fu">all.equal</span>(pat1_pccc_v2<span class="fl">.0</span>, pat1_pccc_v2<span class="fl">.1</span>, <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
-<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a>pat1_pccc_v2<span class="fl">.1</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    <span class="at">icdv      =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;pccc_v2.0&quot;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>                 <span class="co"># default for flag.method = &#39;current&#39;</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  )</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>pat1_pccc_v2<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>    <span class="at">data      =</span> pat1,</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>    <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>    <span class="at">icdv      =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>  )</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="fu">all.equal</span>(pat1_pccc_v2<span class="fl">.0</span>, pat1_pccc_v2<span class="fl">.1</span>, <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a>pat1_pccc_v2<span class="fl">.1</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="do">## Comorbidities via pccc_v2.1</span></span>
 <span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="do">## Comorbidities via pccc_v2.1</span></span>
-<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="do">##   congeni_genetic cvd gi hemato_immu malignancy metabolic misc neonatal</span></span>
-<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="do">## 1               0   0  0           0          0         1    0        0</span></span>
-<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="do">##   neuromusc renal respiratory any_tech_dep any_transplant num_cmrb cmrb_flag</span></span>
-<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="do">## 1         1     0           0            1              0        2         1</span></span></code></pre></div>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="do">##   congeni_genetic cvd gi hemato_immu malignancy metabolic misc neonatal</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="do">## 1               0   0  0           0          0         1    0        0</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="do">##   neuromusc renal respiratory any_tech_dep any_transplant num_cmrb cmrb_flag</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="do">## 1         1     0           0            1              0        2         1</span></span></code></pre></div>
 <p>Under version 3 of the PCCC, this patient has two conditions:
 neuromuscular and metabolic. The technology dependence flags are also 1
 for this patient, but are not counted in the total number of
 conditions.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>pat1_pccc_v3<span class="fl">.0</span> <span class="ot">&lt;-</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="at">data =</span> pat1,</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.0&quot;</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  )</span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>pat1_pccc_v3<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>    <span class="at">data =</span> pat1,</span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span>,</span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>  )</span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a></span>
-<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="fu">all.equal</span>(pat1_pccc_v3<span class="fl">.0</span>, pat1_pccc_v3<span class="fl">.1</span>, <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
-<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a></span>
-<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co"># retain the needed columns, there are four columns for each condition in v3</span></span>
-<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>pat1_pccc_v3<span class="fl">.0</span>[, <span class="fu">grep</span>(<span class="st">&quot;^(cmrb_flag|num_cmrb|neuromus|metabolic|tech_dep_flag)&quot;</span>, <span class="fu">names</span>(pat1_pccc_v3<span class="fl">.0</span>))]</span>
-<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="do">##   metabolic_dxpr_only metabolic_tech_only metabolic_dxpr_and_tech</span></span>
-<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="do">## 1                   0                   1                       0</span></span>
-<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="do">##   metabolic_dxpr_or_tech neuromusc_dxpr_only neuromusc_tech_only</span></span>
-<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="do">## 1                      1                   1                   0</span></span>
-<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="do">##   neuromusc_dxpr_and_tech neuromusc_dxpr_or_tech num_cmrb cmrb_flag</span></span>
-<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="do">## 1                       0                      1        2         1</span></span></code></pre></div>
-<p>In the output from version 3, we have four 0/1 indicator columns for
-each of the conditions.</p>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>    <span class="at">data        =</span> pat1,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="at">dx.var      =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>    <span class="at">icdv        =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v3.0&quot;</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  )</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>pat1_pccc_v3<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    <span class="at">data        =</span> pat1,</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>    <span class="at">dx.var      =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>    <span class="at">icdv        =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>  )</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="fu">all.equal</span>(pat1_pccc_v3<span class="fl">.0</span>, pat1_pccc_v3<span class="fl">.1</span>, <span class="at">check.attributes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co"># retain the needed columns, there are four columns for each condition in v3</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a>pat1_pccc_v3<span class="fl">.0</span>[, <span class="fu">grep</span>(<span class="st">&quot;^(cmrb_flag|num_cmrb|neuromus|metabolic|tech_dep_flag)&quot;</span>, <span class="fu">names</span>(pat1_pccc_v3<span class="fl">.0</span>))]</span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="do">##   metabolic_dxpr_only metabolic_tech_only metabolic_dxpr_and_tech</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="do">## 1                   0                   1                       0</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="do">##   metabolic_dxpr_or_tech neuromusc_dxpr_only neuromusc_tech_only</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="do">## 1                      1                   1                   0</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="do">##   neuromusc_dxpr_and_tech neuromusc_dxpr_or_tech num_cmrb cmrb_flag</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="do">## 1                       0                      1        2         1</span></span></code></pre></div>
+<p>In the output from version 3, we have four
+<code>0L</code>/<code>1L</code> indicator columns for each of the
+conditions.</p>
 <ul>
 <li><p><code>&lt;condition&gt;_dxpr_only</code>: the
 <code>&lt;condition&gt;</code> has been flagged due to diagnostic</p>
@@ -981,12 +978,13 @@ patient/encounter.”</strong></p></li>
 </ul>
 <p>The details in the list above might be easier to understand in a
 tabular form of possible sets. In the case of no conditions, only the
-<code>&lt;condition&gt;_dxpr_or_tech</code> columns are flagged as 0/1
-with the <code>&lt;condition&gt;_dxpr_only</code>,
+<code>&lt;condition&gt;_dxpr_or_tech</code> columns are flagged as
+<code>0L</code>/<code>1L</code> with the
+<code>&lt;condition&gt;_dxpr_only</code>,
 <code>&lt;condition&gt;_tech_only</code>, and
 <code>&lt;condition&gt;_dxpr_and_tech</code> columns set to
 <code>NA</code>. When at least one condition is flagged, all the columns
-will be populated as 0/1.</p>
+will be populated as <code>0L</code>/<code>1L</code>.</p>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1224,33 +1222,31 @@ and technology dependence conditions because of the code 86.06 is in the
 record, but will not have the neuromuscular condition.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>pat2_pccc_v2<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="at">data =</span> pat2,</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>    <span class="at">data      =</span> pat2,</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  )</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="fu">Filter</span>(<span class="at">f =</span> <span class="cf">function</span>(x) x <span class="sc">&gt;</span> <span class="dv">0</span>, pat2_pccc_v2<span class="fl">.1</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="do">##   metabolic any_tech_dep num_cmrb cmrb_flag</span></span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="do">## 1         1            1        1         1</span></span></code></pre></div>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    <span class="at">icdv      =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  )</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="fu">Filter</span>(<span class="at">f =</span> <span class="cf">function</span>(x) x <span class="sc">&gt;</span> <span class="dv">0</span>, pat2_pccc_v2<span class="fl">.1</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="do">##   metabolic any_tech_dep num_cmrb cmrb_flag</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="do">## 1         1            1        1         1</span></span></code></pre></div>
 <p>Under version 3 of the PCCC, this patient will have no conditions.
-This is because no condition was identified based on non-technology
-dependent codes and thus the one technology dependent code is
-ignored.</p>
+This is because no condition was identified based on
+non-technology-dependent codes and thus the one technology-dependent
+code is ignored.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>pat2_pccc_v3<span class="fl">.1</span> <span class="ot">&lt;-</span></span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="at">data =</span> pat2,</span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">9</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  )</span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">Filter</span>(<span class="at">f =</span> <span class="cf">function</span>(x) x <span class="sc">&gt;</span> <span class="dv">0</span>, pat2_pccc_v3<span class="fl">.1</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="do">## data frame with 0 columns and 1 row</span></span></code></pre></div>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="at">data        =</span> pat2,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    <span class="at">dx.var      =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="at">icdv        =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  )</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="fu">Filter</span>(<span class="at">f =</span> <span class="cf">function</span>(x) x <span class="sc">&gt;</span> <span class="dv">0</span>, pat2_pccc_v3<span class="fl">.1</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="do">## data frame with 0 columns and 1 row</span></span></code></pre></div>
 </div>
 </div>
 <div id="expected-data-structures" class="section level1">
@@ -1260,12 +1256,13 @@ ignored.</p>
 These codes can be full codes (include the decimal point) or compact
 codes (omitting the decimal point). Additionally, column(s) for
 identifying patients, encounters, and any other important groups are
-encouraged. A column to indicate the ICD version (9 or 10), and another
-column for identifying the code as a diagnostic or procedure code are
-also encouraged. The example <code>mdcr</code> data set has three
-columns, a patient id (patid), the ICD compact codes (code), and a
-column to indicate if the ICD code is a diagnostic or procedure code,
-(dx: 1 for diagnostic, 0 for procedure).</p>
+encouraged. A column to indicate the ICD version (<code>9L</code> or
+<code>10L</code>), and another column for identifying the code as a
+diagnostic or procedure code are also encouraged. The example
+<code>mdcr</code> dataset has three columns, a patient id (patid), the
+ICD compact codes (code), and a column to indicate if the ICD code is a
+diagnostic or procedure code (<code>dx</code>: <code>1L</code> for
+diagnostic, <code>0L</code> for procedure).</p>
 <p>The <code>mdcr</code> data is provided with columns for</p>
 <ul>
 <li>patient id,</li>
@@ -1297,23 +1294,21 @@ column to indicate if the ICD code is a diagnostic or procedure code,
 diagnostic/procedure status of the code can be done as follows:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>mdcr_results_v2<span class="fl">.1</span>_01 <span class="ot">&lt;-</span></span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="at">data      =</span> mdcr,</span>
 <span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>  )</span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>mdcr_results_v3<span class="fl">.1</span>_01 <span class="ot">&lt;-</span></span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
-<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a>  )</span></code></pre></div>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="at">id.vars   =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;pccc_v2.1&quot;</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  )</span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>mdcr_results_v3<span class="fl">.1</span>_01 <span class="ot">&lt;-</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>    <span class="at">data      =</span> mdcr,</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>    <span class="at">id.vars   =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>    <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>    <span class="at">method    =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>  )</span></code></pre></div>
 <p>A useful summary of the object returned from
 <code>comorbidities()</code> is gained by calling
 <code>summary()</code>. The return is a <code>data.frame</code> with
@@ -2239,28 +2234,30 @@ both diagnostic and procedure.</p>
 <span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="do">##  0  1 </span></span>
 <span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="do">## 77  1</span></span></code></pre></div>
 <p>To account for the diagnostic or procedure status of the codes
-specify a value for the <code>dx.var</code> argument.</p>
+specify a value for the <code>dx.var</code> argument. When calling
+<code>comorbidities()</code> with a variable to indicate diagnostic or
+procedure status, values other than <code>0</code> or <code>1</code>
+will not be joined against and the codes are ignored resulting in no
+condition being flagged.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>mdcr_results_v2<span class="fl">.1</span>_02 <span class="ot">&lt;-</span></span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span></span>
-<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a>  )</span>
-<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>mdcr_results_v3<span class="fl">.1</span>_02 <span class="ot">&lt;-</span></span>
-<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&#39;current&#39;</span>,</span>
-<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
-<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a>  )</span></code></pre></div>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>    <span class="at">data        =</span> mdcr,</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>    <span class="at">id.vars     =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>    <span class="at">dx.var      =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v2.1&quot;</span></span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>  )</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a>mdcr_results_v3<span class="fl">.1</span>_02 <span class="ot">&lt;-</span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a>    <span class="at">data        =</span> mdcr,</span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a>    <span class="at">id.vars     =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a>    <span class="at">dx.var      =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Specificity is increased by using the diagnostic/procedure flag.
 Using <code>pccc_v2.1</code> there are 278 false positive flags when the
 diagnostic/procedure flag is omitted from the
@@ -2310,17 +2307,17 @@ omitted from the <code>comorbidities()</code> call.</p>
 <span id="cb18-14"><a href="#cb18-14" tabindex="-1"></a></span>
 <span id="cb18-15"><a href="#cb18-15" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_icd_codes</span>(<span class="at">with.descriptions =</span> <span class="cn">TRUE</span>), full_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;56.41&quot;</span>, <span class="st">&quot;564.1&quot;</span>))</span>
 <span id="cb18-16"><a href="#cb18-16" tabindex="-1"></a><span class="do">##       icdv dx full_code code src known_start known_end assignable_start</span></span>
-<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="do">## 4280     9  0     56.41 5641 cms        2006      2015             2006</span></span>
-<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="do">## 4281     9  0     56.41 5641 cdc        1997      2012             1997</span></span>
-<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="do">## 22015    9  1     564.1 5641 cms        2006      2015             2006</span></span>
-<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="do">## 22016    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
-<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="do">## 22017    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-17"><a href="#cb18-17" tabindex="-1"></a><span class="do">## 4884     9  0     56.41 5641 cms        2006      2015             2006</span></span>
+<span id="cb18-18"><a href="#cb18-18" tabindex="-1"></a><span class="do">## 4885     9  0     56.41 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-19"><a href="#cb18-19" tabindex="-1"></a><span class="do">## 27424    9  1     564.1 5641 cms        2006      2015             2006</span></span>
+<span id="cb18-20"><a href="#cb18-20" tabindex="-1"></a><span class="do">## 27425    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
+<span id="cb18-21"><a href="#cb18-21" tabindex="-1"></a><span class="do">## 27426    9  1     564.1 5641 cdc        1997      2012             1997</span></span>
 <span id="cb18-22"><a href="#cb18-22" tabindex="-1"></a><span class="do">##       assignable_end                     desc desc_start desc_end</span></span>
-<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="do">## 4280            2015     Partial ureterectomy       2010     2015</span></span>
-<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="do">## 4281            2012     Partial ureterectomy       1997     2012</span></span>
-<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="do">## 22015           2015 Irritable bowel syndrome       2010     2015</span></span>
-<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="do">## 22016           2012 Irritable bowel syndrome       2001     2012</span></span>
-<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="do">## 22017           2012          Irritable colon       1997     1999</span></span></code></pre></div>
+<span id="cb18-23"><a href="#cb18-23" tabindex="-1"></a><span class="do">## 4884            2015     Partial ureterectomy       2006     2015</span></span>
+<span id="cb18-24"><a href="#cb18-24" tabindex="-1"></a><span class="do">## 4885            2012     Partial ureterectomy       1997     2012</span></span>
+<span id="cb18-25"><a href="#cb18-25" tabindex="-1"></a><span class="do">## 27424           2015 Irritable bowel syndrome       2006     2015</span></span>
+<span id="cb18-26"><a href="#cb18-26" tabindex="-1"></a><span class="do">## 27425           2012 Irritable bowel syndrome       2001     2012</span></span>
+<span id="cb18-27"><a href="#cb18-27" tabindex="-1"></a><span class="do">## 27426           2012          Irritable colon       1997     1999</span></span></code></pre></div>
 <p>In the above, the compact code “5641” matches procedure code 56.41
 for a renal condition. In <code>mdcr_results_v2.1_01</code> and
 <code>mdcr_results_v3.1_01</code> where no distinction was made between
@@ -2331,8 +2328,8 @@ is for Irritable bowel syndrome. This is an example of where
 discriminating between diagnostic and procedure codes is critically
 important when looking for complex chronic conditions.</p>
 <p>If we explicitly look at an inner join between this patient’s data
-and the pccc lookup table we see that the code 5641 matches the
-procedure code in the pccc lookup table. By not accounting for
+and the PCCC lookup table we see that the code 5641 matches the
+procedure code in the PCCC lookup table. By not accounting for
 diagnostic and procedure codes, the overlaps between the two coding
 structures can lead to false positives.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">merge</span>(</span>
@@ -2354,8 +2351,8 @@ structures can lead to false positives.</p>
 <p>Using full codes can prevent false positives too. Here are several
 different ways that <code>comorbidities()</code> could be called
 resulting in different outcomes.</p>
-<p>Note: this is a good example of how medicalcoder can handle full and
-compact codes within a single record.</p>
+<p>Note: this is a good example of how <em>medicalcoder</em> can handle
+full and compact codes within a single record.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>DF <span class="ot">&lt;-</span></span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
 <span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>    <span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;full dx&quot;</span>, <span class="st">&quot;full pr&quot;</span>, <span class="st">&quot;compact dx&quot;</span>, <span class="st">&quot;compact pr&quot;</span>),</span>
@@ -2365,12 +2362,12 @@ compact codes within a single record.</p>
 <span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a></span>
 <span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a><span class="co"># ideal: using the dx/pr status and matching on full and compact codes.</span></span>
 <span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>  <span class="at">data =</span> DF,</span>
-<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>  <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>  <span class="at">data      =</span> DF,</span>
+<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="at">id.vars   =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>  <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
 <span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>  <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>  <span class="at">method    =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>, <span class="st">&quot;renal_dxpr_or_tech&quot;</span>)]</span>
 <span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a><span class="do">##           id cmrb_flag renal_dxpr_or_tech</span></span>
 <span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a><span class="do">## 1 compact dx         0                  0</span></span>
@@ -2380,11 +2377,11 @@ compact codes within a single record.</p>
 <span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a></span>
 <span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a><span class="co"># false positive for the compact dx</span></span>
 <span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a>  <span class="at">data =</span> DF,</span>
-<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a>  <span class="at">data      =</span> DF,</span>
+<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a>  <span class="at">id.vars   =</span> <span class="st">&quot;id&quot;</span>,</span>
 <span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a>  <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a>  <span class="at">method    =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>, <span class="st">&quot;renal_dxpr_or_tech&quot;</span>)]</span>
 <span id="cb20-31"><a href="#cb20-31" tabindex="-1"></a><span class="do">##           id cmrb_flag renal_dxpr_or_tech</span></span>
 <span id="cb20-32"><a href="#cb20-32" tabindex="-1"></a><span class="do">## 1 compact dx         1                  1</span></span>
@@ -2394,13 +2391,13 @@ compact codes within a single record.</p>
 <span id="cb20-36"><a href="#cb20-36" tabindex="-1"></a></span>
 <span id="cb20-37"><a href="#cb20-37" tabindex="-1"></a><span class="co"># false negative for compact pr</span></span>
 <span id="cb20-38"><a href="#cb20-38" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb20-39"><a href="#cb20-39" tabindex="-1"></a>  <span class="at">data =</span> DF,</span>
-<span id="cb20-40"><a href="#cb20-40" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb20-41"><a href="#cb20-41" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb20-42"><a href="#cb20-42" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb20-43"><a href="#cb20-43" tabindex="-1"></a>  <span class="at">full.code =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb20-39"><a href="#cb20-39" tabindex="-1"></a>  <span class="at">data          =</span> DF,</span>
+<span id="cb20-40"><a href="#cb20-40" tabindex="-1"></a>  <span class="at">id.vars       =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb20-41"><a href="#cb20-41" tabindex="-1"></a>  <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb20-42"><a href="#cb20-42" tabindex="-1"></a>  <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb20-43"><a href="#cb20-43" tabindex="-1"></a>  <span class="at">full.code     =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb20-44"><a href="#cb20-44" tabindex="-1"></a>  <span class="at">compact.codes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb20-45"><a href="#cb20-45" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb20-45"><a href="#cb20-45" tabindex="-1"></a>  <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb20-46"><a href="#cb20-46" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>, <span class="st">&quot;renal_dxpr_or_tech&quot;</span>)]</span>
 <span id="cb20-47"><a href="#cb20-47" tabindex="-1"></a><span class="do">##           id cmrb_flag renal_dxpr_or_tech</span></span>
 <span id="cb20-48"><a href="#cb20-48" tabindex="-1"></a><span class="do">## 1 compact dx         0                  0</span></span>
@@ -2410,13 +2407,13 @@ compact codes within a single record.</p>
 <span id="cb20-52"><a href="#cb20-52" tabindex="-1"></a></span>
 <span id="cb20-53"><a href="#cb20-53" tabindex="-1"></a><span class="co"># false positive for compact dx</span></span>
 <span id="cb20-54"><a href="#cb20-54" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb20-55"><a href="#cb20-55" tabindex="-1"></a>  <span class="at">data =</span> DF,</span>
-<span id="cb20-56"><a href="#cb20-56" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb20-57"><a href="#cb20-57" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb20-58"><a href="#cb20-58" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb20-59"><a href="#cb20-59" tabindex="-1"></a>  <span class="at">full.code =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb20-55"><a href="#cb20-55" tabindex="-1"></a>  <span class="at">data          =</span> DF,</span>
+<span id="cb20-56"><a href="#cb20-56" tabindex="-1"></a>  <span class="at">id.vars       =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb20-57"><a href="#cb20-57" tabindex="-1"></a>  <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb20-58"><a href="#cb20-58" tabindex="-1"></a>  <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb20-59"><a href="#cb20-59" tabindex="-1"></a>  <span class="at">full.code     =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb20-60"><a href="#cb20-60" tabindex="-1"></a>  <span class="at">compact.codes =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb20-61"><a href="#cb20-61" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb20-61"><a href="#cb20-61" tabindex="-1"></a>  <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb20-62"><a href="#cb20-62" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>, <span class="st">&quot;renal_dxpr_or_tech&quot;</span>)]</span>
 <span id="cb20-63"><a href="#cb20-63" tabindex="-1"></a><span class="do">##           id cmrb_flag renal_dxpr_or_tech</span></span>
 <span id="cb20-64"><a href="#cb20-64" tabindex="-1"></a><span class="do">## 1 compact dx         1                  1</span></span>
@@ -2426,14 +2423,14 @@ compact codes within a single record.</p>
 <span id="cb20-68"><a href="#cb20-68" tabindex="-1"></a></span>
 <span id="cb20-69"><a href="#cb20-69" tabindex="-1"></a><span class="co"># false negatives for compact and full pr</span></span>
 <span id="cb20-70"><a href="#cb20-70" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb20-71"><a href="#cb20-71" tabindex="-1"></a>  <span class="at">data =</span> DF,</span>
-<span id="cb20-72"><a href="#cb20-72" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb20-73"><a href="#cb20-73" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb20-74"><a href="#cb20-74" tabindex="-1"></a>  <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb20-75"><a href="#cb20-75" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb20-76"><a href="#cb20-76" tabindex="-1"></a>  <span class="at">full.code =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb20-71"><a href="#cb20-71" tabindex="-1"></a>  <span class="at">data          =</span> DF,</span>
+<span id="cb20-72"><a href="#cb20-72" tabindex="-1"></a>  <span class="at">id.vars       =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb20-73"><a href="#cb20-73" tabindex="-1"></a>  <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb20-74"><a href="#cb20-74" tabindex="-1"></a>  <span class="at">dx.var        =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb20-75"><a href="#cb20-75" tabindex="-1"></a>  <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb20-76"><a href="#cb20-76" tabindex="-1"></a>  <span class="at">full.code     =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb20-77"><a href="#cb20-77" tabindex="-1"></a>  <span class="at">compact.codes =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb20-78"><a href="#cb20-78" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb20-78"><a href="#cb20-78" tabindex="-1"></a>  <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb20-79"><a href="#cb20-79" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>, <span class="st">&quot;renal_dxpr_or_tech&quot;</span>)]</span>
 <span id="cb20-80"><a href="#cb20-80" tabindex="-1"></a><span class="do">##           id cmrb_flag renal_dxpr_or_tech</span></span>
 <span id="cb20-81"><a href="#cb20-81" tabindex="-1"></a><span class="do">## 1 compact dx         0                  0</span></span>
@@ -2451,112 +2448,116 @@ code E03.0 with only the ICD-10 version being related to a chronic
 complex condition.</p>
 <p>Inputs to the <code>comorbidities()</code> call for the ICD version
 will impact the output. When calling <code>comorbidities()</code> with a
-variable to indicate the ICD version <code>NA</code> values will not be
-joined against and the codes are ignored resulting in no condition being
-flagged. If we know that we only want to compare against ICD-9 or ICD-10
-values then using the <code>icdv</code> argument can simplify the call
-and in this case, no condition for ICD-9 and a condition is flagged for
-ICD-10.</p>
+variable to indicate the ICD version <code>NA</code> values, or values
+other than <code>9</code> or <code>10</code>, will not be joined against
+and the codes are ignored resulting in no condition being flagged. If we
+know that we only want to compare against ICD-9 or ICD-10 values then
+using the <code>icdv</code> argument can simplify the call and in this
+case, no condition for ICD-9 and a condition is flagged for ICD-10.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="do">##        patid icdv code dx</span></span>
 <span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="do">## 125330 95471   10 E030  1</span></span>
 <span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="co"># no flag becuse icdv = 9 which treats all input codes as ICD-9</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="co"># no flag because icdv = 9L treats all input codes as ICD-9</span></span>
 <span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>),</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>  <span class="at">data      =</span> <span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>),</span>
 <span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&#39;patid&#39;</span>,</span>
-<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>  <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>  <span class="at">icdv =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
-<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="at">id.vars   =</span> <span class="st">&#39;patid&#39;</span>,</span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>  <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>  <span class="at">icdv      =</span> <span class="dv">9</span><span class="dt">L</span>,</span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>  <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
 <span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&#39;patid&#39;</span>, <span class="st">&#39;cmrb_flag&#39;</span>)]</span>
 <span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="do">##   patid cmrb_flag</span></span>
 <span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a><span class="do">## 1 95471         0</span></span>
 <span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a><span class="co"># flag because icdv = 10 - same as using `icdv.var = &quot;icdv&quot;`</span></span>
+<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a><span class="co"># flag because icdv = 10L - same as using `icdv.var = &quot;icdv&quot;`</span></span>
 <span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>),</span>
+<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a>  <span class="at">data      =</span> <span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>),</span>
 <span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&#39;patid&#39;</span>,</span>
-<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a>  <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb21-24"><a href="#cb21-24" tabindex="-1"></a>  <span class="at">icdv =</span> <span class="dv">10</span><span class="dt">L</span>,</span>
-<span id="cb21-25"><a href="#cb21-25" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb21-26"><a href="#cb21-26" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a>  <span class="at">id.vars   =</span> <span class="st">&#39;patid&#39;</span>,</span>
+<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a>  <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb21-24"><a href="#cb21-24" tabindex="-1"></a>  <span class="at">icdv      =</span> <span class="dv">10</span><span class="dt">L</span>,</span>
+<span id="cb21-25"><a href="#cb21-25" tabindex="-1"></a>  <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb21-26"><a href="#cb21-26" tabindex="-1"></a>  <span class="at">method    =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
 <span id="cb21-27"><a href="#cb21-27" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&#39;patid&#39;</span>, <span class="st">&#39;cmrb_flag&#39;</span>)]</span>
 <span id="cb21-28"><a href="#cb21-28" tabindex="-1"></a><span class="do">##   patid cmrb_flag</span></span>
 <span id="cb21-29"><a href="#cb21-29" tabindex="-1"></a><span class="do">## 1 95471         1</span></span>
 <span id="cb21-30"><a href="#cb21-30" tabindex="-1"></a></span>
 <span id="cb21-31"><a href="#cb21-31" tabindex="-1"></a><span class="fu">comorbidities</span>(</span>
-<span id="cb21-32"><a href="#cb21-32" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>),</span>
+<span id="cb21-32"><a href="#cb21-32" tabindex="-1"></a>  <span class="at">data      =</span> <span class="fu">subset</span>(mdcr, patid <span class="sc">==</span> <span class="st">&quot;95471&quot;</span>),</span>
 <span id="cb21-33"><a href="#cb21-33" tabindex="-1"></a>  <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb21-34"><a href="#cb21-34" tabindex="-1"></a>  <span class="at">id.vars =</span> <span class="st">&#39;patid&#39;</span>,</span>
-<span id="cb21-35"><a href="#cb21-35" tabindex="-1"></a>  <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb21-36"><a href="#cb21-36" tabindex="-1"></a>  <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb21-37"><a href="#cb21-37" tabindex="-1"></a>  <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb21-38"><a href="#cb21-38" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;pccc_v3.0&quot;</span></span>
+<span id="cb21-34"><a href="#cb21-34" tabindex="-1"></a>  <span class="at">id.vars   =</span> <span class="st">&#39;patid&#39;</span>,</span>
+<span id="cb21-35"><a href="#cb21-35" tabindex="-1"></a>  <span class="at">dx.var    =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb21-36"><a href="#cb21-36" tabindex="-1"></a>  <span class="at">icdv.var  =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb21-37"><a href="#cb21-37" tabindex="-1"></a>  <span class="at">poa       =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb21-38"><a href="#cb21-38" tabindex="-1"></a>  <span class="at">method    =</span> <span class="st">&quot;pccc_v3.0&quot;</span></span>
 <span id="cb21-39"><a href="#cb21-39" tabindex="-1"></a>)[, <span class="fu">c</span>(<span class="st">&#39;patid&#39;</span>, <span class="st">&#39;cmrb_flag&#39;</span>)]</span>
 <span id="cb21-40"><a href="#cb21-40" tabindex="-1"></a><span class="do">##   patid cmrb_flag</span></span>
 <span id="cb21-41"><a href="#cb21-41" tabindex="-1"></a><span class="do">## 1 95471         1</span></span></code></pre></div>
 <p>Lastly, it should be noted that a lot of the ambiguity resulting from
-compact codes can be avoided when full codes are available. medicalcoder
-can handle both forms. In the example below we again use the “E030” and
-assess it against all full and compact codes (default), against only
-full codes, and lastly against only compact codes. Note in this example
-that we are not specifying the ICD version nor the diagnostic/procedure
-status of the code.</p>
+compact codes can be avoided when full codes are available.
+<em>medicalcoder</em> can handle both forms. In the example below we
+again use the “E030” and assess it against all full and compact codes
+(default), against only full codes, and lastly against only compact
+codes. Note in this example that we are not specifying the ICD version
+nor the diagnostic/procedure status of the code.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">lookup_icd_codes</span>(<span class="st">&quot;E030&quot;</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="do">##   input_code   match_type icdv dx full_code code src known_start known_end</span></span>
-<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## 1       E030    full_code    9  1      E030 E030 cms        2010      2015</span></span>
-<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## 2       E030    full_code    9  1      E030 E030 cdc        2010      2012</span></span>
-<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="do">## 5       E030 compact_code   10  1     E03.0 E030 cms        2014      2026</span></span>
-<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="do">## 3       E030 compact_code   10  1     E03.0 E030 who        2008      2019</span></span>
-<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## 4       E030 compact_code   10  1     E03.0 E030 cdc        2001      2025</span></span>
-<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="do">##   assignable_start assignable_end</span></span>
-<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="do">## 1             2010           2015</span></span>
-<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">## 2             2010           2012</span></span>
-<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 5             2014           2026</span></span>
-<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## 3             2008           2019</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 4             2001           2025</span></span>
-<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;Ambiguous compact code&quot;</span>, <span class="st">&quot;Full ICD-9 code&quot;</span>, <span class="st">&quot;Full ICD-10 code&quot;</span>),</span>
-<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a>                   <span class="at">code  =</span> <span class="fu">c</span>(<span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E03.0&quot;</span>))</span>
-<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a>data</span>
-<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="do">##                       id  code</span></span>
-<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code  E030</span></span>
-<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a><span class="do">## 2        Full ICD-9 code  E030</span></span>
-<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a><span class="do">## 3       Full ICD-10 code E03.0</span></span>
-<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a></span>
-<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a>args <span class="ot">&lt;-</span></span>
-<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb22-24"><a href="#cb22-24" tabindex="-1"></a>    <span class="at">data =</span> data,</span>
-<span id="cb22-25"><a href="#cb22-25" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb22-26"><a href="#cb22-26" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
-<span id="cb22-29"><a href="#cb22-29" tabindex="-1"></a>  )</span>
-<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a></span>
-<span id="cb22-31"><a href="#cb22-31" tabindex="-1"></a>default <span class="ot">&lt;-</span></span>
-<span id="cb22-32"><a href="#cb22-32" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
-<span id="cb22-33"><a href="#cb22-33" tabindex="-1"></a>full_only <span class="ot">&lt;-</span></span>
-<span id="cb22-34"><a href="#cb22-34" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">FALSE</span>)))</span>
-<span id="cb22-35"><a href="#cb22-35" tabindex="-1"></a>compact_only <span class="ot">&lt;-</span></span>
-<span id="cb22-36"><a href="#cb22-36" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">FALSE</span>, <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
-<span id="cb22-37"><a href="#cb22-37" tabindex="-1"></a></span>
-<span id="cb22-38"><a href="#cb22-38" tabindex="-1"></a>default[,       <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
-<span id="cb22-39"><a href="#cb22-39" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
-<span id="cb22-40"><a href="#cb22-40" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
-<span id="cb22-41"><a href="#cb22-41" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
-<span id="cb22-42"><a href="#cb22-42" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span>
-<span id="cb22-43"><a href="#cb22-43" tabindex="-1"></a>full_only[,     <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
-<span id="cb22-44"><a href="#cb22-44" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
-<span id="cb22-45"><a href="#cb22-45" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         0</span></span>
-<span id="cb22-46"><a href="#cb22-46" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
-<span id="cb22-47"><a href="#cb22-47" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         0</span></span>
-<span id="cb22-48"><a href="#cb22-48" tabindex="-1"></a>compact_only[,  <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
-<span id="cb22-49"><a href="#cb22-49" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
-<span id="cb22-50"><a href="#cb22-50" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
-<span id="cb22-51"><a href="#cb22-51" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         0</span></span>
-<span id="cb22-52"><a href="#cb22-52" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span></code></pre></div>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a><span class="do">##   input_code   match_type icdv dx full_code code             src known_start</span></span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a><span class="do">## 1       E030    full_code    9  1      E030 E030             cms        2010</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="do">## 2       E030    full_code    9  1      E030 E030             cdc        2010</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="do">## 3       E030 compact_code   10  1     E03.0 E030             cms        2014</span></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="do">## 4       E030 compact_code   10  1     E03.0 E030             cdc        2001</span></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="do">## 5       E030 compact_code   10  1     E03.0 E030          ihacpa        2020</span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="do">## 6       E030 compact_code   10  1     E03.0 E030 socialstyrelsen        1997</span></span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="do">## 7       E030 compact_code   10  1     E03.0 E030             who        2008</span></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">##   known_end assignable_start assignable_end</span></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 1      2015             2010           2015</span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## 2      2012             2010           2012</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 3      2026             2014           2026</span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="do">## 4      2025             2001           2025</span></span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="do">## 5      2026             2020           2026</span></span>
+<span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="do">## 6      2026             1997           2026</span></span>
+<span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="do">## 7      2021             2008           2021</span></span>
+<span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;Ambiguous compact code&quot;</span>, <span class="st">&quot;Full ICD-9 code&quot;</span>, <span class="st">&quot;Full ICD-10 code&quot;</span>),</span>
+<span id="cb22-19"><a href="#cb22-19" tabindex="-1"></a>                   <span class="at">code  =</span> <span class="fu">c</span>(<span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E030&quot;</span>, <span class="st">&quot;E03.0&quot;</span>))</span>
+<span id="cb22-20"><a href="#cb22-20" tabindex="-1"></a>data</span>
+<span id="cb22-21"><a href="#cb22-21" tabindex="-1"></a><span class="do">##                       id  code</span></span>
+<span id="cb22-22"><a href="#cb22-22" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code  E030</span></span>
+<span id="cb22-23"><a href="#cb22-23" tabindex="-1"></a><span class="do">## 2        Full ICD-9 code  E030</span></span>
+<span id="cb22-24"><a href="#cb22-24" tabindex="-1"></a><span class="do">## 3       Full ICD-10 code E03.0</span></span>
+<span id="cb22-25"><a href="#cb22-25" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" tabindex="-1"></a>args <span class="ot">&lt;-</span></span>
+<span id="cb22-27"><a href="#cb22-27" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb22-28"><a href="#cb22-28" tabindex="-1"></a>    <span class="at">data =</span> data,</span>
+<span id="cb22-29"><a href="#cb22-29" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb22-30"><a href="#cb22-30" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb22-32"><a href="#cb22-32" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span></span>
+<span id="cb22-33"><a href="#cb22-33" tabindex="-1"></a>  )</span>
+<span id="cb22-34"><a href="#cb22-34" tabindex="-1"></a></span>
+<span id="cb22-35"><a href="#cb22-35" tabindex="-1"></a>default <span class="ot">&lt;-</span></span>
+<span id="cb22-36"><a href="#cb22-36" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
+<span id="cb22-37"><a href="#cb22-37" tabindex="-1"></a>full_only <span class="ot">&lt;-</span></span>
+<span id="cb22-38"><a href="#cb22-38" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">TRUE</span>,  <span class="at">compact.codes =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb22-39"><a href="#cb22-39" tabindex="-1"></a>compact_only <span class="ot">&lt;-</span></span>
+<span id="cb22-40"><a href="#cb22-40" tabindex="-1"></a>  <span class="fu">do.call</span>(comorbidities, <span class="fu">c</span>(args, <span class="fu">list</span>(<span class="at">full.codes =</span> <span class="cn">FALSE</span>, <span class="at">compact.codes =</span> <span class="cn">TRUE</span> )))</span>
+<span id="cb22-41"><a href="#cb22-41" tabindex="-1"></a></span>
+<span id="cb22-42"><a href="#cb22-42" tabindex="-1"></a>default[,       <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
+<span id="cb22-43"><a href="#cb22-43" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
+<span id="cb22-44"><a href="#cb22-44" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
+<span id="cb22-45"><a href="#cb22-45" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
+<span id="cb22-46"><a href="#cb22-46" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span>
+<span id="cb22-47"><a href="#cb22-47" tabindex="-1"></a>full_only[,     <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
+<span id="cb22-48"><a href="#cb22-48" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
+<span id="cb22-49"><a href="#cb22-49" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         0</span></span>
+<span id="cb22-50"><a href="#cb22-50" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         1</span></span>
+<span id="cb22-51"><a href="#cb22-51" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         0</span></span>
+<span id="cb22-52"><a href="#cb22-52" tabindex="-1"></a>compact_only[,  <span class="fu">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;cmrb_flag&quot;</span>)]</span>
+<span id="cb22-53"><a href="#cb22-53" tabindex="-1"></a><span class="do">##                       id cmrb_flag</span></span>
+<span id="cb22-54"><a href="#cb22-54" tabindex="-1"></a><span class="do">## 1 Ambiguous compact code         1</span></span>
+<span id="cb22-55"><a href="#cb22-55" tabindex="-1"></a><span class="do">## 2       Full ICD-10 code         0</span></span>
+<span id="cb22-56"><a href="#cb22-56" tabindex="-1"></a><span class="do">## 3        Full ICD-9 code         1</span></span></code></pre></div>
 <p>With no information about the “E030” being ICD-9 or ICD-10, full or
 compact, (can only be a diagnostic code in either ICD-9 or ICD-10) we
 get different flags. The default, the most liberal approach flags this
@@ -2569,7 +2570,7 @@ full code with the same compact form.</p>
 </div>
 <div id="longitudinal-conditions" class="section level1">
 <h1>Longitudinal Conditions</h1>
-<p>The medicalcoder package includes the example data set,
+<p>The <em>medicalcoder</em> package includes the example dataset,
 <code>mdcr_longitudinal</code>, with ICD-9 and ICD-10 codes for 3
 synthetic patients with multiple encounters. Each row has a date
 (encounter) for when the ICD code was reported.</p>
@@ -2590,13 +2591,13 @@ done by specifying <code>id.vars = c(&quot;patid&quot;)</code> such that the
 one encounter.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>longitudinal_v2_patid <span class="ot">&lt;-</span></span>
 <span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr_longitudinal,</span>
-<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>),</span>
-<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
-<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>    <span class="at">data        =</span> mdcr_longitudinal,</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>    <span class="at">id.vars     =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>    <span class="at">icdv.var    =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>, <span class="co"># Default value</span></span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span></span>
 <span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>  )</span>
 <span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>tab <span class="ot">&lt;-</span> kableExtra<span class="sc">::</span><span class="fu">kbl</span>(longitudinal_v2_patid)</span>
 <span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>tab <span class="ot">&lt;-</span> kableExtra<span class="sc">::</span><span class="fu">kable_styling</span>(tab, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>), <span class="at">font_size =</span> <span class="dv">10</span>)</span>
@@ -2810,14 +2811,15 @@ cmrb_flag
 <p>We can look at the conditions flagged at each encounter by specifying
 the <code>id.vars = c(&quot;patid&quot;, &quot;date&quot;)</code>.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>longitudinal_v2_patid_date <span class="ot">&lt;-</span></span>
-<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(<span class="at">data =</span> mdcr_longitudinal,</span>
-<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>, <span class="st">&quot;date&quot;</span>),</span>
-<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
-<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
-<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
-<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>  )</span></code></pre></div>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>    <span class="at">data        =</span> mdcr_longitudinal,</span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>    <span class="at">id.vars     =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>, <span class="st">&quot;date&quot;</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>    <span class="at">icdv.var    =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;current&quot;</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span></span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a>  )</span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -3354,23 +3356,24 @@ cmrb_flag
 </tr>
 </tbody>
 </table>
-<p>Looking at patid 9663901 at an encounter level we see that the
-conditions occur at different moments in time and the condition the
-patient has change overtime. Because these are chronic conditions, once
+<p>Looking at patid 9663901 at an encounter level, we see that
+conditions occur at different moments in time, and that the patient’s
+conditions change over time. Because these are chronic conditions, once
 the condition is observed, it should be considered to exist in
 perpetuity.</p>
-<p>For <code>pccc_v2.1</code> a simple carry-forward method can be
-applied to the data set to mark the presence of a condition at the time
-of reporting and thereafter.</p>
+<p>For <code>pccc_v2.1</code> the
+<code>flag.method = &quot;cumulative&quot;</code> option can be used as a simple
+carry-forward method to mark the presence of a condition at the time of
+reporting and thereafter.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>longitudinal_v2_patid_date_cumulative_poa0 <span class="ot">&lt;-</span></span>
 <span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr_longitudinal,</span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>, <span class="st">&quot;date&quot;</span>),</span>
-<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>    <span class="at">data        =</span> mdcr_longitudinal,</span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>    <span class="at">id.vars     =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>, <span class="st">&quot;date&quot;</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>    <span class="at">icdv.var    =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
 <span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;cumulative&quot;</span>,</span>
-<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">0</span></span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">0</span><span class="dt">L</span></span>
 <span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>  )</span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -3910,13 +3913,13 @@ cmrb_flag
 </table>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>longitudinal_v2_patid_date_cumulative_poa1 <span class="ot">&lt;-</span></span>
 <span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr_longitudinal,</span>
-<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>, <span class="st">&quot;date&quot;</span>),</span>
-<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>    <span class="at">data        =</span> mdcr_longitudinal,</span>
+<span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>    <span class="at">icd.codes   =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>    <span class="at">id.vars     =</span> <span class="fu">c</span>(<span class="st">&quot;patid&quot;</span>, <span class="st">&quot;date&quot;</span>),</span>
+<span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>    <span class="at">icdv.var    =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>    <span class="at">method      =</span> <span class="st">&quot;pccc_v2.1&quot;</span>,</span>
 <span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;cumulative&quot;</span>,</span>
-<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>    <span class="at">poa         =</span> <span class="dv">1</span><span class="dt">L</span></span>
 <span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>  )</span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -4458,12 +4461,12 @@ cmrb_flag
 <div id="pccc-v3" class="section level2">
 <h2>PCCC V3</h2>
 <p>For <code>pccc_v3.0</code> and <code>pccc_v3.1</code> a simple
-carry-forward method would not be easy to use as information about
-technology dependent codes is omitted when non-technology dependent
+carry-forward method would not be easy to use because information about
+technology-dependent codes is omitted when non-technology-dependent
 codes do not exist.</p>
 <p>Let’s use three ICD-10 diagnostic codes for this example and we will
 explore all six possible permutations of the codes. We’ll generate a
-data set with seven encounters and one code appearing on each of
+dataset with seven encounters and one code appearing on each of
 encounters 2, 4, and 6.</p>
 <p>The codes we’ll use are:</p>
 <ul>
@@ -4474,13 +4477,13 @@ encounters 2, 4, and 6.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>codes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;H49.811&quot;</span>, <span class="st">&quot;J84.111&quot;</span>, <span class="st">&quot;Z96.41&quot;</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_pccc_codes</span>(), full_code <span class="sc">%in%</span> codes)</span>
 <span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="do">##      icdv dx full_code   code   condition                 subcondition</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## 6438   10  1   H49.811 H49811   metabolic    other_metabolic_disorders</span></span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="do">## 6705   10  1   J84.111 J84111 respiratory chronic_respiratory_diseases</span></span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## 7898   10  1    Z96.41  Z9641   metabolic    device_and_technology_use</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## 6987   10  1   H49.811 H49811   metabolic    other_metabolic_disorders</span></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="do">## 7276   10  1   J84.111 J84111 respiratory chronic_respiratory_diseases</span></span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## 8892   10  1    Z96.41  Z9641   metabolic    device_and_technology_use</span></span>
 <span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="do">##      transplant_flag tech_dep_flag pccc_v3.1 pccc_v3.0 pccc_v2.1 pccc_v2.0</span></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="do">## 6438               0             0         1         1         1         1</span></span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## 6705               0             0         1         1         0         0</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="do">## 7898               0             1         1         1         1         1</span></span></code></pre></div>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="do">## 6987               0             0         1         1         1         1</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## 7276               0             0         1         1         0         0</span></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="do">## 8892               0             1         1         1         1         1</span></span></code></pre></div>
 <p>The constructed data and permutations are:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>permutations <span class="ot">&lt;-</span></span>
 <span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">data.table</span>(</span>
@@ -4503,7 +4506,7 @@ encounters 2, 4, and 6.</p>
 <span id="cb29-19"><a href="#cb29-19" tabindex="-1"></a><span class="do">##  $ encounter_id: int  1 2 ...</span></span>
 <span id="cb29-20"><a href="#cb29-20" tabindex="-1"></a><span class="do">##  $ code        : chr  NA ...</span></span>
 <span id="cb29-21"><a href="#cb29-21" tabindex="-1"></a><span class="do">##  $ plabel      : chr  &quot;Permutation 1: H49.811, J84.111, Z96.41&quot; ...</span></span>
-<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="do">##  - attr(*, &quot;.internal.selfref&quot;)=&lt;pointer: 0x101c8dc90&gt;</span></span></code></pre></div>
+<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="do">##  - attr(*, &quot;.internal.selfref&quot;)=&lt;pointer: 0x1016c9d40&gt;</span></span></code></pre></div>
 <ul>
 <li>Permutation 1: H49.811, J84.111, Z96.41</li>
 <li>Permutation 2: H49.811, Z96.41, J84.111</li>
@@ -4512,19 +4515,19 @@ encounters 2, 4, and 6.</p>
 <li>Permutation 5: Z96.41, H49.811, J84.111</li>
 <li>Permutation 6: Z96.41, J84.111, H49.811</li>
 </ul>
-<p>We’ll apply the <code>pccc_v3.1</code> to this code set with
+<p>We’ll apply <code>pccc_v3.1</code> to this code set with
 <code>flag.method = &quot;cumulative&quot;</code> and all codes considered to be
 present-on-admission.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a>rtn <span class="ot">&lt;-</span></span>
 <span id="cb30-2"><a href="#cb30-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>    <span class="at">data =</span> permutations,</span>
-<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;permutation&quot;</span>, <span class="st">&quot;plabel&quot;</span>, <span class="st">&quot;encounter_id&quot;</span>),</span>
-<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">10</span><span class="dt">L</span>,</span>
+<span id="cb30-3"><a href="#cb30-3" tabindex="-1"></a>    <span class="at">data          =</span> permutations,</span>
+<span id="cb30-4"><a href="#cb30-4" tabindex="-1"></a>    <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb30-5"><a href="#cb30-5" tabindex="-1"></a>    <span class="at">id.vars       =</span> <span class="fu">c</span>(<span class="st">&quot;permutation&quot;</span>, <span class="st">&quot;plabel&quot;</span>, <span class="st">&quot;encounter_id&quot;</span>),</span>
+<span id="cb30-6"><a href="#cb30-6" tabindex="-1"></a>    <span class="at">icdv          =</span> <span class="dv">10</span><span class="dt">L</span>,</span>
 <span id="cb30-7"><a href="#cb30-7" tabindex="-1"></a>    <span class="at">compact.codes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
-<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;cumulative&quot;</span>,</span>
-<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span></span>
+<span id="cb30-8"><a href="#cb30-8" tabindex="-1"></a>    <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" tabindex="-1"></a>    <span class="at">flag.method   =</span> <span class="st">&quot;cumulative&quot;</span>,</span>
+<span id="cb30-10"><a href="#cb30-10" tabindex="-1"></a>    <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span></span>
 <span id="cb30-11"><a href="#cb30-11" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Let’s walk through the results for each permutation.</p>
 <p><strong>Permutation 1</strong></p>
@@ -5807,7 +5810,7 @@ num ccc
 </tbody>
 </table>
 <p>Permutation 4 is notable as presence of the respiratory condition on
-encounters 2 through 7 means that when the technology dependent
+encounters 2 through 7 means that when the technology-dependent
 metabolic code appears on encounter 4, a metabolic is flagged for
 encounters 4 through 7. Compare this with permutations 5 and 6.</p>
 <strong>Permutation 5</strong>
@@ -6124,13 +6127,13 @@ num ccc
 </tr>
 </tbody>
 </table>
-<p>For permutation 5 the first code is a tech dependent metabolic code
-on encounter 2. Because the <em>only</em> code for flagging a condition
-is a technology dependent code the PCCC version 3 algorithm results in
-<em>no</em> condition being flagged for encounters 2 and 3. On encounter
-4, when the non-tech metabolic code appears then the metabolic condition
-is flagged and the past history of the technology dependent code
-persists.</p>
+<p>For permutation 5 the first code is a technology-dependent metabolic
+code on encounter 2. Because the <em>only</em> code for flagging a
+condition is a technology-dependent code the PCCC version 3 algorithm
+results in <em>no</em> condition being flagged for encounters 2 and 3.
+On encounter 4, when the non-tech metabolic code appears then the
+metabolic condition is flagged and the past history of the
+technology-dependent dependent code persists.</p>
 <strong>Permutation 6</strong>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <thead>
@@ -6446,7 +6449,7 @@ num ccc
 </tbody>
 </table>
 <p>As with permutation 5, since the only code in the record for
-encounter 2 and 3 is the technology dependent metabolic code, there is
+encounter 2 and 3 is the technology-dependent metabolic code, there is
 no flagged condition. On encounter 4, when the dxpr code for a
 respiratory condition is reported then the respiratory condition
 <em>and</em> the metabolic condition is flagged as technology dependent.
@@ -6459,8 +6462,8 @@ condition is flagged.</p>
 <p>The documentation for PCCC version 2 <span class="citation">(Feudtner
 et al. 2014)</span> and version 3 <span class="citation">(Feinstein et
 al. 2024)</span> include subconditions under each of the major
-conditions. However, to our knowledge, no software prior to medicalcoder
-implemented flagging for the subconditions.</p>
+conditions. However, to our knowledge, no software prior to
+<em>medicalcoder</em> implemented flagging for the subconditions.</p>
 <p>The subconditions for each condition are shown in the next table.</p>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; ">
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
@@ -7107,25 +7110,25 @@ Transplantation
 <code>pccc_v3.1</code> with and without comorbidities.</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>without_subconditions <span class="ot">&lt;-</span></span>
 <span id="cb31-2"><a href="#cb31-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
+<span id="cb31-3"><a href="#cb31-3" tabindex="-1"></a>    <span class="at">data          =</span> mdcr,</span>
+<span id="cb31-4"><a href="#cb31-4" tabindex="-1"></a>    <span class="at">id.vars       =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" tabindex="-1"></a>    <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" tabindex="-1"></a>    <span class="at">icdv.var      =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" tabindex="-1"></a>    <span class="at">dx.var        =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb31-8"><a href="#cb31-8" tabindex="-1"></a>    <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb31-9"><a href="#cb31-9" tabindex="-1"></a>    <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
 <span id="cb31-10"><a href="#cb31-10" tabindex="-1"></a>    <span class="at">subconditions =</span> <span class="cn">FALSE</span></span>
 <span id="cb31-11"><a href="#cb31-11" tabindex="-1"></a>  )</span>
 <span id="cb31-12"><a href="#cb31-12" tabindex="-1"></a></span>
 <span id="cb31-13"><a href="#cb31-13" tabindex="-1"></a>with_subconditions <span class="ot">&lt;-</span></span>
 <span id="cb31-14"><a href="#cb31-14" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a>    <span class="at">data =</span> mdcr,</span>
-<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="st">&quot;patid&quot;</span>,</span>
-<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb31-18"><a href="#cb31-18" tabindex="-1"></a>    <span class="at">icdv.var =</span> <span class="st">&quot;icdv&quot;</span>,</span>
-<span id="cb31-19"><a href="#cb31-19" tabindex="-1"></a>    <span class="at">dx.var =</span> <span class="st">&quot;dx&quot;</span>,</span>
-<span id="cb31-20"><a href="#cb31-20" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
-<span id="cb31-21"><a href="#cb31-21" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
+<span id="cb31-15"><a href="#cb31-15" tabindex="-1"></a>    <span class="at">data          =</span> mdcr,</span>
+<span id="cb31-16"><a href="#cb31-16" tabindex="-1"></a>    <span class="at">id.vars       =</span> <span class="st">&quot;patid&quot;</span>,</span>
+<span id="cb31-17"><a href="#cb31-17" tabindex="-1"></a>    <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb31-18"><a href="#cb31-18" tabindex="-1"></a>    <span class="at">icdv.var      =</span> <span class="st">&quot;icdv&quot;</span>,</span>
+<span id="cb31-19"><a href="#cb31-19" tabindex="-1"></a>    <span class="at">dx.var        =</span> <span class="st">&quot;dx&quot;</span>,</span>
+<span id="cb31-20"><a href="#cb31-20" tabindex="-1"></a>    <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
+<span id="cb31-21"><a href="#cb31-21" tabindex="-1"></a>    <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
 <span id="cb31-22"><a href="#cb31-22" tabindex="-1"></a>    <span class="at">subconditions =</span> <span class="cn">TRUE</span></span>
 <span id="cb31-23"><a href="#cb31-23" tabindex="-1"></a>  )</span></code></pre></div>
 <p>The structure of the return object <code>with_subconditions</code> is
@@ -7152,7 +7155,7 @@ identical to the results of calling <code>comorbidities()</code> with
 <span id="cb32-18"><a href="#cb32-18" tabindex="-1"></a><span class="do">##   ..$ respiratory    :&#39;data.frame&#39;:  3200 obs. of  7 variables:</span></span>
 <span id="cb32-19"><a href="#cb32-19" tabindex="-1"></a></span>
 <span id="cb32-20"><a href="#cb32-20" tabindex="-1"></a><span class="fu">all.equal</span>(</span>
-<span id="cb32-21"><a href="#cb32-21" tabindex="-1"></a>  with_subconditions<span class="sc">$</span>conditions,</span>
+<span id="cb32-21"><a href="#cb32-21" tabindex="-1"></a>  with_subconditions[[<span class="st">&quot;conditions&quot;</span>]],</span>
 <span id="cb32-22"><a href="#cb32-22" tabindex="-1"></a>  without_subconditions,</span>
 <span id="cb32-23"><a href="#cb32-23" tabindex="-1"></a>  <span class="at">check.attributes =</span> <span class="cn">FALSE</span></span>
 <span id="cb32-24"><a href="#cb32-24" tabindex="-1"></a>)</span>
@@ -7169,7 +7172,7 @@ only those with the condition.</p>
 <span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="do">##  $ count                          : num  3225 825 1544 300 754 ...</span></span>
 <span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a><span class="do">##  $ percent_of_cohort              : num  8.429 2.156 4.035 0.784 1.971 ...</span></span>
 <span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a><span class="do">##  $ percent_of_those_with_condition: num  NA 25.6 47.9 9.3 23.4 ...</span></span></code></pre></div>
-<p>The subconditions are available for all pccc variants. A summary is
+<p>The subconditions are available for all PCCC variants. A summary is
 presented in the following tables.</p>
 <div id="congenital-or-genetic" class="section level2">
 <h2>Congenital or Genetic</h2>
@@ -11290,19 +11293,19 @@ Transplantation
 </div>
 <div id="longitudinal" class="section level2">
 <h2>Longitudinal</h2>
-<p>The longitudinal assessment for subconditions work as well. Using the
-same <code>permutations</code> data set from above we will look at the
-metabolic and respiratory conditions and subconditions.</p>
+<p>The longitudinal assessment for subconditions works as well. Using
+the same <code>permutations</code> dataset from above we will look at
+the metabolic and respiratory conditions and subconditions.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a>rslts <span class="ot">&lt;-</span></span>
 <span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a>  <span class="fu">comorbidities</span>(</span>
-<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>    <span class="at">data =</span> permutations,</span>
-<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>    <span class="at">icd.codes =</span> <span class="st">&quot;code&quot;</span>,</span>
-<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;permutation&quot;</span>, <span class="st">&quot;plabel&quot;</span>, <span class="st">&quot;encounter_id&quot;</span>),</span>
-<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>    <span class="at">icdv =</span> <span class="dv">10</span><span class="dt">L</span>,</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a>    <span class="at">data          =</span> permutations,</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a>    <span class="at">icd.codes     =</span> <span class="st">&quot;code&quot;</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a>    <span class="at">id.vars       =</span> <span class="fu">c</span>(<span class="st">&quot;permutation&quot;</span>, <span class="st">&quot;plabel&quot;</span>, <span class="st">&quot;encounter_id&quot;</span>),</span>
+<span id="cb34-6"><a href="#cb34-6" tabindex="-1"></a>    <span class="at">icdv          =</span> <span class="dv">10</span><span class="dt">L</span>,</span>
 <span id="cb34-7"><a href="#cb34-7" tabindex="-1"></a>    <span class="at">compact.codes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
-<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a>    <span class="at">flag.method =</span> <span class="st">&quot;cumulative&quot;</span>,</span>
-<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a>    <span class="at">poa =</span> <span class="dv">1</span>,</span>
+<span id="cb34-8"><a href="#cb34-8" tabindex="-1"></a>    <span class="at">method        =</span> <span class="st">&quot;pccc_v3.1&quot;</span>,</span>
+<span id="cb34-9"><a href="#cb34-9" tabindex="-1"></a>    <span class="at">flag.method   =</span> <span class="st">&quot;cumulative&quot;</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" tabindex="-1"></a>    <span class="at">poa           =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
 <span id="cb34-11"><a href="#cb34-11" tabindex="-1"></a>    <span class="at">subconditions =</span> <span class="cn">TRUE</span></span>
 <span id="cb34-12"><a href="#cb34-12" tabindex="-1"></a>  )</span></code></pre></div>
 <p>Let’s start by looking at the respiratory results. The only
@@ -11312,32 +11315,33 @@ only report rows for when the primary condition was flagged. We see in
 the following encounters where the chronic respiratory disease is
 flagged is consistent with when the primary respiratory condition is
 flagged.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">all</span>(rslts<span class="sc">$</span>subconditions<span class="sc">$</span>respiratory<span class="sc">$</span>chronic_respiratory_diseases <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a><span class="do">## [1] TRUE</span></span>
-<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a><span class="fu">sapply</span>(rslts<span class="sc">$</span>subconditions<span class="sc">$</span>respiratory[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)], max)</span>
-<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a><span class="do">## chronic_respiratory_diseases              cystic_fibrosis </span></span>
-<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a><span class="do">##                            1                            0 </span></span>
-<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a><span class="do">##    device_and_technology_use                        other </span></span>
-<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a><span class="do">##                            0                            0 </span></span>
-<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a><span class="do">##    respiratory_malformations              transplantation </span></span>
-<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a><span class="do">##                            0                            0</span></span>
-<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a></span>
-<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a><span class="co"># which encounters flag for primary condition respiratory?</span></span>
-<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a>cnd <span class="ot">&lt;-</span></span>
-<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>  rslts<span class="sc">$</span>conditions[</span>
-<span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>    respiratory_dxpr_or_tech <span class="sc">==</span> <span class="dv">1</span>,</span>
-<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>    .(<span class="at">cencid =</span> <span class="fu">paste</span>(encounter_id, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)),</span>
-<span id="cb35-16"><a href="#cb35-16" tabindex="-1"></a>    by <span class="ot">=</span> .(plabel)</span>
-<span id="cb35-17"><a href="#cb35-17" tabindex="-1"></a>  ]</span>
-<span id="cb35-18"><a href="#cb35-18" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" tabindex="-1"></a>  <span class="fu">all</span>(rslts<span class="sc">$</span>subconditions<span class="sc">$</span>respiratory<span class="sc">$</span>chronic_respiratory_diseases <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" tabindex="-1"></a>)</span>
+<span id="cb35-4"><a href="#cb35-4" tabindex="-1"></a><span class="fu">sapply</span>(rslts<span class="sc">$</span>subconditions<span class="sc">$</span>respiratory[, <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)], max)</span>
+<span id="cb35-5"><a href="#cb35-5" tabindex="-1"></a><span class="do">## chronic_respiratory_diseases              cystic_fibrosis </span></span>
+<span id="cb35-6"><a href="#cb35-6" tabindex="-1"></a><span class="do">##                            1                            0 </span></span>
+<span id="cb35-7"><a href="#cb35-7" tabindex="-1"></a><span class="do">##    device_and_technology_use                        other </span></span>
+<span id="cb35-8"><a href="#cb35-8" tabindex="-1"></a><span class="do">##                            0                            0 </span></span>
+<span id="cb35-9"><a href="#cb35-9" tabindex="-1"></a><span class="do">##    respiratory_malformations              transplantation </span></span>
+<span id="cb35-10"><a href="#cb35-10" tabindex="-1"></a><span class="do">##                            0                            0</span></span>
+<span id="cb35-11"><a href="#cb35-11" tabindex="-1"></a></span>
+<span id="cb35-12"><a href="#cb35-12" tabindex="-1"></a><span class="co"># which encounters flag for primary condition respiratory?</span></span>
+<span id="cb35-13"><a href="#cb35-13" tabindex="-1"></a>cnd <span class="ot">&lt;-</span></span>
+<span id="cb35-14"><a href="#cb35-14" tabindex="-1"></a>  rslts<span class="sc">$</span>conditions[</span>
+<span id="cb35-15"><a href="#cb35-15" tabindex="-1"></a>    respiratory_dxpr_or_tech <span class="sc">==</span> <span class="dv">1</span>,</span>
+<span id="cb35-16"><a href="#cb35-16" tabindex="-1"></a>    .(<span class="at">cencid =</span> <span class="fu">paste</span>(encounter_id, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)),</span>
+<span id="cb35-17"><a href="#cb35-17" tabindex="-1"></a>    by <span class="ot">=</span> .(plabel)</span>
+<span id="cb35-18"><a href="#cb35-18" tabindex="-1"></a>  ]</span>
 <span id="cb35-19"><a href="#cb35-19" tabindex="-1"></a></span>
-<span id="cb35-20"><a href="#cb35-20" tabindex="-1"></a><span class="co"># which encounters flag for the subcondition chronic_respiratory_diseases?</span></span>
-<span id="cb35-21"><a href="#cb35-21" tabindex="-1"></a>scnd <span class="ot">&lt;-</span></span>
-<span id="cb35-22"><a href="#cb35-22" tabindex="-1"></a>  rslts<span class="sc">$</span>subconditions<span class="sc">$</span>respiratory[</span>
-<span id="cb35-23"><a href="#cb35-23" tabindex="-1"></a>    ,</span>
-<span id="cb35-24"><a href="#cb35-24" tabindex="-1"></a>    .(<span class="at">sencid =</span> <span class="fu">paste</span>(encounter_id, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)),</span>
-<span id="cb35-25"><a href="#cb35-25" tabindex="-1"></a>    by <span class="ot">=</span> .(plabel)</span>
-<span id="cb35-26"><a href="#cb35-26" tabindex="-1"></a>  ]</span></code></pre></div>
+<span id="cb35-20"><a href="#cb35-20" tabindex="-1"></a></span>
+<span id="cb35-21"><a href="#cb35-21" tabindex="-1"></a><span class="co"># which encounters flag for the subcondition chronic_respiratory_diseases?</span></span>
+<span id="cb35-22"><a href="#cb35-22" tabindex="-1"></a>scnd <span class="ot">&lt;-</span></span>
+<span id="cb35-23"><a href="#cb35-23" tabindex="-1"></a>  rslts<span class="sc">$</span>subconditions<span class="sc">$</span>respiratory[</span>
+<span id="cb35-24"><a href="#cb35-24" tabindex="-1"></a>    ,</span>
+<span id="cb35-25"><a href="#cb35-25" tabindex="-1"></a>    .(<span class="at">sencid =</span> <span class="fu">paste</span>(encounter_id, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>)),</span>
+<span id="cb35-26"><a href="#cb35-26" tabindex="-1"></a>    by <span class="ot">=</span> .(plabel)</span>
+<span id="cb35-27"><a href="#cb35-27" tabindex="-1"></a>  ]</span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 Encounters flagging for respiratory condition and the chronic
@@ -11446,11 +11450,11 @@ device and technology use, and 2) other metabolic disorders.</p>
 <span id="cb36-9"><a href="#cb36-9" tabindex="-1"></a><span class="co"># which encounters flag for the subconditions?</span></span>
 <span id="cb36-10"><a href="#cb36-10" tabindex="-1"></a>scnd <span class="ot">&lt;-</span></span>
 <span id="cb36-11"><a href="#cb36-11" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">melt</span>(</span>
-<span id="cb36-12"><a href="#cb36-12" tabindex="-1"></a>    rslts<span class="sc">$</span>subconditions<span class="sc">$</span>metabolic,</span>
-<span id="cb36-13"><a href="#cb36-13" tabindex="-1"></a>    <span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&quot;plabel&quot;</span>, <span class="st">&quot;encounter_id&quot;</span>),</span>
-<span id="cb36-14"><a href="#cb36-14" tabindex="-1"></a>    <span class="at">measure.vars =</span> <span class="fu">c</span>(<span class="st">&quot;device_and_technology_use&quot;</span>, <span class="st">&quot;other_metabolic_disorders&quot;</span>),</span>
+<span id="cb36-12"><a href="#cb36-12" tabindex="-1"></a>    <span class="at">data            =</span> rslts<span class="sc">$</span>subconditions<span class="sc">$</span>metabolic,</span>
+<span id="cb36-13"><a href="#cb36-13" tabindex="-1"></a>    <span class="at">id.vars         =</span> <span class="fu">c</span>(<span class="st">&quot;plabel&quot;</span>, <span class="st">&quot;encounter_id&quot;</span>),</span>
+<span id="cb36-14"><a href="#cb36-14" tabindex="-1"></a>    <span class="at">measure.vars    =</span> <span class="fu">c</span>(<span class="st">&quot;device_and_technology_use&quot;</span>, <span class="st">&quot;other_metabolic_disorders&quot;</span>),</span>
 <span id="cb36-15"><a href="#cb36-15" tabindex="-1"></a>    <span class="at">variable.factor =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb36-16"><a href="#cb36-16" tabindex="-1"></a>    <span class="at">variable.name =</span> <span class="st">&quot;subcondition&quot;</span></span>
+<span id="cb36-16"><a href="#cb36-16" tabindex="-1"></a>    <span class="at">variable.name   =</span> <span class="st">&quot;subcondition&quot;</span></span>
 <span id="cb36-17"><a href="#cb36-17" tabindex="-1"></a>  )</span>
 <span id="cb36-18"><a href="#cb36-18" tabindex="-1"></a>scnd <span class="ot">&lt;-</span> scnd[value <span class="sc">==</span> <span class="dv">1</span>]</span>
 <span id="cb36-19"><a href="#cb36-19" tabindex="-1"></a>scnd <span class="ot">&lt;-</span></span>
@@ -11462,8 +11466,8 @@ device and technology use, and 2) other metabolic disorders.</p>
 <span id="cb36-25"><a href="#cb36-25" tabindex="-1"></a></span>
 <span id="cb36-26"><a href="#cb36-26" tabindex="-1"></a>scnd <span class="ot">&lt;-</span></span>
 <span id="cb36-27"><a href="#cb36-27" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">dcast</span>(</span>
-<span id="cb36-28"><a href="#cb36-28" tabindex="-1"></a>    scnd,</span>
-<span id="cb36-29"><a href="#cb36-29" tabindex="-1"></a>    plabel <span class="sc">~</span> subcondition,</span>
+<span id="cb36-28"><a href="#cb36-28" tabindex="-1"></a>    <span class="at">data      =</span> scnd,</span>
+<span id="cb36-29"><a href="#cb36-29" tabindex="-1"></a>    <span class="at">formula   =</span> plabel <span class="sc">~</span> subcondition,</span>
 <span id="cb36-30"><a href="#cb36-30" tabindex="-1"></a>    <span class="at">value.var =</span> <span class="st">&quot;sencid&quot;</span></span>
 <span id="cb36-31"><a href="#cb36-31" tabindex="-1"></a>  )</span></code></pre></div>
 <table class="table table-striped" style="font-size: 10px; margin-left: auto; margin-right: auto;">

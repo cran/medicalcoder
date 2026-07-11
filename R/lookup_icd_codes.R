@@ -26,11 +26,11 @@
 #'
 #' @return A `data.frame` with one or more rows per input, including columns
 #' * `match_type`: did the input match a full or compact code
-#' * `icdv`: icd version (9 or 10)
-#' * `dx`: diagnostic code (1) or procedure code (0)
+#' * `icdv`: ICD version (`9L` or `10L`)
+#' * `dx`: diagnostic code (`1L`) or procedure code (`0L`)
 #' * `full_code`: the full code string
-#' * `code`: the compact codes string
-#' * `src`: the source - CMS, CDC, or WHO.
+#' * `code`: the compact code string
+#' * `src`: the source CMS, CDC, WHO, IHACPA, or Socialstyrelsen
 #' * year ranges (`known_*`, `assignable_*`).
 #'
 #' @family ICD tools
@@ -175,7 +175,9 @@ lookup_icd_codes <- function(x, regex = FALSE, full.codes = TRUE, compact.codes 
   rtn[["lookup_order"]] <- NULL
   rtn[["input_seq"]] <- NULL
 
-  mdcr_unique(rtn)
+  rtn <- mdcr_unique(rtn)
+  rownames(rtn) <- NULL
+  rtn
 }
 
 ################################################################################
