@@ -598,7 +598,7 @@ Elixhauser</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.9.0&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.10.0&#39;</span></span></code></pre></div>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>The <em>medicalcoder</em> package implements several variants of the
@@ -618,7 +618,7 @@ AHRQ</li>
 <li>Codes from Table 2 of <span class="citation">Quan et al.
 (2005)</span>
 <ul>
-<li><code>elixhauser_elixhauser1988</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
+<li><code>elixhauser_elixhauser1998</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
 <li><code>elixhauser_ahrq_web</code>: <span class="citation">(Quan et
 al. 2005; Healthcare Cost and Utilization Project (HCUP)
 2017)</span></li>
@@ -636,7 +636,7 @@ consistent with the way these methods were implemented in <span class="citation"
 <p>End users may access three lookup tables relevant to Elixhauser
 variants.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    11294 obs. of  15 variables:</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    11309 obs. of  15 variables:</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
@@ -644,7 +644,7 @@ variants.</p>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">##  $ poaexempt                : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1998: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
 <span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
@@ -657,7 +657,7 @@ variants.</p>
 <span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;AIDS&quot; &quot;ALCOHOL&quot; &quot;ALCOHOL&quot; ...</span></span>
 <span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="do">##  $ index                    : chr  &quot;mortality&quot; &quot;readmission&quot; &quot;mortality&quot; &quot;readmission&quot; ...</span></span>
 <span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1998: int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
 <span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  0 19 -1 6 -2 9 0 4 NA NA ...</span></span>
 <span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  -4 5 -1 3 -3 5 NA NA -1 2 ...</span></span>
 <span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  -4 5 -1 3 -3 5 NA NA 0 2 ...</span></span>
@@ -682,12 +682,17 @@ indicators for the inclusion in specific variants.</p></li>
 <li><p><code>get_elixhauser_index_scores()</code> returns a
 <code>data.frame</code> with points scored per condition for both
 mortality and readmission indices by variant.</p></li>
-<li><p><code>get_elixhauser_poa()</code> returns a
-<code>data.frame</code> which reports which conditions are required and
-not required to be present-on-admission for the conditions to be
-classified as a comorbidity by variant. For the variants not listed the
-default is as with the Charlson and PCCC methods, the code needs to be
-present-on-admission for the condition to be flagged.</p></li>
+<li><p><code>get_elixhauser_poa()</code> returns a condition-level rule
+table. <code>poa_required = 1</code> means a mapped diagnosis must be
+POA for the condition to be flagged, unless its code is POA exempt.
+<code>poa_required = 0</code> means POA does not affect that condition.
+The <code>elixhauser_ahrqYYYY</code> columns identify the annual AHRQ
+releases that use each condition/rule row.
+<code>elixhauser_ahrq_icd10</code> is the union across included AHRQ
+releases, not an additional annual release. Code-level POA exemptions
+are tracked separately from this condition-level table. For variants
+without an explicit POA rule, the default is that the code must be POA
+for the condition to be flagged.</p></li>
 </ul>
 </div>
 <div id="applying-elixhauser" class="section level1">
@@ -1410,7 +1415,7 @@ Cost and Utilization Project (HCUP)</em>. <a href="https://hcup-us.ahrq.gov/tool
 Quan, Hude, Vijaya Sundararajan, Patricia Halfon, et al. 2005.
 <span>“Coding Algorithms for Defining Comorbidities in ICD-9-CM and
 ICD-10 Administrative Data.”</span> <em>Medical Care</em> 43 (11):
-1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+1130–39. https://doi.org/<a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
 </div>
 </div>
 </div>

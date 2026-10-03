@@ -1,7 +1,7 @@
 Package: medicalcoder
 Title: A Unified and Longitudinally Aware Framework for ICD-Based
         Comorbidity Assessment
-Version: 0.9.0
+Version: 0.10.0
 Authors@R: c(
     person(given = "Peter",   family = "DeWitt",    email = "peter.dewitt@cuanschutz.edu",      role = c("aut", "cre", "cov"), comment = c(ORCID = "0000-0002-6391-0795")),
     person(given = "Tell",    family = "Bennett",   email = "tell.bennett@cuanschutz.edu",      role = c("ctb"),               comment = c(ORCID = "0000-0003-1483-4236")),
@@ -25,11 +25,11 @@ LazyData: true
 Suggests: data.table, dplyr, kableExtra, knitr, R.utils, rmarkdown,
         tibble, tidyr
 VignetteBuilder: knitr, rmarkdown
-Config/Needs/website: pkgdown, comorbidity, icdcomorbid,
-        multimorbidity, dplyr, tidyr, tibble, odbc, DBI, RSQLite, pccc
-Config/roxygen2/version: 8.0.0
+Config/Needs/website: pkgdown, comorbidity, multimorbidity, dplyr,
+        tidyr, tibble, DBI, RSQLite, pccc
+Config/roxygen2/version: 8.1.0
 NeedsCompilation: no
-Packaged: 2026-07-11 23:11:40 UTC; dewittp
+Packaged: 2026-10-03 19:01:24 UTC; dewittp
 Author: Peter DeWitt [aut, cre, cov] (ORCID:
     <https://orcid.org/0000-0002-6391-0795>),
   Tell Bennett [ctb] (ORCID: <https://orcid.org/0000-0003-1483-4236>),
@@ -39,4 +39,4 @@ Author: Peter DeWitt [aut, cre, cov] (ORCID:
     <https://orcid.org/0000-0002-4655-3773>)
 Maintainer: Peter DeWitt <peter.dewitt@cuanschutz.edu>
 Repository: CRAN
-Date/Publication: 2026-07-11 23:40:02 UTC
+Date/Publication: 2026-10-03 19:20:02 UTC

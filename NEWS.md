@@ -1,3 +1,47 @@
+# medicalcoder 0.10.0
+
+## New Features
+
+* Add FY2027 ICD-10-CM and ICD-10-PCS from CMS. The CDC-hosted FY2027 CM
+  order file agrees with CMS; the package's `cdc` source label continues to
+  refer to mortality codes.
+* Extend ICD-10-AM code coverage through Australian financial year 2027 using
+  the current Thirteenth Edition.
+
+## Bug Fixes
+
+* Select CMS source archives explicitly so the original FY2026 PCS archive
+  cannot mask the April 2026 update. Correct affected FY2026 code validity.
+* Repair recursive ICD build dependencies and track selected source files so
+  importer and source updates propagate to generated package data.
+* Preserve the union of codes from supported annual AHRQ ICD-10 mappings in
+  `elixhauser_ahrq_icd10`. This method has no encounter year or quarter input,
+  so codes from earlier releases remain included even if a later release no
+  longer lists them as assignable.
+* Add a data-build check that mapped, assignable ICD-10 codes retain the same
+  POA-exemption status across supported AHRQ releases. This guards the
+  assumption behind the combined `elixhauser_ahrq_icd10` method (#47).
+
+## Other Changes
+
+* Add a `CITATION` file and cite the [JAMIA Open
+  manuscript](https://doi.org/10.1093/jamiaopen/ooag182) in the README.
+* Organize tests into attached, unattached, and extended groups, with a runner
+  that isolates each test script in its own environment. Routine checks now
+  disable extended tests explicitly; use `make check-extended` to run them.
+  Tests that require an unavailable optional dependency can use `skip_test()`
+  so the runner records a skip and continues with the group.
+
+## Breaking Changes
+
+* Corrected the Elixhauser method name from `elixhauser_elixhauser1988` to
+  `elixhauser_elixhauser1998`. The `get_elixhauser_codes()` and
+  `get_elixhauser_index_scores()` lookup tables now use the
+  `elixhauser_elixhauser1998` column and no longer include the old column
+  name. Update code that selects the old column. Calls to
+  `comorbidities(method = "elixhauser_elixhauser1988")` remain temporarily
+  supported with a deprecation warning. (#50)
+
 # medicalcoder 0.9.0
 
 ## New Features

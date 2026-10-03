@@ -825,7 +825,7 @@ one non-technology condition is flagged.</p>
 <code>get_pccc_codes()</code> returns a data.frame.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>pccc_codes <span class="ot">&lt;-</span> <span class="fu">get_pccc_codes</span>()</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">str</span>(pccc_codes)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    8900 obs. of  12 variables:</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    8913 obs. of  12 variables:</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
@@ -2514,9 +2514,9 @@ nor the diagnostic/procedure status of the code.</p>
 <span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="do">##   known_end assignable_start assignable_end</span></span>
 <span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="do">## 1      2015             2010           2015</span></span>
 <span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="do">## 2      2012             2010           2012</span></span>
-<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 3      2026             2014           2026</span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="do">## 3      2027             2014           2027</span></span>
 <span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="do">## 4      2025             2001           2025</span></span>
-<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="do">## 5      2026             2020           2026</span></span>
+<span id="cb22-15"><a href="#cb22-15" tabindex="-1"></a><span class="do">## 5      2027             2020           2027</span></span>
 <span id="cb22-16"><a href="#cb22-16" tabindex="-1"></a><span class="do">## 6      2026             1997           2026</span></span>
 <span id="cb22-17"><a href="#cb22-17" tabindex="-1"></a><span class="do">## 7      2021             2008           2021</span></span>
 <span id="cb22-18"><a href="#cb22-18" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="st">&quot;Ambiguous compact code&quot;</span>, <span class="st">&quot;Full ICD-9 code&quot;</span>, <span class="st">&quot;Full ICD-10 code&quot;</span>),</span>
@@ -4477,13 +4477,13 @@ encounters 2, 4, and 6.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>codes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;H49.811&quot;</span>, <span class="st">&quot;J84.111&quot;</span>, <span class="st">&quot;Z96.41&quot;</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_pccc_codes</span>(), full_code <span class="sc">%in%</span> codes)</span>
 <span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a><span class="do">##      icdv dx full_code   code   condition                 subcondition</span></span>
-<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## 6987   10  1   H49.811 H49811   metabolic    other_metabolic_disorders</span></span>
-<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="do">## 7276   10  1   J84.111 J84111 respiratory chronic_respiratory_diseases</span></span>
-<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## 8892   10  1    Z96.41  Z9641   metabolic    device_and_technology_use</span></span>
+<span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a><span class="do">## 6989   10  1   H49.811 H49811   metabolic    other_metabolic_disorders</span></span>
+<span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="do">## 7287   10  1   J84.111 J84111 respiratory chronic_respiratory_diseases</span></span>
+<span id="cb28-6"><a href="#cb28-6" tabindex="-1"></a><span class="do">## 8905   10  1    Z96.41  Z9641   metabolic    device_and_technology_use</span></span>
 <span id="cb28-7"><a href="#cb28-7" tabindex="-1"></a><span class="do">##      transplant_flag tech_dep_flag pccc_v3.1 pccc_v3.0 pccc_v2.1 pccc_v2.0</span></span>
-<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="do">## 6987               0             0         1         1         1         1</span></span>
-<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## 7276               0             0         1         1         0         0</span></span>
-<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="do">## 8892               0             1         1         1         1         1</span></span></code></pre></div>
+<span id="cb28-8"><a href="#cb28-8" tabindex="-1"></a><span class="do">## 6989               0             0         1         1         1         1</span></span>
+<span id="cb28-9"><a href="#cb28-9" tabindex="-1"></a><span class="do">## 7287               0             0         1         1         0         0</span></span>
+<span id="cb28-10"><a href="#cb28-10" tabindex="-1"></a><span class="do">## 8905               0             1         1         1         1         1</span></span></code></pre></div>
 <p>The constructed data and permutations are:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a>permutations <span class="ot">&lt;-</span></span>
 <span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>  data.table<span class="sc">::</span><span class="fu">data.table</span>(</span>
@@ -4506,7 +4506,7 @@ encounters 2, 4, and 6.</p>
 <span id="cb29-19"><a href="#cb29-19" tabindex="-1"></a><span class="do">##  $ encounter_id: int  1 2 ...</span></span>
 <span id="cb29-20"><a href="#cb29-20" tabindex="-1"></a><span class="do">##  $ code        : chr  NA ...</span></span>
 <span id="cb29-21"><a href="#cb29-21" tabindex="-1"></a><span class="do">##  $ plabel      : chr  &quot;Permutation 1: H49.811, J84.111, Z96.41&quot; ...</span></span>
-<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="do">##  - attr(*, &quot;.internal.selfref&quot;)=&lt;pointer: 0x1016c9d40&gt;</span></span></code></pre></div>
+<span id="cb29-22"><a href="#cb29-22" tabindex="-1"></a><span class="do">##  - attr(*, &quot;.internal.selfref&quot;)=&lt;pointer: 0x105d75500&gt;</span></span></code></pre></div>
 <ul>
 <li>Permutation 1: H49.811, J84.111, Z96.41</li>
 <li>Permutation 2: H49.811, Z96.41, J84.111</li>

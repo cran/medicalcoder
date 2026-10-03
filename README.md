@@ -11,7 +11,7 @@
 [![CRAN status](https://www.r-pkg.org/badges/version-last-release/medicalcoder)](https://CRAN.R-project.org/package=medicalcoder)
 [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/medicalcoder)](https://www.r-pkg.org/pkg/medicalcoder)
 [![downloads](https://cranlogs.r-pkg.org/badges/grand-total/medicalcoder)](https://www.r-pkg.org/pkg/medicalcoder)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/dewittpe/medicalcoder)
+<!--[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/dewittpe/medicalcoder)-->
 <!-- badges: end -->
 
 _medicalcoder_ is a lightweight, base-R package for working with ICD-9 and ICD-10
@@ -116,6 +116,41 @@ From the command line:
 
 ```
 R CMD INSTALL medicalcoder_X.Y.Z.tar.gz
+```
+
+## Reproducibility and versioning
+
+`medicalcoder` includes ICD code data and comorbidity mappings that can change
+between package releases. Record the package version used for an analysis so
+that its results can be reproduced:
+
+
+``` r
+packageVersion("medicalcoder")
+```
+
+For example, install a specific release from CRAN with:
+
+
+``` r
+remotes::install_version("medicalcoder", version = "0.10.0")
+```
+
+## Citation
+
+Two things to cite,
+
+    Peter E DeWitt, Seth Russell, James A Feinstein, Margaret N Rebull, Tellen D
+    Bennett, medicalcoder: a unified and longitudinally aware framework for
+    International Classification of Diseases code-based comorbidity assessment
+    in R, JAMIA Open, Volume 9, Issue 5, October 2026, ooag182
+
+    https://doi.org/10.1093/jamiaopen/ooag182
+
+And the package itself (run this code locally to get the version you are using.
+
+``` r
+citation("medicalcoder", auto = TRUE)
 ```
 
 ## Quick Start:
@@ -274,7 +309,7 @@ There are eight variants of Charlson comorbidities implemented in _medicalcoder_
 * [Quan et al. (2005)](https://doi.org/10.1097/01.mlr.0000182534.19832.83)
 * [Quan et al. (2011)](https://doi.org/10.1093/aje/kwq433)
 * [Sundararajan et al. (2004)](https://doi.org/10.1016/j.jclinepi.2004.03.012)
-* [Glasheen (2019)](https://pubmed.ncbi.nlm.nih.gov/31428236/)
+* [Glasheen (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6684052/)
 * [Ludvigsson et al. (2021)](https://doi.org/10.2147/CLEP.S282475)
 * [Beyrer et al. (2021)](https://doi.org/10.1002/pds.5204)
 * MIMIC-IV Charlson SQL from
@@ -313,7 +348,7 @@ vignette(topic = "charlson", package = "medicalcoder")
 #### Elixhauser Comorbidities
 
 * [Elixhauser et al. (1998)](https://doi.org/10.1097/00005650-199801000-00004)
-  * `method = elixhauser_elixhauser1988`
+  * `method = elixhauser_elixhauser1998`
 * [Quan et al. (2005)](https://doi.org/10.1097/01.mlr.0000182534.19832.83)
   * `method = elixhauser_quan2005`
 * AHRQ (2017, 2022, 2023, 2024, 2025, 2026, ICD10)
@@ -367,7 +402,7 @@ You can get a table of ICD codes via `get_icd_codes()`.
 
 ``` r
 str(medicalcoder::get_icd_codes())
-#> 'data.frame':	330606 obs. of  9 variables:
+#> 'data.frame':	330947 obs. of  9 variables:
 #>  $ icdv            : int  9 9 9 9 9 9 9 9 9 9 ...
 #>  $ dx              : int  0 0 0 0 0 0 0 0 0 0 ...
 #>  $ full_code       : chr  "00" "00" "00.0" "00.0" ...
@@ -394,7 +429,9 @@ The columns are:
 * `src`: character string denoting the source of the ICD code information.
     * `cms`: The ICD-9-CM, ICD-9-PCS, ICD-10-CM, or ICD-10-PCS codes curated
       by the Centers for Medicare and Medicaid Services (CMS).
-    * `cdc`: CDC mortality coding.
+    * `cdc`: CDC mortality ICD-10 codes (calendar years), plus historical
+      CDC ICD-9 extracts. CDC-hosted ICD-10-CM files are represented by the
+      canonical `cms` source.
     * `ihacpa`: ICD-10-AM codes from the Independent Health and Aged Care
       Pricing Authority.
     * `socialstyrelsen`: ICD-10-SE codes from Sweden's National Board of
@@ -434,22 +471,22 @@ subset(
   select = c("full_code", "known_start", "known_end", "assignable_start", "assignable_end")
 )
 #>    full_code known_start known_end assignable_start assignable_end
-#> 1        Z94        2014      2026               NA             NA
-#> 5      Z94.0        2014      2026             2014           2026
-#> 9      Z94.1        2014      2026             2014           2026
-#> 13     Z94.2        2014      2026             2014           2026
-#> 17     Z94.3        2014      2026             2014           2026
-#> 21     Z94.4        2014      2026             2014           2026
-#> 25     Z94.5        2014      2026             2014           2026
-#> 29     Z94.6        2014      2026             2014           2026
-#> 33     Z94.7        2014      2026             2014           2026
-#> 37     Z94.8        2014      2026               NA             NA
-#> 41    Z94.81        2014      2026             2014           2026
-#> 43    Z94.82        2014      2026             2014           2026
-#> 45    Z94.83        2014      2026             2014           2026
-#> 47    Z94.84        2014      2026             2014           2026
-#> 50    Z94.89        2014      2026             2014           2026
-#> 52     Z94.9        2014      2026             2014           2026
+#> 1        Z94        2014      2027               NA             NA
+#> 5      Z94.0        2014      2027             2014           2027
+#> 9      Z94.1        2014      2027             2014           2027
+#> 13     Z94.2        2014      2027             2014           2027
+#> 17     Z94.3        2014      2027             2014           2027
+#> 21     Z94.4        2014      2027             2014           2027
+#> 25     Z94.5        2014      2027             2014           2027
+#> 29     Z94.6        2014      2027             2014           2027
+#> 33     Z94.7        2014      2027             2014           2027
+#> 37     Z94.8        2014      2027               NA             NA
+#> 41    Z94.81        2014      2027             2014           2027
+#> 43    Z94.82        2014      2027             2014           2027
+#> 45    Z94.83        2014      2027             2014           2027
+#> 47    Z94.84        2014      2027             2014           2027
+#> 50    Z94.89        2014      2027             2014           2027
+#> 52     Z94.9        2014      2027             2014           2027
 ```
 
 Additionally, the `get_icd_codes()` method can provide descriptions and the ICD

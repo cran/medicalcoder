@@ -602,7 +602,7 @@ Comorbidities</a></li>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(medicalcoder)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;medicalcoder&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.9.0&#39;</span></span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="do">## [1] &#39;0.10.0&#39;</span></span></code></pre></div>
 <div id="comorbidity-algorithms" class="section level1">
 <h1>Comorbidity Algorithms</h1>
 <p>There are three comorbidity algorithms, each with several variants,
@@ -661,7 +661,7 @@ specific years</li>
 <li>Codes from Table 2 of <span class="citation">Quan et al.
 (2005)</span>
 <ol style="list-style-type: lower-roman">
-<li><code>elixhauser_elixhauser1988</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
+<li><code>elixhauser_elixhauser1998</code>: <span class="citation">(Elixhauser et al. 1998; Quan et al. 2005)</span></li>
 <li><code>elixhauser_ahrq_web</code>: <span class="citation">(Quan et
 al. 2005; Healthcare Cost and Utilization Project (HCUP)
 2017)</span></li>
@@ -684,7 +684,7 @@ non-exported function. In general, the methods are listed in the form of
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="do">##  [7] &quot;charlson_quan2005&quot;         &quot;charlson_cdmf2019&quot;        </span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">##  [9] &quot;charlson_sundararajan2004&quot; &quot;charlson_ludvigsson2021&quot;  </span></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## [11] &quot;charlson_beyrer2021&quot;       &quot;charlson_mimicivcode&quot;     </span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## [13] &quot;elixhauser_elixhauser1988&quot; &quot;elixhauser_ahrq_web&quot;      </span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## [13] &quot;elixhauser_elixhauser1998&quot; &quot;elixhauser_ahrq_web&quot;      </span></span>
 <span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="do">## [15] &quot;elixhauser_quan2005&quot;       &quot;elixhauser_ahrq2022&quot;      </span></span>
 <span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="do">## [17] &quot;elixhauser_ahrq2023&quot;       &quot;elixhauser_ahrq2024&quot;      </span></span>
 <span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="do">## [19] &quot;elixhauser_ahrq2025&quot;       &quot;elixhauser_ahrq2026&quot;      </span></span>
@@ -793,6 +793,16 @@ variable in the dataset to report which codes are POA via the function
 argument <code>poa.var</code>. If all the codes are to be considered POA
 or not, the functional argument <code>poa</code> can be used to set a
 common status without adding a column to the input dataset.</p>
+<p>Some source datasets encode POA or diagnosis-type information
+together with the ICD code. <a href="https://github.com/dewittpe/medicalcoder/issues/35#issuecomment-4440738819">For
+example</a>, Australian linked hospital data may store values such as
+<code>2I490</code>, where the leading <code>2</code> indicates that the
+condition did not arise during the episode of care, and
+<code>I490</code> is the compact ICD-10-AM code for I49.0. Decode these
+source-specific values before calling <code>comorbidities()</code>: pass
+the ICD code without the POA prefix via <code>icd.codes</code>, and pass
+a separate <code>0L</code>/<code>1L</code>/<code>NA</code> indicator via
+<code>poa.var</code>.</p>
 <p>Additionally, <em>medicalcoder</em> provides a
 <code>flag.method</code> argument for longitudinal datasets. The default
 <code>flag.method = &quot;current&quot;</code> evaluates each encounter on its
@@ -1744,7 +1754,7 @@ procedure flag, the compact code, and the full code. A column for the
 condition and other method-specific flags are provided. Lastly, there
 are indicator columns for the variant of each method.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_pccc_codes</span>())</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    8900 obs. of  12 variables:</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    8913 obs. of  12 variables:</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="do">##  $ icdv           : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="do">##  $ dx             : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="do">##  $ full_code      : chr  &quot;00.10&quot; &quot;00.50&quot; &quot;00.51&quot; &quot;00.53&quot; ...</span></span>
@@ -1758,7 +1768,7 @@ are indicator columns for the variant of each method.</p>
 <span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="do">##  $ pccc_v2.1      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="do">##  $ pccc_v2.0      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_charlson_codes</span>())</span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    9248 obs. of  13 variables:</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    9257 obs. of  13 variables:</span></span>
 <span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="do">##  $ dx                       : int  0 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;38.48&quot; &quot;003.1&quot; &quot;007.2&quot; &quot;007.4&quot; ...</span></span>
@@ -1773,7 +1783,7 @@ are indicator columns for the variant of each method.</p>
 <span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="do">##  $ charlson_sundararajan2004: int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="do">##  $ charlson_quan2011        : int  0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">get_elixhauser_codes</span>())</span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    11294 obs. of  15 variables:</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="do">## &#39;data.frame&#39;:    11309 obs. of  15 variables:</span></span>
 <span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="do">##  $ icdv                     : int  9 9 9 9 9 9 9 9 9 9 ...</span></span>
 <span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="do">##  $ dx                       : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="do">##  $ full_code                : chr  &quot;042&quot; &quot;070.22&quot; &quot;070.23&quot; &quot;070.32&quot; ...</span></span>
@@ -1781,7 +1791,7 @@ are indicator columns for the variant of each method.</p>
 <span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="do">##  $ poaexempt                : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
 <span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="do">##  $ condition                : chr  &quot;AIDS&quot; &quot;LIVER&quot; &quot;LIVER&quot; &quot;LIVER&quot; ...</span></span>
 <span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq_web      : int  1 1 1 1 1 1 1 0 0 0 ...</span></span>
-<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1988: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="do">##  $ elixhauser_elixhauser1998: int  1 0 0 1 1 0 1 0 0 0 ...</span></span>
 <span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="do">##  $ elixhauser_quan2005      : int  1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2022      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
 <span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="do">##  $ elixhauser_ahrq2023      : int  NA NA NA NA NA NA NA NA NA NA ...</span></span>
@@ -1899,7 +1909,7 @@ Dependence and Transplantation.”</span> <em>BMC Pediatrics</em> 14: 1–7.
 Glasheen, William P, Tristan Cordier, Rajiv Gumpina, Gil Haugh, Jared
 Davis, and Andrew Renda. 2019. <span>“Charlson Comorbidity Index: ICD-9
 Update and ICD-10 Translation.”</span> <em>American Health &amp; Drug
-Benefits</em> 12 (4): 188. <a href="https://pubmed.ncbi.nlm.nih.gov/31428236/">https://pubmed.ncbi.nlm.nih.gov/31428236/</a>.
+Benefits</em> 12 (4): 188. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6684052/">https://pmc.ncbi.nlm.nih.gov/articles/PMC6684052/</a>.
 </div>
 <div id="ref-ahrq2017" class="csl-entry">
 Healthcare Cost and Utilization Project (HCUP). 2017. <em>Elixhauser
@@ -1926,13 +1936,14 @@ for Register-Based Research in Sweden [Corrigendum].”</span>
 Quan, Hude, Bo Li, Colette M. Couris, et al. 2011. <span>“Updating and
 Validating the Charlson Comorbidity Index and Score for Risk Adjustment
 in Hospital Discharge Abstracts Using Data from 6 Countries.”</span>
-<em>American Journal of Epidemiology</em> 173 (6): 676–82. <a href="https://doi.org/10.1093/aje/kwq433">https://doi.org/10.1093/aje/kwq433</a>.
+<em>American Journal of Epidemiology</em> 173 (6): 676–82.
+https://doi.org/<a href="https://doi.org/10.1093/aje/kwq433">https://doi.org/10.1093/aje/kwq433</a>.
 </div>
 <div id="ref-quan2005" class="csl-entry">
 Quan, Hude, Vijaya Sundararajan, Patricia Halfon, et al. 2005.
 <span>“Coding Algorithms for Defining Comorbidities in ICD-9-CM and
 ICD-10 Administrative Data.”</span> <em>Medical Care</em> 43 (11):
-1130–39. <a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
+1130–39. https://doi.org/<a href="https://doi.org/10.1097/01.mlr.0000182534.19832.83">https://doi.org/10.1097/01.mlr.0000182534.19832.83</a>.
 </div>
 <div id="ref-sundararajan2004" class="csl-entry">
 Sundararajan, Vijaya, Toni Henderson, Catherine Perry, Amanda Muggivan,
